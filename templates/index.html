@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Intake - Lagos Real Estate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Lead Intake Form</h1>
+        <p>Enter a new lead's details to generate follow-up messages.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('add_lead') }}" method="POST">
+            <div class="form-group">
+                <label for="agent_name">Your Name *</label>
+                <input type="text" id="agent_name" name="agent_name" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Lead's Name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Lead's WhatsApp Phone *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget (e.g., 50M - 75M Naira) *</label>
+                <input type="text" id="budget" name="budget" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Desired Location (e.g., Lekki Phase 1) *</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="property_type">Property Type (e.g., 3-Bedroom Apartment) *</label>
+                <input type="text" id="property_type" name="property_type" required>
+            </div>
+            <div class="form-group">
+                <label for="timeline">Timeline (e.g., 3 Months) *</label>
+                <input type="text" id="timeline" name="timeline" required>
+            </div>
+            <div class="form-group">
+                <label for="notes">Additional Notes</label>
+                <textarea id="notes" name="notes" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn">Save Lead & Generate Messages</button>
+            </div>
+        </form>
+         <div class="footer-nav">
+            <a href="{{ url_for('leads') }}">View All Leads</a>
+        </div>
+    </div>
+</body>
+</html>

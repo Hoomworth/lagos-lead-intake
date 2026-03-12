@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Leads - Lagos Real Estate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Leads Dashboard</h1>
+        <p>A list of all saved leads.</p>
+
+        <div class="leads-table-container">
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Agent</th>
+                        <th>Lead Name</th>
+                        <th>Phone</th>
+                        <th>Budget</th>
+                        <th>Location</th>
+                        <th>Property Type</th>
+                        <th>Timeline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                        <tr>
+                            <td>{{ lead.date_added.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ lead.agent_name }}</td>
+                            <td>{{ lead.name }}</td>
+                            <td>{{ lead.phone }}</td>
+                            <td>{{ lead.budget }}</td>
+                            <td>{{ lead.location }}</td>
+                            <td>{{ lead.property_type }}</td>
+                            <td>{{ lead.timeline }}</td>
+                            <td>
+                                <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small">View Messages</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" style="text-align: center;">No leads found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-nav">
+            <a href="{{ url_for('index') }}">Add a New Lead</a>
+        </div>
+    </div>
+</body>
+</html>
