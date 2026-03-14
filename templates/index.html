@@ -1,67 +1,177 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lead Intake - Lagos Real Estate</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Lead Intake | Real Estate SaaS</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    body {
+      background-color: #f8fafc; /* Light gray/off-white background */
+    }
+    /* Smooth transition for input focus */
+    input, select, textarea {
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Lead Intake Form</h1>
-        <p>Enter a new lead's details to generate follow-up messages.</p>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flashes">
-                {% for category, message in messages %}
-                    <div class="flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <form action="{{ url_for('add_lead') }}" method="POST">
-            <div class="form-group">
-                <label for="agent_name">Your Name *</label>
-                <input type="text" id="agent_name" name="agent_name" required>
-            </div>
-            <div class="form-group">
-                <label for="name">Lead's Name *</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Lead's WhatsApp Phone *</label>
-                <input type="tel" id="phone" name="phone" required>
-            </div>
-            <div class="form-group">
-                <label for="budget">Budget (e.g., 50M - 75M Naira) *</label>
-                <input type="text" id="budget" name="budget" required>
-            </div>
-            <div class="form-group">
-                <label for="location">Desired Location (e.g., Lekki Phase 1) *</label>
-                <input type="text" id="location" name="location" required>
-            </div>
-            <div class="form-group">
-                <label for="property_type">Property Type (e.g., 3-Bedroom Apartment) *</label>
-                <input type="text" id="property_type" name="property_type" required>
-            </div>
-            <div class="form-group">
-                <label for="timeline">Timeline (e.g., 3 Months) *</label>
-                <input type="text" id="timeline" name="timeline" required>
-            </div>
-            <div class="form-group">
-                <label for="notes">Additional Notes</label>
-                <textarea id="notes" name="notes" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn">Save Lead & Generate Messages</button>
-            </div>
-        </form>
-         <div class="footer-nav">
-            <a href="{{ url_for('leads') }}">View All Leads</a>
-        </div>
-    </div>
-</body>
-</html>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8" style="background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);">
+<!-- BEGIN: MainContainer -->
+<main class="w-full max-w-2xl" data-purpose="form-wrapper">
+<!-- BEGIN: IntakeCard -->
+<div class="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden sm:grid-cols-3">
+<!-- BEGIN: FormHeader -->
+<header class="px-8 pt-8 pb-6 border-b text-center" style="background: linear-gradient(to right, #e811ea, #00d4ff); border-bottom: none;">
+<h1 class="text-2xl font-bold tracking-tight text-center text-white" style="">NEW LEAD INTAKE</h1>
+<p class="mt-2 text-sm leading-relaxed text-center text-white/90">Capture prospect details to automatically generate personalized follow-up messages and track your pipeline.</p>
+</header>
+<!-- END: FormHeader -->
+<!-- BEGIN: IntakeForm -->
+<form action="{{ url_for('add_lead') }}" class="p-8 space-y-6" data-purpose="lead-capture-form" method="POST">
+<!-- Grid Container for paired fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Agent Name -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="agent_name" style="">Agent Name</label>
+<input class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="agent_name" name="agent_name" placeholder="e.g. Chinedu Okafor" required="" type="text"/>
+</div>
+<!-- Lead Name -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="name" style="">Lead Name</label>
+<input class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="name" name="name" placeholder="e.g. Adebiyi Daniel" required="" type="text"/>
+</div>
+<!-- WhatsApp Phone -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="Phone" style="">WhatsApp Phone</label>
+<div class="relative">
+<input class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="Phone" name="Phone" placeholder="e.g. 0801 234 5678" required="" type="tel"/>
+</div>
+</div>
+<!-- Budget -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="budget" style="">Budget Range</label>
+<select class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm font-normal text-slate-500" id="budget" name="budget"><option value="">Select budget...</option>
+<option value="50k-100k">₦50k - ₦100k</option>
+<option value="100k-500k">₦100k - ₦500k</option>
+<option value="1m-5m">₦1m - ₦5m</option>
+<option value="5m-10m">₦5m - ₦10m</option>
+<option value="10m-50m">₦10m - ₦50m</option>
+<option value="50m-100m">₦50m - ₦100m</option></select>
+</div>
+<!-- Desired Location -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="location" style="">Desired Location</label>
+<input class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="location" name="location" placeholder="e.g. Lekki Phase 1, Ikoyi, or Victoria Island" type="text"/>
+</div>
+<!-- Property Type -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="property_type" style="">Property Type</label>
+<select class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="property_type" name="property_type">
+<option value="self-contain">Self-Contain</option>
+<option value="mini-flat">Mini Flat</option>
+<option value="apartment-flat">Apartment / Flat</option>
+<option value="duplex">Duplex</option>
+<option value="terraced-house">Terraced House</option>
+<option value="bungalow">Bungalow</option>
+<option value="land">Land</option>
+</select>
+</div>
+</div>
+<!-- Timeline (Full Width) -->
+<div class="flex flex-col gap-1.5 sm:grid-cols-3">
+<label class="text-sm font-semibold text-slate-700" for="timeline" style="">Expected Timeline</label>
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
+<!-- Timeline Radio Options -->
+<label class="relative flex items-center justify-center rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-brand-600" style="">
+<input class="sr-only" name="timeline" type="radio" value="immediate"/>
+<span class="text-xs font-medium text-slate-600" style="">Immediate</span>
+</label>
+<label class="relative flex items-center justify-center rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-brand-600" style="">
+<input class="sr-only" name="timeline" type="radio" value="1-3-months"/>
+<span class="text-xs font-medium text-slate-600" style="">1-3 Months</span>
+</label>
+<label class="relative flex items-center justify-center rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-brand-600" style="">
+<input class="sr-only" name="timeline" type="radio" value="3-6-months"/>
+<span class="text-xs font-medium text-slate-600" style="">3-6 Months</span>
+</label>
+<label class="relative flex items-center justify-center rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-brand-600" style="">
+<input class="sr-only" name="timeline" type="radio" value="6-12-months"/>
+<span class="text-xs font-medium text-slate-600" style="">6-12 Months</span>
+</label>
+<label class="relative flex items-center justify-center rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-brand-600" style="">
+<input class="sr-only" name="timeline" type="radio" value="12-24-months"/>
+<span class="text-xs font-medium text-slate-600" style="">12-24 Months</span>
+</label>
+</div>
+</div>
+<!-- Additional Notes -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700" for="notes" style="">Additional Notes</label>
+<textarea class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand-600 focus:ring-brand-600 sm:text-sm" id="notes" name="notes" placeholder="Specific features required, preferred communication times..." rows="3"></textarea>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors focus:ring-[#FF0000]" style="background: linear-gradient(to right, #e811ea, #00d4ff); color: white;" type="submit">
+            Save Lead &amp; Generate Messages
+          </button>
+</div>
+</form>
+<!-- END: IntakeForm -->
+<!-- BEGIN: FormFooter -->
+<footer class="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-center">
+<a class="text-sm font-medium text-slate-500 hover:text-brand-600 flex items-center gap-1 transition-colors" href="{{ url_for('leads') }}" style="">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          View All Leads
+        </a>
+</footer>
+<!-- END: FormFooter -->
+</div>
+<!-- END: IntakeCard -->
+</main>
+<!-- END: MainContainer -->
+<script data-purpose="radio-button-visual-feedback">
+    // Small script to handle visual feedback for the custom radio buttons
+    const radioLabels = document.querySelectorAll('input[name="timeline"]');
+    radioLabels.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        // Reset all
+        document.querySelectorAll('input[name="timeline"]').forEach(el => {
+          el.parentElement.classList.remove('border-brand-600', 'bg-brand-50', 'ring-2', 'ring-brand-600');
+          el.parentElement.querySelector('span').classList.replace('text-brand-700', 'text-slate-600');
+        });
+        // Set active
+        if (e.target.checked) {
+          e.target.parentElement.classList.add('border-brand-600', 'bg-brand-50', 'ring-2', 'ring-brand-600');
+          e.target.parentElement.querySelector('span').classList.replace('text-slate-600', 'text-brand-700');
+        }
+      });
+    });
+  </script>
+</body></html>
