@@ -13,14 +13,16 @@
         <p>Lead: <strong>{{ lead.name }}</strong></p>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flashes">
-                {% for category, message in messages %}
-                    <div class="flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+  {% if messages %}
+    {% for category, message in messages %}
+      {% if category == 'success' %}
+        <div style="background:#d1fae5; color:#065f46; padding:12px; border-radius:6px; margin-bottom:10px;">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
         <div class="message-container">
             <h2>Message 1: Initial WhatsApp Reply</h2>
