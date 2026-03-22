@@ -222,6 +222,16 @@ def add_lead():
     timeline = request.form.get('timeline')
     notes = request.form.get('notes')
 
+    print("DEBUG DATA:")
+print("agent_name:", agent_name)
+print("name:", name)
+print("phone:", phone)
+print("budget:", budget)
+print("location:", location)
+print("property_type:", property_type)
+print("timeline:", timeline)
+print("notes:", notes)
+
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Please fill out all required fields.', 'error')
         return redirect(url_for('index'))
