@@ -232,11 +232,11 @@ print("property_type:", property_type)
 print("timeline:", timeline)
 print("notes:", notes)
 
-    if not all([agent_name, name, phone, budget, location, property_type, timeline]):
+if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Please fill out all required fields.', 'error')
         return redirect(url_for('index'))
 
-    try:
+try:
         new_lead = Lead(
             agent_name=agent_name,
             name=name,
@@ -252,7 +252,7 @@ print("notes:", notes)
         db.session.commit()
 
         return redirect(url_for('result', lead_id=new_lead.id))
-    except Exception as e:
+except Exception as e:
         db.session.rollback()
         flash(f'An error occurred: {e}', 'error')
         return redirect(url_for('index'))
