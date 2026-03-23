@@ -222,42 +222,32 @@ def add_lead():
     timeline = request.form.get('timeline')
     notes = request.form.get('notes')
 
+    # DEBUG (temporary)
     print("DEBUG DATA:")
-    print("agent_name:", agent_name)
-    print("name:", name)
-    print("phone:", phone)
-    print("budget:", budget)
-    print("location:", location)
-    print("property_type:", property_type)
-    print("timeline:", timeline)
-    print("notes:", notes)
+    print(agent_name, name, phone, budget, location, property_type, timeline)
 
+    # Validation
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Please fill out all required fields.', 'error')
         return redirect(url_for('index'))
 
-    try:
-        new_lead = Lead(
-            agent_name=agent_name,
-            name=name,
-            phone=phone,
-            budget=budget,
-            location=location,
-            property_type=property_type,
-            timeline=timeline,
-            notes=notes,
-            user_id=current_user.id
-        )
+    # Save to DB
+    new_lead = Lead(
+        agent_name=agent_name,
+        name=name,
+        phone=phone,
+        budget=budget,
+        location=location,
+        property_type=property_type,
+        timeline=timeline,
+        notes=notes,
+        user_id=current_user.id
+    )
 
-        db.session.add(new_lead)
-        db.session.commit()
+    db.session.add(new_lead)
+    db.session.commit()
 
-        return redirect(url_for('result', lead_id=new_lead.id))
-
-    except Exception as e:
-        db.session.rollback()
-        flash(f'An error occurred: {e}', 'error')
-        return redirect(url_for('index'))
+    return redirect(url_for('result', lead_id=new_lead.id))
 
 @app.route('/result/<int:lead_id>')
 @login_required
