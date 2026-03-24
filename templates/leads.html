@@ -11,7 +11,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
             <div>
                 <h1 style="margin-bottom: 6px;">Leads Dashboard</h1>
-                <p style="margin: 0;">Welcome, {{ current_user.full_name }}. A list of your saved leads.</p>
+                <p style="margin: 0;">Welcome, {{ current_user.full_name if current_user else "User" }}. A list of your saved leads.</p>
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
