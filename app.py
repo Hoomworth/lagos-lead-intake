@@ -54,10 +54,12 @@ class Lead(db.Model):
 # -----------------------------
 def get_current_user():
     user_id = session.get('user_id')
-    if not user_id:
-        return None
-    return User.query.get(user_id)
 
+    if user_id is None:
+        return None
+
+    user = User.query.filter_by(id=user_id).first()
+    return user
 
 def login_required(route_function):
     @wraps(route_function)
@@ -212,6 +214,10 @@ def index():
 @login_required
 def add_lead():
     current_user = get_current_user()
+
+    if current_user is None:
+        flash('Session expired. Please log in again.', 'error')
+        return redirect(url_for('login'))
 
     agent_name = request.form.get('agent_name')
     name = request.form.get('name')
