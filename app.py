@@ -282,9 +282,14 @@ def result(lead_id):
 @login_required
 def leads():
     current_user = get_current_user()
+
+    if not current_user:
+        flash('Session expired. Please log in again.', 'error')
+        return redirect(url_for('login'))
+
     all_leads = Lead.query.filter_by(user_id=current_user.id).order_by(Lead.date_added.desc()).all()
     return render_template('leads.html', leads=all_leads, current_user=current_user)
-
+    
     @app.route('/delete_lead/<int:lead_id>', methods=['POST'])
     @login_required
     def delete_lead(lead_id):
