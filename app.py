@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'change-this-to-a-real-secret-key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///leads.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -284,6 +284,23 @@ def leads():
     current_user = get_current_user()
     all_leads = Lead.query.filter_by(user_id=current_user.id).order_by(Lead.date_added.desc()).all()
     return render_template('leads.html', leads=all_leads, current_user=current_user)
+
+    @app.route('/delete_lead/<int:lead_id>', methods=['POST'])
+    @login_required
+    def delete_lead(lead_id):
+        current_user = get_current_user()
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if not lead:
+        flash('Lead not found or unauthorized.', 'error')
+        return redirect(url_for('leads'))
+
+    db.session.delete(lead)
+    db.session.commit()
+
+    flash('Lead deleted successfully.', 'success')
+    return redirect(url_for('leads'))
 
 
 if __name__ == '__main__':
