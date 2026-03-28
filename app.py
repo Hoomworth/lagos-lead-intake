@@ -37,6 +37,7 @@ class Lead(db.Model):
     property_type = db.Column(db.String(50), nullable=False)
     timeline = db.Column(db.String(50), nullable=False)
     notes = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(20), default='New')
     date_added = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -273,6 +274,20 @@ def delete_lead(lead_id):
 
     flash('Deleted successfully', 'success')
     return redirect(url_for('leads'))
+
+
+@app.route('/mark_contacted/<int:lead_id>')
+@login_required
+def mark_contacted(lead_id):
+    current_user = get_current_user()
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if lead:
+        lead.status = 'Contacted'
+        db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 # -----------------------------

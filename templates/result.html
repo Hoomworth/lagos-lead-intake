@@ -35,7 +35,7 @@
     </button>
 
     <a 
-        href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}" 
+        href="{{ url_for('mark_contacted', lead_id=lead.id) }}" 
         target="_blank"
         class="btn"
         style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
