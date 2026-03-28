@@ -217,17 +217,30 @@ def add_lead():
 def result(lead_id):
     current_user = get_current_user()
 
+    if not current_user:
+        return redirect(url_for('login'))
+
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
     if not lead:
         return redirect(url_for('leads'))
+
+    # FORMAT PHONE FOR WHATSAPP
+    phone = lead.phone.strip()
+
+    if phone.startswith('0'):
+        phone = '234' + phone[1:]
+
+    if phone.startswith('+'):
+        phone = phone[1:]
 
     return render_template(
         'result.html',
         lead=lead,
         message1=generate_message_1(lead),
         message2=generate_message_2(lead),
-        call_script=generate_call_script(lead)
+        call_script=generate_call_script(lead),
+        phone=phone
     )
 
 
