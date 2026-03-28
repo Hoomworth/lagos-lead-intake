@@ -24,13 +24,24 @@
   {% endif %}
 {% endwith %}
 
-        <div class="message-container">
-            <h2>Message 1: Initial WhatsApp Reply</h2>
-            <div class="message-box">
-                <pre id="message1">{{ message1 }}</pre>
-            </div>
-            <button class="btn btn-copy" onclick="copyToClipboard('message1')">Copy Message</button>
-        </div>
+<div class="message-container">
+    <h2>Message 1: Initial WhatsApp Reply</h2>
+    <div class="message-box">
+        <pre id="message1">{{ message1 }}</pre>
+    </div>
+
+    <button class="btn btn-copy" onclick="copyToClipboard('message1')">
+        Copy Message
+    </button>
+
+    <a 
+        href="https://wa.me/{{ lead.phone }}?text={{ message1 | urlencode }}" 
+        target="_blank"
+        class="btn"
+        style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
+        Send via WhatsApp
+    </a>
+</div>
 
         <div class="message-container">
             <h2>Message 2: 24-Hour Follow-Up</h2>
