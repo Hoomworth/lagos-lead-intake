@@ -26,9 +26,6 @@ class User(db.Model):
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
-    def __repr__(self):
-        return f'<User {self.email}>'
-
 
 class Lead(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,24 +39,18 @@ class Lead(db.Model):
     notes = db.Column(db.Text, nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    # This connects each lead to a specific user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return f'<Lead {self.name}>'
 
 
 # -----------------------------
-# Helper Functions
+# Helpers
 # -----------------------------
 def get_current_user():
     user_id = session.get('user_id')
-
-    if user_id is None:
+    if not user_id:
         return None
+    return User.query.filter_by(id=user_id).first()
 
-    user = User.query.filter_by(id=user_id).first()
-    return user
 
 def login_required(route_function):
     @wraps(route_function)
@@ -72,17 +63,15 @@ def login_required(route_function):
 
 
 # -----------------------------
-# Message Generation Functions
+# Message Generators
 # -----------------------------
 def generate_message_1(lead):
     return f"""
 Hello {lead.name.title()},
 
-Thank you for your inquiry about finding a {lead.property_type} in {lead.location} with a budget of {lead.budget}. My name is {lead.agent_name}, and I'm a real estate agent specializing in properties in Lagos.
+Thank you for your inquiry about finding a {lead.property_type} in {lead.location} with a budget of {lead.budget}. My name is {lead.agent_name}.
 
-I am reviewing your request and will get back to you shortly with some initial options that match your criteria.
-
-In the meantime, you can view some of our available properties on our website: [Your Website Link]
+I am reviewing your request and will get back to you shortly.
 
 Best regards,
 {lead.agent_name}
@@ -93,11 +82,9 @@ def generate_message_2(lead):
     return f"""
 Hello {lead.name.title()},
 
-This is {lead.agent_name} following up on your property inquiry. I hope you had a chance to look at the initial options I sent over.
+This is {lead.agent_name} following up on your property inquiry.
 
-I would love to schedule a brief 10-15 minute call to better understand your needs and discuss how I can help you find the perfect {lead.property_type} in {lead.location}.
-
-Are you available for a quick chat tomorrow around 11am or 2pm?
+Are you available for a quick call tomorrow?
 
 Best regards,
 {lead.agent_name}
@@ -106,24 +93,10 @@ Best regards,
 
 def generate_call_script(lead):
     return f"""
-Lead Name: {lead.name.title()}
+Lead: {lead.name}
 Phone: {lead.phone}
-Inquiry: {lead.property_type} in {lead.location}, Budget: {lead.budget}
 
-Opener:
-Hi {lead.name.title()}, this is {lead.agent_name} calling from [Your Agency Name]. I'm following up on your inquiry about a {lead.property_type} in {lead.location}. Is now a good time to talk for a few minutes?
-
-Discovery Questions:
-1. To make sure I find the best options for you, could you tell me more about what you're looking for?
-2. You mentioned a budget of {lead.budget}. Is this flexible for the right property?
-3. What is your timeline for moving? You mentioned {lead.timeline}.
-4. Have you seen any other properties that you liked?
-
-Next Steps:
-Thank you for sharing that with me. Based on what you've told me, I have a few properties in mind that I think you'll love. I will prepare a personalized list and send it to you via WhatsApp shortly.
-
-Closing:
-I look forward to helping you find your new property. Have a great day.
+Hi {lead.name}, this is {lead.agent_name}. I'm calling about your request for a {lead.property_type} in {lead.location}.
 """
 
 
@@ -133,36 +106,33 @@ I look forward to helping you find your new property. Have a great day.
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        full_name = request.form.get('full_name', '').strip()
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '')
-        confirm_password = request.form.get('confirm_password', '')
+        full_name = request.form.get('full_name')
+        email = request.form.get('email').lower()
+        password = request.form.get('password')
+        confirm = request.form.get('confirm_password')
 
-        if not full_name or not email or not password or not confirm_password:
-            flash('Please fill out all fields.', 'error')
+        if not full_name or not email or not password or not confirm:
+            flash('Fill all fields', 'error')
             return redirect(url_for('register'))
 
-        if password != confirm_password:
-            flash('Passwords do not match.', 'error')
+        if password != confirm:
+            flash('Passwords do not match', 'error')
             return redirect(url_for('register'))
 
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            flash('An account with that email already exists.', 'error')
+        if User.query.filter_by(email=email).first():
+            flash('Email already exists', 'error')
             return redirect(url_for('register'))
 
-        hashed_password = generate_password_hash(password)
-
-        new_user = User(
+        user = User(
             full_name=full_name,
             email=email,
-            password_hash=hashed_password
+            password_hash=generate_password_hash(password)
         )
 
-        db.session.add(new_user)
+        db.session.add(user)
         db.session.commit()
 
-        flash('Account created successfully. Please log in.', 'success')
+        flash('Account created. Login now.', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -171,23 +141,18 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '')
-
-        if not email or not password:
-            flash('Please enter your email and password.', 'error')
-            return redirect(url_for('login'))
+        email = request.form.get('email').lower()
+        password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
 
         if not user or not check_password_hash(user.password_hash, password):
-            flash('Invalid email or password.', 'error')
+            flash('Invalid email or password', 'error')
             return redirect(url_for('login'))
 
         session['user_id'] = user.id
         session['user_name'] = user.full_name
 
-        flash('You are now logged in.', 'success')
         return redirect(url_for('index'))
 
     return render_template('login.html')
@@ -196,7 +161,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
 
@@ -206,8 +170,7 @@ def logout():
 @app.route('/')
 @login_required
 def index():
-    current_user = get_current_user()
-    return render_template('index.html', current_user=current_user)
+    return render_template('index.html')
 
 
 @app.route('/add_lead', methods=['POST'])
@@ -215,8 +178,7 @@ def index():
 def add_lead():
     current_user = get_current_user()
 
-    if current_user is None:
-        flash('Session expired. Please log in again.', 'error')
+    if not current_user:
         return redirect(url_for('login'))
 
     agent_name = request.form.get('agent_name')
@@ -228,17 +190,11 @@ def add_lead():
     timeline = request.form.get('timeline')
     notes = request.form.get('notes')
 
-    # DEBUG (temporary)
-    print("DEBUG DATA:")
-    print(agent_name, name, phone, budget, location, property_type, timeline)
-
-    # Validation
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
-        flash('Please fill out all required fields.', 'error')
+        flash('Fill all fields', 'error')
         return redirect(url_for('index'))
 
-    # Save to DB
-    new_lead = Lead(
+    lead = Lead(
         agent_name=agent_name,
         name=name,
         phone=phone,
@@ -250,10 +206,11 @@ def add_lead():
         user_id=current_user.id
     )
 
-    db.session.add(new_lead)
+    db.session.add(lead)
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=new_lead.id))
+    return redirect(url_for('result', lead_id=lead.id))
+
 
 @app.route('/result/<int:lead_id>')
 @login_required
@@ -261,20 +218,16 @@ def result(lead_id):
     current_user = get_current_user()
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
-    if not lead:
-        flash('Lead not found.', 'error')
-        return redirect(url_for('leads'))
 
-    message1 = generate_message_1(lead)
-    message2 = generate_message_2(lead)
-    call_script = generate_call_script(lead)
+    if not lead:
+        return redirect(url_for('leads'))
 
     return render_template(
         'result.html',
         lead=lead,
-        message1=message1,
-        message2=message2,
-        call_script=call_script
+        message1=generate_message_1(lead),
+        message2=generate_message_2(lead),
+        call_script=generate_call_script(lead)
     )
 
 
@@ -284,31 +237,36 @@ def leads():
     current_user = get_current_user()
 
     if not current_user:
-        flash('Session expired. Please log in again.', 'error')
         return redirect(url_for('login'))
 
-    all_leads = Lead.query.filter_by(user_id=current_user.id).order_by(Lead.date_added.desc()).all()
-    return render_template('leads.html', leads=all_leads, current_user=current_user)
-    
-    @app.route('/delete_lead/<int:lead_id>', methods=['POST'])
-    @login_required
-    def delete_lead(lead_id):
-        current_user = get_current_user()
+    leads = Lead.query.filter_by(user_id=current_user.id).order_by(Lead.date_added.desc()).all()
+
+    return render_template('leads.html', leads=leads, current_user=current_user)
+
+
+# ✅ DELETE ROUTE (FIXED)
+@app.route('/delete_lead/<int:lead_id>', methods=['POST'])
+@login_required
+def delete_lead(lead_id):
+    current_user = get_current_user()
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
     if not lead:
-        flash('Lead not found or unauthorized.', 'error')
         return redirect(url_for('leads'))
 
     db.session.delete(lead)
     db.session.commit()
 
-    flash('Lead deleted successfully.', 'success')
+    flash('Deleted successfully', 'success')
     return redirect(url_for('leads'))
 
 
+# -----------------------------
+# RUN
+# -----------------------------
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
