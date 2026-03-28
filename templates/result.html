@@ -35,11 +35,12 @@
     </button>
 
     <a 
-        href="{{ url_for('mark_contacted', lead_id=lead.id) }}" 
-        target="_blank"
-        class="btn"
-        style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
-        Send via WhatsApp
+       href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
+       target="_blank"
+       onclick="fetch('{{ url_for(\"mark_contacted\", lead_id=lead.id) }}')"
+       class="btn"
+       style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
+       Send via WhatsApp
     </a>
 </div>
 
