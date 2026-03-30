@@ -25,7 +25,7 @@
 {% endwith %}
 
 <div class="message-container">
-    <h2>Message 1: Initial WhatsApp Reply</h2>
+
     <div class="message-box">
         <pre id="message1">{{ message1 }}</pre>
     </div>
@@ -35,13 +35,16 @@
     </button>
 
     <a 
-       href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
-       target="_blank"
-       onclick="fetch('{{ url_for(\"mark_contacted\", lead_id=lead.id) }}')"
-       class="btn"
-       style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
-       Send via WhatsApp
+        href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
+        target="_blank"
+        onclick="fetch('{{ url_for('mark_contacted', lead_id=lead.id) }}')"
+        class="btn"
+        style="background:#25D366; color:white; margin-top:10px; display:inline-block;">
+        Send via WhatsApp
     </a>
+
+</div>
+
 </div>
 
         <div class="message-container">
