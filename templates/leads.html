@@ -47,7 +47,28 @@
                             <td>{{ lead.location }}</td>
                             <td>{{ lead.property_type }}</td>
                             <td>{{ lead.timeline }}</td>
-                            <td><span style="padding:4px 8px; border-radius:4px; background:#eee;">{{ lead.status }}</span></td>
+                            <td>
+                                {% if lead.status == 'New' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#e5e7eb; color:#111;">
+                                        New
+                                    </span>
+                            
+                                {% elif lead.status == 'Contacted' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#d1fae5; color:#065f46;">
+                                        Contacted
+                                    </span>
+                            
+                                {% elif lead.status == 'Closed' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#dbeafe; color:#1e40af;">
+                                        Closed
+                                    </span>
+                            
+                                {% else %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#eee;">
+                                        {{ lead.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
                             <td style="display: flex; gap: 6px;">
                                 
                                 <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small">View</a>
