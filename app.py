@@ -286,6 +286,20 @@ def delete_lead(lead_id):
     return redirect(url_for('leads'))
 
 
+@app.route('/mark_closed/<int:lead_id>')
+@login_required
+def mark_closed(lead_id):
+    current_user = get_current_user()
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if lead:
+        lead.status = 'Closed'
+        db.session.commit()
+
+    return redirect(url_for('leads'))    
+
+
 @app.route('/mark_contacted/<int:lead_id>')
 @login_required
 def mark_contacted(lead_id):
