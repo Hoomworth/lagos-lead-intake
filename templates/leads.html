@@ -18,6 +18,18 @@
                 <a href="{{ url_for('index') }}" class="btn">+ Add New Lead</a>
                 <a href="{{ url_for('logout') }}" class="btn btn-small" style="background: #dc3545;">Logout</a>
             </div>
+            
+            <div style="margin-bottom: 15px;">
+                <a href="{{ url_for('leads') }}" class="btn btn-small">All</a>
+            
+                <a href="{{ url_for('leads', status='New') }}" class="btn btn-small">
+                    New
+                </a>
+            
+                <a href="{{ url_for('leads', status='Contacted') }}" class="btn btn-small">
+                    Contacted
+                </a>
+            </div>
         </div>
 
         <div class="leads-table-container">

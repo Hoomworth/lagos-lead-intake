@@ -253,10 +253,25 @@ def leads():
     if not current_user:
         return redirect(url_for('login'))
 
-    leads = Lead.query.filter_by(user_id=current_user.id).order_by(Lead.date_added.desc()).all()
+    status_filter = request.args.get('status')
 
-    return render_template('leads.html', leads=leads, current_user=current_user)
+    if status_filter:
+        all_leads = Lead.query.filter_by(
+            user_id=current_user.id,
+            status=status_filter
+        ).order_by(Lead.date_added.desc()).all()
+    else:
+        all_leads = Lead.query.filter_by(
+            user_id=current_user.id
+        ).order_by(Lead.date_added.desc()).all()
 
+    return render_template(
+        'leads.html',
+        leads=all_leads,
+        current_user=current_user,
+        status_filter=status_filter
+    )
+    
 
 # ✅ DELETE ROUTE (FIXED)
 @app.route('/delete_lead/<int:lead_id>', methods=['POST'])
