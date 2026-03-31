@@ -316,7 +316,7 @@ def mark_closed(lead_id):
     return redirect(url_for('leads'))    
 
 
-@app.route('/mark_contacted/<int:lead_id>')
+@app.route('/mark_contacted/<int:lead_id>', methods=['POST'])
 @login_required
 def mark_contacted(lead_id):
     current_user = get_current_user()
@@ -327,7 +327,7 @@ def mark_contacted(lead_id):
         lead.status = 'Contacted'
         db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return '', 200
 
 
 # -----------------------------
