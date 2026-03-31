@@ -255,16 +255,20 @@ def leads():
     if not current_user:
         return redirect(url_for('login'))
 
+    # ✅ GET FILTER FROM URL
     status = request.args.get('status')
 
+    # ✅ BASE QUERY
     query = Lead.query.filter_by(user_id=current_user.id)
 
+    # ✅ APPLY FILTER IF EXISTS
     if status:
         query = query.filter_by(status=status)
 
+    # ✅ FINAL DATA
     all_leads = query.order_by(Lead.date_added.desc()).all()
 
-    # ✅ COUNTS (NEW PART)
+    # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()
     new_leads = Lead.query.filter_by(user_id=current_user.id, status='New').count()
     contacted_leads = Lead.query.filter_by(user_id=current_user.id, status='Contacted').count()
@@ -274,7 +278,6 @@ def leads():
         'leads.html',
         leads=all_leads,
         current_user=current_user,
-        status_filter=status,
         total_leads=total_leads,
         new_leads=new_leads,
         contacted_leads=contacted_leads,
