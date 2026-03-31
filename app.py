@@ -40,6 +40,8 @@ class Lead(db.Model):
     status = db.Column(db.String(20), default='New')
     date_added = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
+    status = db.Column(db.String(20), default='New')
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
@@ -251,27 +253,20 @@ def leads():
     current_user = get_current_user()
 
     if not current_user:
+        flash('Session expired. Please log in again.', 'error')
         return redirect(url_for('login'))
 
-    status_filter = request.args.get('status')
+    status = request.args.get('status')
 
-    if status_filter:
-        all_leads = Lead.query.filter_by(
-            user_id=current_user.id,
-            status=status_filter
-        ).order_by(Lead.date_added.desc()).all()
-    else:
-        all_leads = Lead.query.filter_by(
-            user_id=current_user.id
-        ).order_by(Lead.date_added.desc()).all()
+    query = Lead.query.filter_by(user_id=current_user.id)
 
-    return render_template(
-        'leads.html',
-        leads=all_leads,
-        current_user=current_user,
-        status_filter=status_filter
-    )
-    
+    if status:
+        query = query.filter_by(status=status)
+
+    all_leads = query.order_by(Lead.date_added.desc()).all()
+
+    return render_template('leads.html', leads=all_leads, current_user=current_user)
+
 
 # ✅ DELETE ROUTE (FIXED)
 @app.route('/delete_lead/<int:lead_id>', methods=['POST'])
