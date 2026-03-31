@@ -253,7 +253,6 @@ def leads():
     current_user = get_current_user()
 
     if not current_user:
-        flash('Session expired. Please log in again.', 'error')
         return redirect(url_for('login'))
 
     status = request.args.get('status')
@@ -265,8 +264,22 @@ def leads():
 
     all_leads = query.order_by(Lead.date_added.desc()).all()
 
-    return render_template('leads.html', leads=all_leads, current_user=current_user)
+    # ✅ COUNTS (NEW PART)
+    total_leads = Lead.query.filter_by(user_id=current_user.id).count()
+    new_leads = Lead.query.filter_by(user_id=current_user.id, status='New').count()
+    contacted_leads = Lead.query.filter_by(user_id=current_user.id, status='Contacted').count()
+    closed_leads = Lead.query.filter_by(user_id=current_user.id, status='Closed').count()
 
+    return render_template(
+        'leads.html',
+        leads=all_leads,
+        current_user=current_user,
+        status_filter=status,
+        total_leads=total_leads,
+        new_leads=new_leads,
+        contacted_leads=contacted_leads,
+        closed_leads=closed_leads
+    )
 
 # ✅ DELETE ROUTE (FIXED)
 @app.route('/delete_lead/<int:lead_id>', methods=['POST'])

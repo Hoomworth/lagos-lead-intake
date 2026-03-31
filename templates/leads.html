@@ -32,6 +32,24 @@
             </div>
         </div>
 
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+
+            <div class="btn btn-small">Total: {{ total_leads }}</div>
+        
+            <div class="btn btn-small" style="background:#e5e7eb;">
+                New: {{ new_leads }}
+            </div>
+        
+            <div class="btn btn-small" style="background:#d1fae5; color:#065f46;">
+                Contacted: {{ contacted_leads }}
+            </div>
+        
+            <div class="btn btn-small" style="background:#dbeafe; color:#1e40af;">
+                Closed: {{ closed_leads }}
+            </div>
+        
+        </div>
+
         <div class="leads-table-container">
             <table class="leads-table">
                 <thead>
