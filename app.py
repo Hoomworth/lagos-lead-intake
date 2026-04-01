@@ -259,18 +259,19 @@ def leads():
     status = request.args.get('status')
     search = request.args.get('search')
 
+    # ✅ BASE QUERY
     query = Lead.query.filter_by(user_id=current_user.id)
 
-# ✅ APPLY STATUS FILTER
-if status:
-    query = query.filter_by(status=status)
+    # ✅ APPLY STATUS FILTER
+    if status:
+        query = query.filter_by(status=status)
 
-# ✅ APPLY SEARCH FILTER
-if search:
-    query = query.filter(
-        (Lead.name.ilike(f"%{search}%")) |
-        (Lead.phone.ilike(f"%{search}%"))
-    )
+    # ✅ APPLY SEARCH FILTER
+    if search:
+        query = query.filter(
+            (Lead.name.ilike(f"%{search}%")) |
+            (Lead.phone.ilike(f"%{search}%"))
+        )
 
     # ✅ FINAL DATA
     all_leads = query.order_by(Lead.date_added.desc()).all()
