@@ -257,9 +257,19 @@ def leads():
 
     # ✅ GET FILTER FROM URL
     status = request.args.get('status')
+    search = request.args.get('search')
 
     # ✅ BASE QUERY
     query = Lead.query.filter_by(user_id=current_user.id)
+
+    if status:
+    query = query.filter_by(status=status)
+
+    if search:
+    query = query.filter(
+        (Lead.name.ilike(f"%{search}%")) |
+        (Lead.phone.ilike(f"%{search}%"))
+    )
 
     # ✅ APPLY FILTER IF EXISTS
     if status:

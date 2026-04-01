@@ -32,6 +32,22 @@
             </div>
         </div>
 
+        <form method="GET" action="{{ url_for('leads') }}" style="margin-bottom: 15px;">
+    
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search by name or phone..."
+                value="{{ request.args.get('search', '') }}"
+                style="padding:8px; width:250px; border-radius:6px; border:1px solid #ccc;"
+            >
+        
+            <button type="submit" class="btn btn-small">
+                Search
+            </button>
+        
+        </form>
+
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
 
             <div class="btn btn-small">Total: {{ total_leads }}</div>
