@@ -257,9 +257,9 @@ def leads():
 
     # ✅ GET FILTER FROM URL
     status = request.args.get('status')
-search = request.args.get('search')
+    search = request.args.get('search')
 
-query = Lead.query.filter_by(user_id=current_user.id)
+    query = Lead.query.filter_by(user_id=current_user.id)
 
 # ✅ APPLY STATUS FILTER
 if status:
