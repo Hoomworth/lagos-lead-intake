@@ -113,24 +113,29 @@ Best regards,
 """
 
 
-def generate_message_2(lead):
+def generate_call_script(lead):
     return f"""
-Hello {lead.name.title()},
+LEAD SUMMARY
+Name: {lead.name}
+Phone: {lead.phone}
+Interest: {lead.property_type} in {lead.location}
+Budget: {lead.budget}
+Timeline: {lead.timeline}
 
-Just checking back with you regarding your request for a {lead.property_type} in {lead.location}.
+OPENING
+Hi {lead.name}, this is {lead.agent_name}. You made an inquiry about a {lead.property_type} in {lead.location}. Is this a good time to talk for a minute?
 
-I have shortlisted a few options that could match what you’re looking for, but I need a bit more clarity before sending them so I don’t waste your time.
+QUALIFYING QUESTIONS
+- Are you buying for personal use or investment?
+- What exactly are you looking for?
+- How soon are you planning to move? ({lead.timeline})
+- Is your budget of {lead.budget} fixed or flexible?
 
-Are you still actively searching or just exploring options for now?
+POSITIONING
+Based on what you’ve shared, I have options that match your needs.
 
-Also, would you prefer:
-- A quick WhatsApp walkthrough
-- Or a short call to explain the best available options
-
-Let me know what works best for you.
-
-Best regards,  
-{lead.agent_name}
+CLOSING
+I will send you suitable options on WhatsApp shortly. If anything stands out, we can schedule a viewing.
 """
 
 
