@@ -72,11 +72,22 @@ def generate_message_1(lead):
     return f"""
 Hello {lead.name.title()},
 
-Thank you for your inquiry about finding a {lead.property_type} in {lead.location} with a budget of {lead.budget}. My name is {lead.agent_name}.
+Thank you for reaching out regarding a {lead.property_type} in {lead.location} within a budget of {lead.budget}.
 
-I am reviewing your request and will get back to you shortly.
+My name is {lead.agent_name}, and I handle verified listings within this area. I’ve noted your request and I’m currently checking options that match what you’re looking for.
 
-Best regards,
+To make sure I don’t send you the wrong listings, I need to quickly confirm a few things:
+
+- Are you buying for personal use or investment?
+- Do you prefer new builds or something already developed?
+- How important is proximity to major roads or work location?
+- Is your budget flexible if we find something that truly fits?
+
+Once I have this, I will send you 2–3 solid options that match exactly what you want.
+
+Looking forward to your response.
+
+Best regards,  
 {lead.agent_name}
 """
 
@@ -85,21 +96,41 @@ def generate_message_2(lead):
     return f"""
 Hello {lead.name.title()},
 
-This is {lead.agent_name} following up on your property inquiry.
+Just checking back with you regarding your request for a {lead.property_type} in {lead.location}.
 
-Are you available for a quick call tomorrow?
+I have shortlisted a few options that could match what you’re looking for, but I need a bit more clarity before sending them so I don’t waste your time.
 
-Best regards,
+Are you still actively searching or just exploring options for now?
+
+Also, would you prefer:
+- A quick WhatsApp walkthrough
+- Or a short call to explain the best available options
+
+Let me know what works best for you.
+
+Best regards,  
 {lead.agent_name}
 """
 
 
-def generate_call_script(lead):
+def generate_message_2(lead):
     return f"""
-Lead: {lead.name}
-Phone: {lead.phone}
+Hello {lead.name.title()},
 
-Hi {lead.name}, this is {lead.agent_name}. I'm calling about your request for a {lead.property_type} in {lead.location}.
+Just checking back with you regarding your request for a {lead.property_type} in {lead.location}.
+
+I have shortlisted a few options that could match what you’re looking for, but I need a bit more clarity before sending them so I don’t waste your time.
+
+Are you still actively searching or just exploring options for now?
+
+Also, would you prefer:
+- A quick WhatsApp walkthrough
+- Or a short call to explain the best available options
+
+Let me know what works best for you.
+
+Best regards,  
+{lead.agent_name}
 """
 
 
