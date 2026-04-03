@@ -8,29 +8,27 @@
 </head>
 <body>
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-            <div>
-                <h1 style="margin-bottom: 6px;">Leads Dashboard</h1>
-                <p style="margin: 0;">Welcome, {{ current_user.full_name if current_user else "User" }}. A list of your saved leads.</p>
-            </div>
+        <!-- 🔥 NEW CRM HEADER -->
+<div class="dashboard-header">
 
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ url_for('index') }}" class="btn">+ Add New Lead</a>
-                <a href="{{ url_for('logout') }}" class="btn btn-small" style="background: #dc3545;">Logout</a>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-                <a href="{{ url_for('leads') }}" class="btn btn-small">All</a>
-            
-                <a href="{{ url_for('leads', status='New') }}" class="btn btn-small">
-                    New
-                </a>
-            
-                <a href="{{ url_for('leads', status='Contacted') }}" class="btn btn-small">
-                    Contacted
-                </a>
-            </div>
-        </div>
+    <div>
+        <h1>CRM Dashboard</h1>
+        <p>Welcome, {{ current_user.full_name }}</p>
+    </div>
+
+    <div>
+        <a href="{{ url_for('index') }}" class="btn primary">+ New Lead</a>
+        <a href="{{ url_for('logout') }}" class="btn danger">Logout</a>
+    </div>
+
+</div>
+
+<!-- 🔥 FILTER BUTTONS -->
+<div style="margin-bottom: 15px;">
+    <a href="{{ url_for('leads') }}" class="btn btn-small">All</a>
+    <a href="{{ url_for('leads', status='New') }}" class="btn btn-small">New</a>
+    <a href="{{ url_for('leads', status='Contacted') }}" class="btn btn-small">Contacted</a>
+</div>
 
         <!-- 🔧 SEARCH BAR FIX (ADD HERE) -->
 <form method="GET" action="{{ url_for('leads') }}" 
@@ -53,23 +51,30 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
 
 </form>
 
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <!-- 🔥 MODERN STATS CARDS -->
+<div class="stats-grid">
 
-            <div class="btn btn-small">Total: {{ total_leads }}</div>
-        
-            <div class="btn btn-small" style="background:#e5e7eb;">
-                New: {{ new_leads }}
-            </div>
-        
-            <div class="btn btn-small" style="background:#d1fae5; color:#065f46;">
-                Contacted: {{ contacted_leads }}
-            </div>
-        
-            <div class="btn btn-small" style="background:#dbeafe; color:#1e40af;">
-                Closed: {{ closed_leads }}
-            </div>
-        
-        </div>
+    <div class="card">
+        <h3>Total Leads</h3>
+        <p>{{ total_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>New</h3>
+        <p>{{ new_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Contacted</h3>
+        <p>{{ contacted_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Closed</h3>
+        <p>{{ closed_leads }}</p>
+    </div>
+
+</div>
 
         <div class="leads-table-container">
             <table class="leads-table">
