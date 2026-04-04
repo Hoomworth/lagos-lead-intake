@@ -240,3 +240,49 @@ pre {
     font-weight: bold;
     margin: 0;
 }
+
+
+.search-bar {
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.search-bar input {
+    flex:1;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+.filter-bar {
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.filter-bar a {
+    padding:6px 12px;
+    background:#eee;
+    border-radius:6px;
+    text-decoration:none;
+}
+
+.table-wrapper {
+    overflow-x:auto;
+}
+
+.status {
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+.status.new { background:#eee; }
+.status.contacted { background:#d1fae5; color:#065f46; }
+.status.closed { background:#dbeafe; color:#1e40af; }
+
+.actions {
+    display:flex;
+    gap:6px;
+}
