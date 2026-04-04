@@ -1,0 +1,242 @@
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="tel"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box; /* Important for padding and width consistency */
+}
+
+textarea {
+    resize: vertical;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-copy {
+    background-color: #28a745;
+    margin-top: 10px;
+}
+
+.btn-copy:hover {
+    background-color: #218838;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.message-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.message-container h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.message-box {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 6px;
+    white-space: pre-wrap; /* Ensures content wraps */
+    word-wrap: break-word; /* Breaks long words if needed */
+    font-family: monospace;
+    font-size: 14px;
+}
+
+pre {
+    margin: 0;
+    white-space: pre-wrap; /* Ensures content wraps */
+    word-wrap: break-word; /* Breaks long words if needed */
+}
+
+
+.flashes {
+    margin-bottom: 20px;
+}
+
+.flash-success {
+    padding: 15px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.flash-error {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.footer-nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.footer-nav a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Leads Table */
+.leads-table-container {
+    overflow-x: auto; /* For responsive tables */
+}
+
+.leads-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.leads-table th, .leads-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.leads-table th {
+    background-color: #f2f2f2;
+    font-weight: 600;
+}
+
+.leads-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.leads-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+/* 🔥 CRM DASHBOARD STYLE */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: #777;
+}
+
+.btn.primary {
+    background: #2563eb;
+}
+
+.btn.danger {
+    background: #dc3545;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.card p {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}

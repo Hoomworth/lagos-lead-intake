@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Leads - Lagos Real Estate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 🔥 NEW CRM HEADER -->
+<div class="dashboard-header">
+
+    <div>
+        <h1>REALTOR CRM DASHBOARD</h1>
+        <p>Welcome, {{ current_user.full_name }}</p>
+    </div>
+
+    <div>
+        <a href="{{ url_for('index') }}" class="btn primary">+ New Lead</a>
+        <a href="{{ url_for('logout') }}" class="btn danger">Logout</a>
+    </div>
+
+</div>
+
+<!-- 🔥 FILTER BUTTONS -->
+<div style="margin-bottom: 15px;">
+    <a href="{{ url_for('leads') }}" class="btn btn-small">All</a>
+    <a href="{{ url_for('leads', status='New') }}" class="btn btn-small">New</a>
+    <a href="{{ url_for('leads', status='Contacted') }}" class="btn btn-small">Contacted</a>
+</div>
+
+        <!-- 🔧 SEARCH BAR FIX (ADD HERE) -->
+<form method="GET" action="{{ url_for('leads') }}" 
+style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+
+<input 
+  type="text" 
+  name="search" 
+  placeholder="Search name or phone"
+  value="{{ request.args.get('search', '') }}"
+  style="padding:10px; border:1px solid #ccc; border-radius:6px; flex:1; min-width:200px;"
+>
+
+<button 
+  type="submit" 
+  class="btn"
+  style="height:42px;">
+  Search
+</button>
+
+</form>
+
+        <!-- 🔥 MODERN STATS CARDS -->
+<div class="stats-grid">
+
+    <div class="card">
+        <h3>Total Leads</h3>
+        <p>{{ total_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>New</h3>
+        <p>{{ new_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Contacted</h3>
+        <p>{{ contacted_leads }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Closed</h3>
+        <p>{{ closed_leads }}</p>
+    </div>
+
+</div>
+
+        <div class="leads-table-container">
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Agent</th>
+                        <th>Lead Name</th>
+                        <th>Phone</th>
+                        <th>Budget</th>
+                        <th>Location</th>
+                        <th>Property Type</th>
+                        <th>Timeline</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                        <tr>
+                            <td>{{ lead.date_added.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ lead.agent_name }}</td>
+                            <td>{{ lead.name }}</td>
+                            <td>{{ lead.phone }}</td>
+                            <td>{{ lead.budget }}</td>
+                            <td>{{ lead.location }}</td>
+                            <td>{{ lead.property_type }}</td>
+                            <td>{{ lead.timeline }}</td>
+                            <td>
+                                {% if lead.status == 'New' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#e5e7eb; color:#111;">
+                                        New
+                                    </span>
+                            
+                                {% elif lead.status == 'Contacted' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#d1fae5; color:#065f46;">
+                                        Contacted
+                                    </span>
+                            
+                                {% elif lead.status == 'Closed' %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#dbeafe; color:#1e40af;">
+                                        Closed
+                                    </span>
+                            
+                                {% else %}
+                                    <span style="padding:4px 8px; border-radius:4px; background:#eee;">
+                                        {{ lead.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="display: flex; gap: 6px;">
+    
+                                <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small">View</a>
+                            
+                                <a href="{{ url_for('mark_closed', lead_id=lead.id) }}" 
+                                   class="btn btn-small" 
+                                   style="background:#3b82f6; color:white;">
+                                   Close
+                                </a>
+                            
+                                <form action="{{ url_for('delete_lead', lead_id=lead.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-small" style="background: #dc3545;">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" style="text-align: center;">No leads found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-nav">
+            <a href="{{ url_for('index') }}">Add a New Lead</a>
+        </div>
+    </div>
+</body>
+</html>
