@@ -386,6 +386,50 @@ def mark_contacted(lead_id):
     return '', 200
 
 
+@app.route('/generate_ai/<int:lead_id>', methods=['POST'])
+@login_required
+def generate_ai(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left. Please upgrade.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if not lead:
+        return redirect(url_for('leads'))
+
+    # 🔥 TEMP AI (we upgrade later)
+    ai_message = f"""
+Hi {lead.name},
+
+I’ve reviewed your interest in a {lead.property_type} at {lead.location} within your budget of {lead.budget}.
+
+From experience, there are a few solid options that match what you're looking for, but the best one depends on your exact goal.
+
+Are you buying for personal use or investment?
+
+Once I confirm that, I’ll send you the most suitable options immediately.
+
+– {lead.agent_name}
+"""
+
+    # deduct credit
+    current_user.credits -= 1
+    db.session.commit()
+
+    flash("AI message generated successfully!", "success")
+
+    return render_template(
+        'result.html',
+        lead=lead,
+        message1=ai_message,
+        message2=generate_message_2(lead),
+        call_script=generate_call_script(lead),
+        phone=lead.phone
+    )
+
 # -----------------------------
 # RUN
 # -----------------------------
