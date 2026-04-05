@@ -334,7 +334,7 @@ def leads():
         total_leads=total_leads,
         new_leads=new_leads,
         contacted_leads=contacted_leads,
-        closed_leads=closed_leads
+        closed_leads=closed_leads,
         credits=current_user.credits
     )
 
