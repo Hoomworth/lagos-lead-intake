@@ -26,6 +26,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    credits = db.Column(db.Integer, default=3)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -195,6 +196,10 @@ def login():
         session['user_id'] = user.id
         session['user_name'] = user.full_name
         session.permanent = True
+
+        if user.credits is None:
+            user.credits = 3
+            db.session.commit()
 
         return redirect(url_for('index'))
 
