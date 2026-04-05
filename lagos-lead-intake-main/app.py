@@ -240,7 +240,7 @@ def add_lead():
 
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Fill all fields', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('leads'))
 
     lead = Lead(
         agent_name=agent_name,
@@ -326,6 +326,8 @@ def leads():
     new_leads = Lead.query.filter_by(user_id=current_user.id, status='New').count()
     contacted_leads = Lead.query.filter_by(user_id=current_user.id, status='Contacted').count()
     closed_leads = Lead.query.filter_by(user_id=current_user.id, status='Closed').count()
+
+    print("USER CREDITS:", current_user.credits)
 
     return render_template(
         'leads.html',
