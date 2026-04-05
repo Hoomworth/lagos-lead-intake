@@ -8,7 +8,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///leads.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -23,6 +26,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    credits = db.Column(db.Integer, default=3)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -191,6 +195,11 @@ def login():
 
         session['user_id'] = user.id
         session['user_name'] = user.full_name
+        session.permanent = True
+
+        if user.credits is None:
+            user.credits = 3
+            db.session.commit()
 
         return redirect(url_for('index'))
 
@@ -231,7 +240,7 @@ def add_lead():
 
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Fill all fields', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('leads'))
 
     lead = Lead(
         agent_name=agent_name,
@@ -318,6 +327,8 @@ def leads():
     contacted_leads = Lead.query.filter_by(user_id=current_user.id, status='Contacted').count()
     closed_leads = Lead.query.filter_by(user_id=current_user.id, status='Closed').count()
 
+    print("USER CREDITS:", current_user.credits)
+
     return render_template(
         'leads.html',
         leads=all_leads,
@@ -325,7 +336,8 @@ def leads():
         total_leads=total_leads,
         new_leads=new_leads,
         contacted_leads=contacted_leads,
-        closed_leads=closed_leads
+        closed_leads=closed_leads,
+        credits=current_user.credits
     )
 
 # ✅ DELETE ROUTE (FIXED)
@@ -373,6 +385,50 @@ def mark_contacted(lead_id):
 
     return '', 200
 
+
+@app.route('/generate_ai/<int:lead_id>', methods=['POST'])
+@login_required
+def generate_ai(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left. Please upgrade.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if not lead:
+        return redirect(url_for('leads'))
+
+    # 🔥 TEMP AI (we upgrade later)
+    ai_message = f"""
+Hi {lead.name},
+
+I’ve reviewed your interest in a {lead.property_type} at {lead.location} within your budget of {lead.budget}.
+
+From experience, there are a few solid options that match what you're looking for, but the best one depends on your exact goal.
+
+Are you buying for personal use or investment?
+
+Once I confirm that, I’ll send you the most suitable options immediately.
+
+– {lead.agent_name}
+"""
+
+    # deduct credit
+    current_user.credits -= 1
+    db.session.commit()
+
+    flash("AI message generated successfully!", "success")
+
+    return render_template(
+        'result.html',
+        lead=lead,
+        message1=ai_message,
+        message2=generate_message_2(lead),
+        call_script=generate_call_script(lead),
+        phone=lead.phone
+    )
 
 # -----------------------------
 # RUN
