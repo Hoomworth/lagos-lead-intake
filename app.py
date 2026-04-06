@@ -416,7 +416,7 @@ Once I confirm that, I’ll send you the most suitable options immediately.
 """
 
     # deduct credit
-    current_user.credits -= 1
+    current_user.credits -= 2
     db.session.commit()
 
     flash("AI message generated successfully!", "success")
