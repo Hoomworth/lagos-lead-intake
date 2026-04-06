@@ -282,10 +282,12 @@ def result(lead_id):
     if phone.startswith('+'):
         phone = phone[1:]
 
+    ai_message = session.pop('ai_message', None)
+
     return render_template(
         'result.html',
         lead=lead,
-        message1=generate_message_1(lead),
+        message1=ai_message if ai_message else generate_message_1(lead),
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
         phone=phone
@@ -421,15 +423,10 @@ Once I confirm that, I’ll send you the most suitable options immediately.
 
     flash("AI message generated successfully!", "success")
 
-    return render_template(
-        'result.html',
-        lead=lead,
-        message1=ai_message,
-        message2=generate_message_2(lead),
-        call_script=generate_call_script(lead),
-        phone=lead.phone
-    )
+    session['ai_message'] = ai_message
+    return redirect(url_for('result', lead_id=lead.id))
 
+    
 # -----------------------------
 # RUN
 # -----------------------------
