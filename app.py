@@ -388,7 +388,7 @@ def mark_contacted(lead_id):
     return '', 200
 
 
-@app.route('/generate_ai/<int:lead_id>', methods=['POST'])
+@app.route('/generate_ai/<int:lead_id>')
 @login_required
 def generate_ai(lead_id):
     current_user = get_current_user()

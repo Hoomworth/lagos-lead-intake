@@ -30,11 +30,11 @@
         <pre id="message1">{{ message1 }}</pre>
     </div>
 
-    <form method="POST" action="{{ url_for('generate_ai', lead_id=lead.id) }}">
-    <button class="btn" style="background:#111; margin-top:10px;">
-        Generate AI Reply (1 Credit)
-    </button>
-    </form>
+    <a href="{{ url_for('generate_ai', lead_id=lead.id) }}"
+    class="btn"
+    style="background:#111; margin-top:10px; display:inline-block;">
+    Generate AI Reply (1 Credit)
+    </a>
 
     <button class="btn btn-copy" onclick="copyToClipboard('message1')">
         Copy Message
