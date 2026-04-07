@@ -404,18 +404,21 @@ def generate_ai(lead_id):
 
     # 🔥 TEMP AI (we upgrade later)
     ai_message = f"""
-Hi {lead.name},
+       THIS IS AI GENERATED MESSAGE 🔥
 
-I’ve reviewed your interest in a {lead.property_type} at {lead.location} within your budget of {lead.budget}.
+    Hello {lead.name},
 
-From experience, there are a few solid options that match what you're looking for, but the best one depends on your exact goal.
+    This is NOT the normal template.
 
-Are you buying for personal use or investment?
+    Budget: {lead.budget}
+    Location: {lead.location}
 
-Once I confirm that, I’ll send you the most suitable options immediately.
+    Are you buying for personal use or investment?
 
-– {lead.agent_name}
-"""
+    Once I confirm, I will send you the best options.
+
+    – {lead.agent_name}
+    """
 
     # deduct credit
     current_user.credits -= 1
