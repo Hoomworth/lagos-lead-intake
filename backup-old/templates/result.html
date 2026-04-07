@@ -28,17 +28,7 @@
 
     <div class="message-box">
         <pre id="message1">{{ message1 }}</pre>
-
-        <p style="margin-top:10px;">
-            <strong>AI Credits Left:</strong> {{ current_user.credits }}
-        </p>
     </div>
-
-    <a href="{{ url_for('generate_ai', lead_id=lead.id) }}"
-    class="btn"
-    style="background:#111; margin-top:10px; display:inline-block;">
-    Generate AI Reply (1 Credit)
-    </a>
 
     <button class="btn btn-copy" onclick="copyToClipboard('message1')">
         Copy Message

@@ -200,7 +200,6 @@ def login():
         if user.credits is None:
             user.credits = 3
             db.session.commit()
-        
 
         return redirect(url_for('index'))
 
@@ -283,13 +282,10 @@ def result(lead_id):
     if phone.startswith('+'):
         phone = phone[1:]
 
-    ai_message = session.pop('ai_message', None)
-
     return render_template(
         'result.html',
         lead=lead,
-        current_user=current_user,
-        message1=ai_message if ai_message else generate_message_1(lead),
+        message1=generate_message_1(lead),
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
         phone=phone
@@ -390,14 +386,13 @@ def mark_contacted(lead_id):
     return '', 200
 
 
-@app.route('/generate_ai/<int:lead_id>')
+@app.route('/generate_ai/<int:lead_id>', methods=['POST'])
 @login_required
 def generate_ai(lead_id):
-    print("AI ROUTE HIT")
     current_user = get_current_user()
 
     if current_user.credits <= 0:
-        flash("You have no credits left. Please buy more.", "error")
+        flash("No credits left. Please upgrade.", "error")
         return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
@@ -407,21 +402,18 @@ def generate_ai(lead_id):
 
     # 🔥 TEMP AI (we upgrade later)
     ai_message = f"""
-       THIS IS AI GENERATED MESSAGE 🔥
+Hi {lead.name},
 
-    Hello {lead.name},
+I’ve reviewed your interest in a {lead.property_type} at {lead.location} within your budget of {lead.budget}.
 
-    This is NOT the normal template.
+From experience, there are a few solid options that match what you're looking for, but the best one depends on your exact goal.
 
-    Budget: {lead.budget}
-    Location: {lead.location}
+Are you buying for personal use or investment?
 
-    Are you buying for personal use or investment?
+Once I confirm that, I’ll send you the most suitable options immediately.
 
-    Once I confirm, I will send you the best options.
-
-    – {lead.agent_name}
-    """
+– {lead.agent_name}
+"""
 
     # deduct credit
     current_user.credits -= 1
@@ -429,10 +421,15 @@ def generate_ai(lead_id):
 
     flash("AI message generated successfully!", "success")
 
-    session['ai_message'] = ai_message
-    return redirect(url_for('result', lead_id=lead.id))
+    return render_template(
+        'result.html',
+        lead=lead,
+        message1=ai_message,
+        message2=generate_message_2(lead),
+        call_script=generate_call_script(lead),
+        phone=lead.phone
+    )
 
-    
 # -----------------------------
 # RUN
 # -----------------------------

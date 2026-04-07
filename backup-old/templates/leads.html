@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="top-bar">
+        <div>
+            <h1>CRM Dashboard</h1>
+            <p>Welcome, {{ current_user.full_name }} <br><strong>AI credits:</strong> {{ credits }}</p>
+        </div>
+
+        <div class="top-actions">
+            <a href="{{ url_for('index') }}" class="btn">+ Add Lead</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-small" style="background:#dc3545;">Logout</a>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <form method="GET" action="{{ url_for('leads') }}" class="search-bar">
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="Search name or phone"
+            value="{{ request.args.get('search', '') }}"
+        >
+        <button type="submit" class="btn">Search</button>
+    </form>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+        <a href="{{ url_for('leads') }}">All</a>
+        <a href="{{ url_for('leads', status='New') }}">New</a>
+        <a href="{{ url_for('leads', status='Contacted') }}">Contacted</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+
+        <div class="card total">
+            <h3>Total Leads</h3>
+            <p>{{ total_leads }}</p>
+        </div>
+
+        <div class="card new">
+            <h3>New</h3>
+            <p>{{ new_leads }}</p>
+        </div>
+
+        <div class="card contacted">
+            <h3>Contacted</h3>
+            <p>{{ contacted_leads }}</p>
+        </div>
+
+        <div class="card closed">
+            <h3>Closed</h3>
+            <p>{{ closed_leads }}</p>
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+        <table class="leads-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Budget</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lead in leads %}
+                <tr>
+                    <td>{{ lead.date_added.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ lead.name }}</td>
+                    <td>{{ lead.phone }}</td>
+                    <td>{{ lead.budget }}</td>
+                    <td>{{ lead.location }}</td>
+
+                    <td>
+                        <span class="status {{ lead.status|lower }}">
+                            {{ lead.status }}
+                        </span>
+                    </td>
+
+                    <td class="actions">
+                        <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small">View</a>
+
+                        <a href="{{ url_for('mark_closed', lead_id=lead.id) }}" 
+                           class="btn btn-small" style="background:#3b82f6;">
+                           Close
+                        </a>
+
+                        <form action="{{ url_for('delete_lead', lead_id=lead.id) }}" method="POST">
+                            <button type="submit" class="btn btn-small" style="background:#dc3545;">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
