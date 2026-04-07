@@ -391,6 +391,7 @@ def mark_contacted(lead_id):
 @app.route('/generate_ai/<int:lead_id>')
 @login_required
 def generate_ai(lead_id):
+    print("AI ROUTE HIT")
     current_user = get_current_user()
 
     if current_user.credits <= 0:
