@@ -197,9 +197,8 @@ def login():
         session['user_name'] = user.full_name
         session.permanent = True
 
-        if user.credits is None:
-            user.credits = 3
-            db.session.commit()
+        user.credits = 3
+        db.session.commit()
 
         return redirect(url_for('index'))
 
