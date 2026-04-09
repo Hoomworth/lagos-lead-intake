@@ -396,11 +396,10 @@ def mark_contacted(lead_id):
 @app.route('/generate_ai/<int:lead_id>')
 @login_required
 def generate_ai(lead_id):
-    print("AI ROUTE HIT")
     current_user = get_current_user()
 
     if current_user.credits <= 0:
-        flash("You have no credits left. Please buy more.", "error")
+        flash("No credits left. Please upgrade.", "error")
         return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
@@ -408,31 +407,42 @@ def generate_ai(lead_id):
     if not lead:
         return redirect(url_for('leads'))
 
-    # 🔥 TEMP AI (we upgrade later)
-    ai_message = f"""
-       THIS IS AI GENERATED MESSAGE 🔥
+    # 🔥 REAL AI
+    prompt = f"""
+You are a professional Lagos real estate agent.
 
-    Hello {lead.name},
+Write a WhatsApp message to this client:
 
-    This is NOT the normal template.
+Name: {lead.name}
+Location: {lead.location}
+Budget: {lead.budget}
+Property Type: {lead.property_type}
 
-    Budget: {lead.budget}
-    Location: {lead.location}
+Make it:
+- Natural
+- Conversational
+- Persuasive
+- Nigerian tone
+"""
 
-    Are you buying for personal use or investment?
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
 
-    Once I confirm, I will send you the best options.
-
-    – {lead.agent_name}
-    """
+    ai_message = response.choices[0].message.content
 
     # deduct credit
     current_user.credits -= 1
     db.session.commit()
 
+    # store message in session
+    session['ai_message'] = ai_message
+
     flash("AI message generated successfully!", "success")
 
-    session['ai_message'] = ai_message
     return redirect(url_for('result', lead_id=lead.id))
 
     
