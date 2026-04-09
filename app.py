@@ -60,6 +60,64 @@ class Lead(db.Model):
 # -----------------------------
 # Helpers
 # -----------------------------
+def analyze_lead(lead):
+    score = 0
+
+    # Timeline
+    timeline = (lead.timeline or "").lower()
+    if "urgent" in timeline:
+        score += 30
+        intent = "Urgent Buyer"
+    elif "month" in timeline:
+        score += 20
+        intent = "Active Buyer"
+    else:
+        score += 10
+        intent = "Exploring"
+
+    # Budget
+    try:
+        budget_value = int(''.join(filter(str.isdigit, lead.budget)))
+        if budget_value > 50000000:
+            score += 30
+        elif budget_value > 20000000:
+            score += 20
+        else:
+            score += 10
+    except:
+        score += 10
+
+    # Property Type
+    if "land" in (lead.property_type or "").lower():
+        score += 10
+    else:
+        score += 20
+
+    # Final classification
+    if score >= 70:
+        quality = "Hot"
+        action = "Call immediately"
+        timing = "Within 5 minutes"
+    elif score >= 40:
+        quality = "Warm"
+        action = "Send WhatsApp first"
+        timing = "Within 30 minutes"
+    else:
+        quality = "Cold"
+        action = "Nurture with follow-up message"
+        timing = "Later in the day"
+
+    objections = "May worry about price or location fit"
+
+    return {
+        "score": score,
+        "quality": quality,
+        "intent": intent,
+        "action": action,
+        "timing": timing,
+        "objections": objections
+    }
+
 def get_current_user():
     user_id = session.get('user_id')
     if not user_id:
@@ -293,10 +351,13 @@ def result(lead_id):
 
     ai_message = session.pop('ai_message', None)
 
+    analysis = analyze_lead(lead)
+
     return render_template(
         'result.html',
         lead=lead,
         current_user=current_user,
+        analysis=analysis,
         message1=ai_message if ai_message else generate_message_1(lead),
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
