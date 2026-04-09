@@ -9,8 +9,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Generated Follow-Up Messages</h1>
-        <p>Lead: <strong>{{ lead.name }}</strong></p>
+        <h1>Generated Messages</h1>
+        <p style="margin-top:5px; font-size:15px;">
+            <strong>Lead:</strong>
+            <span style="font-weight:600;">{{ lead.name }}</span>
+        </p>    
 
         {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -27,18 +30,19 @@
 <div class="message-container">
     <h2>Lead Intelligence Summary</h2>
 
-    <div class="message-box">
-
-    <p><strong>Quality:</strong> {{ analysis.quality }}</p>
-    <p><strong>Intent:</strong> {{ analysis.intent }}</p>
-    <p><strong>Deal Score:</strong> {{ analysis.score }}%</p>
-    <p><strong>Recommended Action:</strong> {{ analysis.action }}</p>
-    <p><strong>Best Time:</strong> {{ analysis.timing }}</p>
-    <p><strong>Likely Objection:</strong> {{ analysis.objections }}</p>
-     </div>
+    <div class="message-box" style="font-size:14px; line-height:1.6;">
+    <p style="margin:6px 0;"><strong>Quality:</strong> {{ analysis.quality }}</p>
+    <p style="margin:6px 0;"><strong>Intent:</strong> {{ analysis.intent }}</p>
+    <p style="margin:6px 0;"><strong>Deal Score:</strong> {{ analysis.score }}%</p>
+    <p style="margin:6px 0;"><strong>Recommended Action:</strong> {{ analysis.action }}</p>
+    <p style="margin:6px 0;"><strong>Best Time:</strong> {{ analysis.timing }}</p>
+    <p style="margin:6px 0;"><strong>Likely Objection:</strong> {{ analysis.objections }}</p>
+   </div>
 </div>
 
 <div class="message-container">
+
+    <h2>Message 1: First Contact</h2>
 
     <div class="message-box">
         <pre id="message1">{{ message1 }}</pre>
