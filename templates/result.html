@@ -31,12 +31,64 @@
     <h2>Lead Intelligence Summary</h2>
 
     <div class="message-box" style="font-size:14px; line-height:1.6;">
-    <p style="margin:6px 0;"><strong>Quality:</strong> {{ analysis.quality }}</p>
-    <p style="margin:6px 0;"><strong>Intent:</strong> {{ analysis.intent }}</p>
-    <p style="margin:6px 0;"><strong>Deal Score:</strong> {{ analysis.score }}%</p>
-    <p style="margin:6px 0;"><strong>Recommended Action:</strong> {{ analysis.action }}</p>
-    <p style="margin:6px 0;"><strong>Best Time:</strong> {{ analysis.timing }}</p>
-    <p style="margin:6px 0;"><strong>Likely Objection:</strong> {{ analysis.objections }}</p>
+
+    <!-- QUALITY BADGE -->
+    <p style="margin:6px 0;">
+        <strong>Quality:</strong> 
+        <span class="
+            {% if analysis.quality == 'Hot' %}
+                badge-hot
+            {% elif analysis.quality == 'Warm' %}
+                badge-warm
+            {% else %}
+                badge-cold
+            {% endif %}
+        ">
+            {{ analysis.quality }}
+        </span>
+    </p>
+
+    <!-- INTENT -->
+    <p style="margin:6px 0;">
+        <strong>Intent:</strong> {{ analysis.intent }}
+    </p>
+
+    <!-- DEAL SCORE BAR -->
+    <p style="margin:10px 0 5px;">
+        <strong>Deal Score:</strong> {{ analysis.score }}%
+    </p>
+
+    <div style="background:#eee; border-radius:6px; overflow:hidden; height:8px;">
+        <div style="
+            width: {{ analysis.score }}%;
+            height:8px;
+            background:
+                {% if analysis.score >= 70 %}
+                    #16a34a
+                {% elif analysis.score >= 40 %}
+                    #f59e0b
+                {% else %}
+                    #6b7280
+                {% endif %};
+        ">
+        </div>
+    </div>
+
+    <!-- ACTION -->
+    <p style="margin:10px 0 6px;">
+        <strong>Recommended Action:</strong> {{ analysis.action }}
+    </p>
+
+    <!-- TIMING -->
+    <p style="margin:6px 0;">
+        <strong>Best Time:</strong> {{ analysis.timing }}
+    </p>
+
+    <!-- OBJECTION -->
+    <p style="margin:6px 0;">
+        <strong>Likely Objection:</strong> {{ analysis.objections }}
+    </p>
+
    </div>
 </div>
 

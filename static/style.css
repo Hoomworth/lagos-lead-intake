@@ -240,3 +240,30 @@ pre {
     font-weight: bold;
     margin: 0;
 }
+
+.badge-hot {
+    background: #dc2626;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-warm {
+    background: #f59e0b;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-cold {
+    background: #6b7280;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
