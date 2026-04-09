@@ -15,7 +15,12 @@ if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+api_key = os.environ.get("OPENAI_API_KEY")
+
+if not api_key:
+    print("ERROR: OPENAI_API_KEY not set")
+
+client = OpenAI(api_key=api_key)
 
 db = SQLAlchemy(app)
 
