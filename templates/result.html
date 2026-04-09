@@ -25,7 +25,9 @@
 {% endwith %}
 
 <div class="message-container">
-    <h2>Lead Intelligence</h2>
+    <h2>Lead Intelligence Summary</h2>
+
+    <div class="message-box">
 
     <p><strong>Quality:</strong> {{ analysis.quality }}</p>
     <p><strong>Intent:</strong> {{ analysis.intent }}</p>
@@ -33,6 +35,7 @@
     <p><strong>Recommended Action:</strong> {{ analysis.action }}</p>
     <p><strong>Best Time:</strong> {{ analysis.timing }}</p>
     <p><strong>Likely Objection:</strong> {{ analysis.objections }}</p>
+     </div>
 </div>
 
 <div class="message-container">
