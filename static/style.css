@@ -254,3 +254,26 @@ pre {
 .badge-cold {
     background: #6b7280;
 }
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-hot {
+    background: #16a34a;
+    color: white;
+}
+
+.badge-warm {
+    background: #f59e0b;
+    color: white;
+}
+
+.badge-cold {
+    background: #6b7280;
+    color: white;
+}

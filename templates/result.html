@@ -33,63 +33,49 @@
     <div class="message-box" style="font-size:14px; line-height:1.6;">
 
     <!-- QUALITY BADGE -->
-    <p style="margin:6px 0;">
-        <strong>Quality:</strong> 
-        <span style="margin-left:6px;" class="
-            {% if analysis.quality == 'Hot' %}
-                badge-hot
-            {% elif analysis.quality == 'Warm' %}
-                badge-warm
-            {% else %}
-                badge-cold
-            {% endif %}
-        ">
-            {{ analysis.quality }}
-        </span>
-    </p>
 
-    <!-- INTENT -->
-    <p style="margin:6px 0;">
-        <strong>Intent:</strong> {{ analysis.intent }}
-    </p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
 
-    <!-- DEAL SCORE BAR -->
-    <p style="margin:6px 0;">
-        <strong>Deal Score:</strong> {{ analysis.score }}%
-    </p>
-
-    {% if analysis.score >= 70 %}
-    {% set bar_color = "#16a34a" %}
-    {% elif analysis.score >= 40 %}
-    {% set bar_color = "#f59e0b" %}
-    {% else %}
-    {% set bar_color = "#6b7280" %}
-    {% endif %}
-
-<div style="background:#e5e7eb; border-radius:6px; overflow:hidden; height:10px; margin-top:2px;">
-    <div style="
-        width: {{ analysis.score }}%;
-        height:10px;
-        background: {{ bar_color }};
-        transition: width 0.3s ease;
+    <span class="badge 
+        {% if analysis.quality == 'Hot' %}badge-hot
+        {% elif analysis.quality == 'Warm' %}badge-warm
+        {% else %}badge-cold
+        {% endif %}
     ">
-    </div>
+        {{ analysis.quality }}
+    </span>
+
+    <span class="badge" style="background:#111; color:#fff;">
+        {{ analysis.intent }}
+    </span>
+
+    <span class="badge" style="background:#e5e7eb; color:#111;">
+        {{ analysis.score }}% Score
+    </span>
+
 </div>
 
-    <!-- ACTION -->
-    <p style="margin:10px 0 6px;">
-        <strong>Recommended Action:</strong> {{ analysis.action }}
-    </p>
+{% if analysis.score >= 70 %}
+    {% set bar_color = "#16a34a" %}
+{% elif analysis.score >= 40 %}
+    {% set bar_color = "#f59e0b" %}
+{% else %}
+    {% set bar_color = "#6b7280" %}
+{% endif %}
 
-    <!-- TIMING -->
-    <p style="margin:6px 0;">
-        <strong>Best Time:</strong> {{ analysis.timing }}
-    </p>
+<div style="background:#e5e7eb; border-radius:6px; overflow:hidden; height:8px; margin-bottom:12px;">
+    <div style="width: {{ analysis.score }}%; height:8px; background: {{ bar_color }};"></div>
+</div>
 
-    <!-- OBJECTION -->
-    <p style="margin:6px 0;">
-        <strong>Likely Objection:</strong> {{ analysis.objections }}
-    </p>
+<div style="font-size:14px; line-height:1.5;">
+
+    <p><strong>Next Step:</strong> {{ analysis.action }}</p>
+
+    <p><strong>Best Time:</strong> {{ analysis.timing }}</p>
+
+    <p><strong>Risk:</strong> {{ analysis.objections }}</p>
+
+</div>
 
    </div>
 </div>
