@@ -350,6 +350,7 @@ def result(lead_id):
         phone = phone[1:]
 
     ai_message = session.pop('ai_message', None)
+    analysis = session.pop('ai_analysis', None)
 
     analysis = analyze_lead(lead)
 
@@ -362,6 +363,16 @@ def result(lead_id):
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
         phone=phone
+        
+        analysis=analysis if analysis else {
+        "quality": "Warm",
+        "intent": "Buyer",
+        "score": 50,
+        "action": "Follow up",
+        "timing": "Soon",
+        "objections": "No major concern"
+        },
+     
     )
 
 
@@ -473,41 +484,63 @@ def generate_ai(lead_id):
     if not lead:
         return redirect(url_for('leads'))
 
-    # 🔥 REAL AI
     prompt = f"""
-You are a professional Lagos real estate agent.
+You are a smart Lagos real estate sales assistant.
 
-Write a WhatsApp message to this client:
+Analyze this lead and return JSON only.
 
+Lead Details:
 Name: {lead.name}
 Location: {lead.location}
 Budget: {lead.budget}
 Property Type: {lead.property_type}
+Timeline: {lead.timeline}
 
-Make it:
-- Natural
-- Conversational
-- Persuasive
-- Nigerian tone
+Return in this format:
+
+{{
+  "quality": "Hot/Warm/Cold",
+  "intent": "Type of buyer",
+  "score": number between 1-100,
+  "action": "Best next step",
+  "timing": "When to follow up",
+  "objection": "Likely concern",
+  "message": "WhatsApp message"
+}}
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
 
-    ai_message = response.choices[0].message.content
+        import json
+        ai_data = json.loads(response.choices[0].message.content)
 
-    # deduct credit
-    current_user.credits -= 1
-    db.session.commit()
+        # Save to session
+        session['ai_message'] = ai_data.get("message")
 
-    # store message in session
-    session['ai_message'] = ai_message
+        session['ai_analysis'] = {
+            "quality": ai_data.get("quality", "Warm"),
+            "intent": ai_data.get("intent", "Buyer"),
+            "score": ai_data.get("score", 50),
+            "action": ai_data.get("action", "Follow up"),
+            "timing": ai_data.get("timing", "Soon"),
+            "objections": ai_data.get("objection", "No major concern")
+        }
 
-    flash("AI message generated successfully!", "success")
+        # deduct credit
+        current_user.credits -= 1
+        db.session.commit()
+
+        flash("AI analysis generated!", "success")
+
+    except Exception as e:
+        print("AI ERROR:", e)
+        flash("AI failed. Try again.", "error")
 
     return redirect(url_for('result', lead_id=lead.id))
 
