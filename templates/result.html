@@ -32,8 +32,6 @@
 
     <div class="message-container">
 
-    <h2 style="margin-bottom:10px;">Lead Intelligence</h2>
-
     <div class="message-box lead-card">
 
         <!-- TOP BADGES -->
@@ -43,15 +41,18 @@
                 {% elif analysis.quality == 'Warm' %}badge-warm
                 {% else %}badge-cold{% endif %}
             ">
-                {{ analysis.quality }}
+            {% if analysis.quality == 'Hot' %}🔥
+            {% elif analysis.quality == 'Warm' %}⚡
+            {% else %}❄️{% endif %}
+            {{ analysis.quality }}
             </span>
 
             <span class="badge badge-dark">
-                {{ analysis.intent }}
+                🧠 {{ analysis.intent }}
             </span>
 
             <span class="badge badge-light">
-                {{ analysis.score }}% Score
+                📊 {{ analysis.score }}% Score
             </span>
         </div>
 
@@ -64,17 +65,17 @@
         <div class="lead-details">
 
             <p>
-                <span class="label">Next Step</span>
+                <span class="label">📌 Next Step</span>
                 <span class="value">{{ analysis.action }}</span>
             </p>
 
             <p>
-                <span class="label">Best Time</span>
+                <span class="label">⏰ Best Time</span>
                 <span class="value">{{ analysis.timing }}</span>
             </p>
 
             <p>
-                <span class="label">Risk</span>
+                <span class="label">⚠️ Risk</span>
                 <span class="value">{{ analysis.objections }}</span>
             </p>
 
