@@ -58,20 +58,21 @@
         <strong>Deal Score:</strong> {{ analysis.score }}%
     </p>
 
+    {% if analysis.score >= 70 %}
+    {% set bar_color = "#16a34a" %}
+    {% elif analysis.score >= 40 %}
+    {% set bar_color = "#f59e0b" %}
+    {% else %}
+    {% set bar_color = "#6b7280" %}
+    {% endif %}
+
     <div style="background:#eee; border-radius:6px; overflow:hidden; height:8px;">
-        <div style="
-            width: {{ analysis.score }}%;
-            height:8px;
-            background:
-                {% if analysis.score >= 70 %}
-                    #16a34a
-                {% elif analysis.score >= 40 %}
-                    #f59e0b
-                {% else %}
-                    #6b7280
-                {% endif %};
-        ">
-        </div>
+    <div style="
+        width: {{ analysis.score }}%;
+        height:8px;
+        background: {{ bar_color }};
+    ">
+    </div>
     </div>
 
     <!-- ACTION -->

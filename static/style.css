@@ -241,29 +241,26 @@ pre {
     margin: 0;
 }
 
-.badge-hot {
-    background: #dc2626;
-    color: white;
-    padding: 3px 8px;
+.badge-hot,
+.badge-warm,
+.badge-cold {
+    display: inline-block;
+    padding: 4px 10px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
+    color: #fff;
+    white-space: nowrap; /* VERY IMPORTANT */
+}
+
+.badge-hot {
+    background: #dc2626;
 }
 
 .badge-warm {
     background: #f59e0b;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
 }
 
 .badge-cold {
     background: #6b7280;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
 }
