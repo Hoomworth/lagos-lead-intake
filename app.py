@@ -352,7 +352,10 @@ def result(lead_id):
     ai_message = session.pop('ai_message', None)
     analysis = session.pop('ai_analysis', None)
 
-    analysis = analyze_lead(lead)
+    # fallback if AI not used
+    if not analysis:
+        analysis = analyze_lead(lead)
+
 
     return render_template(
         'result.html',
@@ -362,17 +365,9 @@ def result(lead_id):
         message1=ai_message if ai_message else generate_message_1(lead),
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
-        phone=phone
-        
-        analysis=analysis if analysis else {
-        "quality": "Warm",
-        "intent": "Buyer",
-        "score": 50,
-        "action": "Follow up",
-        "timing": "Soon",
-        "objections": "No major concern"
-        },
-     
+        phone=phone,
+
+
     )
 
 
