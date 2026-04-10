@@ -30,54 +30,59 @@
 <div class="message-container">
     <h2>Lead Intelligence Summary</h2>
 
-    <div class="message-box" style="font-size:14px; line-height:1.6;">
+    <div class="message-container">
 
-    <!-- QUALITY BADGE -->
+    <h2 style="margin-bottom:10px;">Lead Intelligence</h2>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+    <div class="message-box lead-card">
 
-    <span class="badge 
-        {% if analysis.quality == 'Hot' %}badge-hot
-        {% elif analysis.quality == 'Warm' %}badge-warm
-        {% else %}badge-cold
-        {% endif %}
-    ">
-        {{ analysis.quality }}
-    </span>
+        <!-- TOP BADGES -->
+        <div class="lead-badges">
+            <span class="badge 
+                {% if analysis.quality == 'Hot' %}badge-hot
+                {% elif analysis.quality == 'Warm' %}badge-warm
+                {% else %}badge-cold{% endif %}
+            ">
+                {{ analysis.quality }}
+            </span>
 
-    <span class="badge" style="background:#111; color:#fff;">
-        {{ analysis.intent }}
-    </span>
+            <span class="badge badge-dark">
+                {{ analysis.intent }}
+            </span>
 
-    <span class="badge" style="background:#e5e7eb; color:#111;">
-        {{ analysis.score }}% Score
-    </span>
+            <span class="badge badge-light">
+                {{ analysis.score }}% Score
+            </span>
+        </div>
+
+        <!-- SCORE BAR -->
+        <div class="score-bar">
+            <div class="score-fill" style="width: {{ analysis.score }}%;"></div>
+        </div>
+
+        <!-- DETAILS -->
+        <div class="lead-details">
+
+            <p>
+                <span class="label">Next Step</span>
+                <span class="value">{{ analysis.action }}</span>
+            </p>
+
+            <p>
+                <span class="label">Best Time</span>
+                <span class="value">{{ analysis.timing }}</span>
+            </p>
+
+            <p>
+                <span class="label">Risk</span>
+                <span class="value">{{ analysis.objections }}</span>
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
-
-{% if analysis.score >= 70 %}
-    {% set bar_color = "#16a34a" %}
-{% elif analysis.score >= 40 %}
-    {% set bar_color = "#f59e0b" %}
-{% else %}
-    {% set bar_color = "#6b7280" %}
-{% endif %}
-
-<div style="background:#e5e7eb; border-radius:6px; overflow:hidden; height:8px; margin-bottom:12px;">
-    <div style="width: {{ analysis.score }}%; height:8px; background: {{ bar_color }};"></div>
-</div>
-
-<div style="font-size:14px; line-height:1.5;">
-
-    <p><strong>Next Step:</strong> {{ analysis.action }}</p>
-
-    <p><strong>Best Time:</strong> {{ analysis.timing }}</p>
-
-    <p><strong>Risk:</strong> {{ analysis.objections }}</p>
-
-</div>
-
-   </div>
 </div>
 
 <div class="message-container">

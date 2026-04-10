@@ -96,10 +96,11 @@ textarea {
 }
 
 .message-box {
-    background: #f3f4f6;
+    background: #ffffff;
     padding: 16px;
     border-radius: 10px;
     margin-top: 10px;
+    border: 1px solid #e5e7eb;
 }
 
 pre {
@@ -231,30 +232,6 @@ pre {
     margin: 0;
 }
 
-.badge-hot,
-.badge-warm,
-.badge-cold {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap; /* VERY IMPORTANT */
-}
-
-.badge-hot {
-    background: #dc2626;
-}
-
-.badge-warm {
-    background: #f59e0b;
-}
-
-.badge-cold {
-    background: #6b7280;
-}
-
 .badge {
     padding: 6px 10px;
     border-radius: 20px;
@@ -276,4 +253,64 @@ pre {
 .badge-cold {
     background: #6b7280;
     color: white;
+}
+
+/* ===== FINAL LEAD INTELLIGENCE POLISH ===== */
+
+.lead-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+.lead-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.badge-dark {
+    background: #111;
+    color: #fff;
+}
+
+.badge-light {
+    background: #e5e7eb;
+    color: #111;
+}
+
+.score-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 8px 0 12px;
+}
+
+.score-fill {
+    height: 100%;
+    background: #f59e0b;
+    transition: width 0.3s ease;
+}
+
+.lead-details p {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+    font-size: 13px;
+}
+
+.label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.value {
+    color: #111;
+    font-weight: 600;
+    text-align: right;
+    max-width: 60%;
 }
