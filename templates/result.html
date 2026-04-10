@@ -35,7 +35,7 @@
     <!-- QUALITY BADGE -->
     <p style="margin:6px 0;">
         <strong>Quality:</strong> 
-        <span class="
+        <span style="margin-left:6px;" class="
             {% if analysis.quality == 'Hot' %}
                 badge-hot
             {% elif analysis.quality == 'Warm' %}
@@ -54,7 +54,7 @@
     </p>
 
     <!-- DEAL SCORE BAR -->
-    <p style="margin:10px 0 5px;">
+    <p style="margin:6px 0;">
         <strong>Deal Score:</strong> {{ analysis.score }}%
     </p>
 
@@ -66,14 +66,15 @@
     {% set bar_color = "#6b7280" %}
     {% endif %}
 
-    <div style="background:#eee; border-radius:6px; overflow:hidden; height:8px;">
+<div style="background:#e5e7eb; border-radius:6px; overflow:hidden; height:10px; margin-top:2px;">
     <div style="
         width: {{ analysis.score }}%;
-        height:8px;
+        height:10px;
         background: {{ bar_color }};
+        transition: width 0.3s ease;
     ">
     </div>
-    </div>
+</div>
 
     <!-- ACTION -->
     <p style="margin:10px 0 6px;">
