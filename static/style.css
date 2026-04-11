@@ -322,19 +322,38 @@ pre {
     vertical-align: middle;
 }
 
-/* 🔥 SMS + EMAIL UPGRADE */
+/* 🔥 FINAL POLISH — SMS + EMAIL */
 
 .sms-box {
-    background: #eef2ff;
-    border-left: 4px solid #4f46e5;
+    background: #eef2ff; /* stronger contrast */
+    border-left: 6px solid #4338ca;
+    border-radius: 10px;
+    padding: 14px;
 }
 
 .email-box {
-    background: #ecfdf5;
-    border-left: 4px solid #16a34a;
+    background: #ecfdf5; /* stronger contrast */
+    border-left: 6px solid #15803d;
+    border-radius: 10px;
+    padding: 14px;
 }
 
+/* Improve text inside boxes */
+.sms-box pre,
+.email-box pre {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Buttons feel stronger */
 .btn-full {
     width: 100%;
     margin-top: 10px;
+    border-radius: 8px;
+}
+
+/* Add slight depth */
+.message-box {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }

@@ -138,8 +138,7 @@
     <h2>SMS Message</h2>
 
     <div class="message-box sms-box">
-        <pre id="sms">
-        {{ sms if sms else "Click 'Generate AI Reply' to create SMS message" }}
+        <pre id="sms">{{ sms if sms else "Click 'Generate AI Reply' to create SMS message" }}
         </pre>
     </div>
 
@@ -153,8 +152,7 @@
     <h2>Email Message</h2>
 
     <div class="message-box email-box">
-        <pre id="email">
-        {% if email_subject %}
+        <pre id="email">{% if email_subject %}
         Subject: {{ email_subject }}
 
         {{ email_body }}
