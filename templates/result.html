@@ -145,6 +145,13 @@
     <button class="btn btn-copy btn-full" onclick="copyToClipboard('sms')">
         Copy SMS
     </button>
+
+    <a 
+    href="sms:{{ phone }}?body={{ sms | urlencode }}" 
+    class="btn btn-full" 
+    style="background:#2563eb; color:white; margin-top:8px;">
+    Send SMS
+    </a>
 </div>
 
 
@@ -165,7 +172,16 @@
     <button class="btn btn-copy btn-full" onclick="copyToClipboard('email')">
         Copy Email
     </button>
+
+    <a 
+    href="mailto:?subject={{ email_subject | urlencode }}&body={{ email_body | urlencode }}" 
+    class="btn btn-full" 
+    style="background:#111; color:white; margin-top:8px;">
+    Send Email
+    </a>
 </div>
+
+
         <div class="message-container">
             <h2>Message 2: 24-Hour Follow-Up</h2>
             <div class="message-box">
