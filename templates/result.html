@@ -149,17 +149,26 @@
     style="background:#2563eb; color:white;">
     Send SMS
     </a>
-    {% else %}
-    <button class="btn btn-full" style="background:#9ca3af;" disabled>
-    Generate AI to Send SMS
-    </button>
-    {% endif %}
 
     <p style="text-align:center; margin-top:6px;">
     <a href="#" onclick="copyToClipboard('sms')">
         Copy SMS instead
     </a>
     </p>
+
+    {% else %}
+    <a 
+    href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
+    class="btn btn-full"
+    style="background:#2563eb; color:white;">
+    Generate SMS with AI
+    </a>
+
+    <p style="text-align:center; margin-top:6px; color:#6b7280;">
+    Takes 1 credit
+    </p>
+    {% endif %}
+
 </div>
 
 
@@ -184,17 +193,26 @@
     style="background:#111; color:white;">
     Send Email
     </a>
-    {% else %}
-    <button class="btn btn-full" style="background:#9ca3af;" disabled>
-    Generate AI to Send Email
-    </button>
-    {% endif %}
 
     <p style="text-align:center; margin-top:6px;">
     <a href="#" onclick="copyToClipboard('email')">
         Copy Email instead
     </a>
     </p>
+
+    {% else %}
+    <a 
+    href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
+    class="btn btn-full"
+    style="background:#111; color:white;">
+    Generate Email with AI
+    </a>
+
+    <p style="text-align:center; margin-top:6px; color:#6b7280;">
+    Takes 1 credit
+    </p>
+    {% endif %}
+
 </div>
 
 
