@@ -137,13 +137,13 @@
 <div class="message-container">
     <h2>SMS Message</h2>
 
-    <div class="message-box">
+    <div class="message-box sms-box">
         <pre id="sms">
         {{ sms if sms else "Click 'Generate AI Reply' to create SMS message" }}
-    </pre>
+        </pre>
     </div>
 
-    <button class="btn btn-copy" onclick="copyToClipboard('sms')">
+    <button class="btn btn-copy btn-full" onclick="copyToClipboard('sms')">
         Copy SMS
     </button>
 </div>
@@ -152,7 +152,7 @@
 <div class="message-container">
     <h2>Email Message</h2>
 
-    <div class="message-box">
+    <div class="message-box email-box">
         <pre id="email">
         {% if email_subject %}
         Subject: {{ email_subject }}
@@ -164,9 +164,10 @@
         </pre>
     </div>
 
-    <button class="btn btn-copy" onclick="copyToClipboard('email')">Copy Email</button>
+    <button class="btn btn-copy btn-full" onclick="copyToClipboard('email')">
+        Copy Email
+    </button>
 </div>
-
         <div class="message-container">
             <h2>Message 2: 24-Hour Follow-Up</h2>
             <div class="message-box">

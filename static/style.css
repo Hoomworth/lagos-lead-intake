@@ -321,3 +321,20 @@ pre {
     margin-right: 4px;
     vertical-align: middle;
 }
+
+/* 🔥 SMS + EMAIL UPGRADE */
+
+.sms-box {
+    background: #eef2ff;
+    border-left: 4px solid #4f46e5;
+}
+
+.email-box {
+    background: #ecfdf5;
+    border-left: 4px solid #16a34a;
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 10px;
+}
