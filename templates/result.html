@@ -58,7 +58,7 @@
 
             <span class="badge badge-light">
                  <i data-lucide="bar-chart-3" class="icon"></i>
-                📊 {{ analysis.score }}% Score
+                {{ analysis.score }}% Score
             </span>
         </div>
 
@@ -132,6 +132,39 @@
 
 </div>
 
+</div>
+
+<div class="message-container">
+    <h2>SMS Message</h2>
+
+    <div class="message-box">
+        <pre id="sms">
+        {{ sms if sms else "Click 'Generate AI Reply' to create SMS message" }}
+    </pre>
+    </div>
+
+    <button class="btn btn-copy" onclick="copyToClipboard('sms')">
+        Copy SMS
+    </button>
+</div>
+
+
+<div class="message-container">
+    <h2>Email Message</h2>
+
+    <div class="message-box">
+        <pre id="email">
+        {% if email_subject %}
+        Subject: {{ email_subject }}
+
+        {{ email_body }}
+        {% else %}
+        Click "Generate AI Reply" to create email message
+        {% endif %}
+        </pre>
+    </div>
+
+    <button class="btn btn-copy" onclick="copyToClipboard('email')">Copy Email</button>
 </div>
 
         <div class="message-container">

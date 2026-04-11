@@ -349,7 +349,10 @@ def result(lead_id):
     if phone.startswith('+'):
         phone = phone[1:]
 
-    ai_message = session.pop('ai_message', None)
+    ai_whatsapp = session.pop('ai_whatsapp', None)
+    ai_sms = session.pop('ai_sms', None)
+    ai_email_subject = session.pop('ai_email_subject', None)
+    ai_email_body = session.pop('ai_email_body', None)
     analysis = session.pop('ai_analysis', None)
 
     # fallback if AI not used
@@ -362,10 +365,14 @@ def result(lead_id):
         lead=lead,
         current_user=current_user,
         analysis=analysis,
-        message1=ai_message if ai_message else generate_message_1(lead),
+        message1=ai_whatsapp if ai_whatsapp else generate_message_1(lead),
         message2=generate_message_2(lead),
         call_script=generate_call_script(lead),
         phone=phone,
+
+        sms=ai_sms,
+        email_subject=ai_email_subject,
+        email_body=ai_email_body,
 
 
     )
@@ -480,9 +487,9 @@ def generate_ai(lead_id):
         return redirect(url_for('leads'))
 
     prompt = f"""
-You are a smart Lagos real estate sales assistant.
+You are a professional Lagos real estate sales expert.
 
-Analyze this lead and return JSON only.
+Analyze this lead and generate outreach messages.
 
 Lead Details:
 Name: {lead.name}
@@ -491,7 +498,7 @@ Budget: {lead.budget}
 Property Type: {lead.property_type}
 Timeline: {lead.timeline}
 
-Return in this format:
+Return ONLY valid JSON in this format:
 
 {{
   "quality": "Hot/Warm/Cold",
@@ -500,7 +507,11 @@ Return in this format:
   "action": "Best next step",
   "timing": "When to follow up",
   "objection": "Likely concern",
-  "message": "WhatsApp message"
+
+  "whatsapp": "Friendly WhatsApp message",
+  "sms": "Short SMS under 160 characters",
+  "email_subject": "Email subject line",
+  "email_body": "Professional email message"
 }}
 """
 
@@ -516,7 +527,10 @@ Return in this format:
         ai_data = json.loads(response.choices[0].message.content)
 
         # Save to session
-        session['ai_message'] = ai_data.get("message")
+        session['ai_whatsapp'] = ai_data.get("whatsapp")
+        session['ai_sms'] = ai_data.get("sms")
+        session['ai_email_subject'] = ai_data.get("email_subject")
+        session['ai_email_body'] = ai_data.get("email_body")
 
         session['ai_analysis'] = {
             "quality": ai_data.get("quality", "Warm"),
