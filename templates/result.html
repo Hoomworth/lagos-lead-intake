@@ -142,16 +142,24 @@
         </pre>
     </div>
 
-    <button class="btn btn-copy btn-full" onclick="copyToClipboard('sms')">
-        Copy SMS
-    </button>
-
+    {% if sms %}
     <a 
     href="sms:{{ phone }}?body={{ sms | urlencode }}" 
-    class="btn btn-full" 
-    style="background:#2563eb; color:white; margin-top:8px;">
+    class="btn btn-full"
+    style="background:#2563eb; color:white;">
     Send SMS
     </a>
+    {% else %}
+    <button class="btn btn-full" style="background:#9ca3af;" disabled>
+    Generate AI to Send SMS
+    </button>
+    {% endif %}
+
+    <p style="text-align:center; margin-top:6px;">
+    <a href="#" onclick="copyToClipboard('sms')">
+        Copy SMS instead
+    </a>
+    </p>
 </div>
 
 
@@ -169,16 +177,24 @@
         </pre>
     </div>
 
-    <button class="btn btn-copy btn-full" onclick="copyToClipboard('email')">
-        Copy Email
-    </button>
-
+    {% if email_subject %}
     <a 
     href="mailto:?subject={{ email_subject | urlencode }}&body={{ email_body | urlencode }}" 
-    class="btn btn-full" 
-    style="background:#111; color:white; margin-top:8px;">
+    class="btn btn-full"
+    style="background:#111; color:white;">
     Send Email
     </a>
+    {% else %}
+    <button class="btn btn-full" style="background:#9ca3af;" disabled>
+    Generate AI to Send Email
+    </button>
+    {% endif %}
+
+    <p style="text-align:center; margin-top:6px;">
+    <a href="#" onclick="copyToClipboard('email')">
+        Copy Email instead
+    </a>
+    </p>
 </div>
 
 
