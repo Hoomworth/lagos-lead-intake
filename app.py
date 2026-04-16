@@ -354,6 +354,11 @@ def result(lead_id):
     ai_email_subject = session.pop('ai_email_subject', None)
     ai_email_body = session.pop('ai_email_body', None)
     analysis = session.pop('ai_analysis', None)
+    ai_followup = session.pop('ai_followup', None)
+    ai_script = session.pop('ai_script', None)
+
+    message2 = ai_followup if ai_followup else None
+    call_script = ai_script if ai_script else None
 
     # fallback if AI not used
     if not analysis:
@@ -366,8 +371,8 @@ def result(lead_id):
         current_user=current_user,
         analysis=analysis,
         message1=ai_whatsapp if ai_whatsapp else generate_message_1(lead),
-        message2=generate_message_2(lead),
-        call_script=generate_call_script(lead),
+        message2=message2,
+        call_script=call_script,
         phone=phone,
 
         sms=ai_sms,
@@ -604,6 +609,62 @@ def generate_email(lead_id):
 
     session['ai_email_subject'] = f"{lead.property_type} in {lead.location}"
     session['ai_email_body'] = email_body
+
+    current_user.credits -= 1
+    db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
+
+
+@app.route('/generate_followup/<int:lead_id>')
+@login_required
+def generate_followup(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    prompt = f"Write a follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}"
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    followup = response.choices[0].message.content
+
+    session['ai_followup'] = followup
+
+    current_user.credits -= 1
+    db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
+
+
+@app.route('/generate_script/<int:lead_id>')
+@login_required
+def generate_script(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    prompt = f"Write a short phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}"
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    script = response.choices[0].message.content
+
+    session['ai_script'] = script
 
     current_user.credits -= 1
     db.session.commit()

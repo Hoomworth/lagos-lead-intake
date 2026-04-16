@@ -206,18 +206,38 @@
 
         <div class="message-container">
             <h2>Message 2: 24-Hour Follow-Up</h2>
+
             <div class="message-box">
-                <pre id="message2">{{ message2 }}</pre>
+                <pre id="message2">{{ message2 if message2 else "Click to generate follow-up message" }}</pre>
             </div>
+
+            {% if message2 %}
             <button class="btn btn-copy" onclick="copyToClipboard('message2')">Copy Message</button>
+             {% else %}
+              <a
+              href="{{ url_for('generate_followup', lead_id=lead.id) }}"
+              class="btn btn-center btn-primary">
+              Generate Follow-Up (1 Credit)
+               </a>
+                {% endif %}
         </div>
 
         <div class="message-container">
             <h2>Message 3: Short Call Script</h2>
+
             <div class="message-box">
-                <pre id="call_script">{{ call_script }}</pre>
+                <pre id="call_script">{{ call_script if call_script else "Click to generate call script" }}</pre>
             </div>
+
+            {% if call_script %}
             <button class="btn btn-copy" onclick="copyToClipboard('call_script')">Copy Script</button>
+            {% else %}
+            <a 
+            href="{{ url_for('generate_script', lead_id=lead.id) }}"
+            class="btn btn-center btn-dark">
+            Generate Call Script (1 Credit)
+            </a>
+            {% endif %}
         </div>
 
         <div class="footer-nav">
