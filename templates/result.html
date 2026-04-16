@@ -145,8 +145,7 @@
     {% if sms %}
     <a 
     href="sms:{{ phone }}?body={{ sms | urlencode }}" 
-    class="btn btn-full"
-    style="background:#2563eb; color:white;">
+    class="btn btn-center btn-primary">
     Send SMS
     </a>
 
@@ -189,8 +188,7 @@
     {% if email_subject %}
     <a 
     href="mailto:?subject={{ email_subject | urlencode }}&body={{ email_body | urlencode }}" 
-    class="btn btn-full"
-    style="background:#111; color:white;">
+    class="btn btn-center btn-dark">
     Send Email
     </a>
 

@@ -357,3 +357,21 @@ pre {
 .message-box {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
+
+.btn-center {
+    display: block;
+    width: fit-content;
+    margin: 12px auto;
+    padding: 12px 18px;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-dark {
+    background: #111;
+    color: white;
+}
