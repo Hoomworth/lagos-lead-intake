@@ -143,6 +143,7 @@
     </div>
 
     {% if sms %}
+    <!-- SHOW SEND BUTTON -->
     <a 
     href="sms:{{ phone }}?body={{ sms | urlencode }}" 
     class="btn btn-center btn-primary">
@@ -156,14 +157,14 @@
     </p>
 
     {% else %}
+    <!-- SHOW GENERATE BUTTON -->
     <a 
     href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
-    class="btn btn-full"
-    style="background:#2563eb; color:white;">
+    class="btn btn-center btn-primary">
     Generate SMS with AI
     </a>
 
-    <p style="text-align:center; margin-top:6px; color:#6b7280;">
+    <p style="text-align:center; font-size:12px; color:#777;">
     Takes 1 credit
     </p>
     {% endif %}
@@ -186,6 +187,7 @@
     </div>
 
     {% if email_subject %}
+     <!-- SHOW SEND BUTTON -->
     <a 
     href="mailto:?subject={{ email_subject | urlencode }}&body={{ email_body | urlencode }}" 
     class="btn btn-center btn-dark">
@@ -199,14 +201,14 @@
     </p>
 
     {% else %}
+     <!-- SHOW GENERATE BUTTON -->
     <a 
     href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
-    class="btn btn-full"
-    style="background:#111; color:white;">
+    class="btn btn-center btn-dark">
     Generate Email with AI
     </a>
 
-    <p style="text-align:center; margin-top:6px; color:#6b7280;">
+    <p style="text-align:center; font-size:12px; color:#777;">
     Takes 1 credit
     </p>
     {% endif %}
