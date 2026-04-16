@@ -553,6 +553,63 @@ Return ONLY valid JSON in this format:
 
     return redirect(url_for('result', lead_id=lead.id))
 
+
+@app.route('/generate_sms/<int:lead_id>')
+@login_required
+def generate_sms(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    prompt = f"Generate a short SMS under 160 characters for this lead: {lead.name}, {lead.property_type} in {lead.location}, budget {lead.budget}"
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    sms = response.choices[0].message.content
+
+    session['ai_sms'] = sms
+
+    current_user.credits -= 1
+    db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
+
+
+@app.route('/generate_email/<int:lead_id>')
+@login_required
+def generate_email(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    prompt = f"Write a professional real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}"
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    email_body = response.choices[0].message.content
+
+    session['ai_email_subject'] = f"{lead.property_type} in {lead.location}"
+    session['ai_email_body'] = email_body
+
+    current_user.credits -= 1
+    db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
+
     
 # -----------------------------
 # RUN

@@ -104,18 +104,6 @@
             <strong>AI Credits Left:</strong> {{ current_user.credits }}
         </p>
 
-    {% if current_user.credits > 0 %}
-    <a href="{{ url_for('generate_ai', lead_id=lead.id) }}"
-    class="btn" 
-       style="background:#111; margin-top:10px; display:inline-block;">
-        Generate AI Reply (1 Credit)
-    </a>
-    {% else %}
-     <button class="btn" style="background:#999; margin-top:10px;" disabled>
-        No Credits Left
-     </button>
-     {% endif %}
-
     <button class="btn btn-copy" onclick="copyToClipboard('message1')">
         Copy Message
     </button>
@@ -159,7 +147,7 @@
     {% else %}
     <!-- SHOW GENERATE BUTTON -->
     <a 
-    href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
+    href="{{ url_for('generate_sms', lead_id=lead.id) }}" 
     class="btn btn-center btn-primary">
     Generate SMS with AI
     </a>
@@ -203,7 +191,7 @@
     {% else %}
      <!-- SHOW GENERATE BUTTON -->
     <a 
-    href="{{ url_for('generate_ai', lead_id=lead.id) }}" 
+    href="{{ url_for('generate_email', lead_id=lead.id) }}" 
     class="btn btn-center btn-dark">
     Generate Email with AI
     </a>
