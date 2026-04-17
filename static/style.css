@@ -9,9 +9,9 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 720px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 20px 16px;
 }
 
 h1 {
@@ -397,4 +397,45 @@ pre {
     display: block;
     width: fit-content;
     margin: 12px auto 0;
+}
+
+.top-card {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.top-card h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-top: 4px;
+}
+
+.lead-name {
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.message-box {
+    width: 100%;
+}
+
+.message-box pre {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px;
+    }
 }

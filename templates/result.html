@@ -10,12 +10,12 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="font-size:22px; margin-bottom:4px;">Lead Actions</h1>
-        <p style="color:#777; font-size:14px;">Everything you need to convert this lead</p>
-        <p style="margin-top:10px; font-size:15px; color:#444">
-            <strong>Lead:</strong>
-            <span style="font-weight:600;">{{ lead.name }}</span>
-        </p>    
+        <h1>Lead Actions</h1>
+        <p class="subtitle">Everything you need to convert this lead</p>
+
+        <div class="lead-name">
+            Lead: {{ lead.lead-name }}
+        </div>  
 
         {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -31,8 +31,6 @@
 
 <div class="message-container">
     <h2>Lead Intelligence Summary</h2>
-
-    <div class="message-container">
 
     <div class="message-box lead-card">
 
