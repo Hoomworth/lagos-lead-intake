@@ -501,3 +501,94 @@ pre {
     background: #22c55e;
     color: white;
 }
+
+/* SEARCH */
+.search-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin: 15px 0;
+}
+
+/* FILTER */
+.filter-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-row a {
+    padding: 6px 12px;
+    background: #eee;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    color: #333;
+}
+
+/* LEAD CARD */
+.lead-card-ui {
+    background: #fff;
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+/* TOP */
+.lead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lead-top h3 {
+    margin: 0;
+}
+
+.lead-phone {
+    font-size: 13px;
+    color: #777;
+}
+
+/* STATUS */
+.status {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.status-new {
+    background: #2563eb;
+    color: white;
+}
+
+.status-contacted {
+    background: #f59e0b;
+    color: white;
+}
+
+.status-closed {
+    background: #16a34a;
+    color: white;
+}
+
+/* BODY */
+.lead-body {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* ACTIONS */
+.lead-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
