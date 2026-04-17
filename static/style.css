@@ -8,12 +8,6 @@ body {
     padding: 20px;
 }
 
-.container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 20px 16px;
-}
-
 h1 {
     font-size: 28px;
     color: #333;
@@ -56,11 +50,10 @@ textarea {
     display: inline-block;
     background-color: #007bff;
     color: #fff;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     text-align: center;
     text-decoration: none;
@@ -101,9 +94,9 @@ textarea {
     background: #ffffff;
     padding: 16px;
     border-radius: 12px;
-    margin-top: 10px;
     border: 1px solid #eee;
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    width: 100%;
 }
 
 pre {
@@ -360,17 +353,10 @@ pre {
     border-radius: 8px;
 }
 
-/* Add slight depth */
-.message-box {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-
 .btn-center {
     display: block;
     width: fit-content;
     margin: 12px auto;
-    padding: 12px 18px;
-    border-radius: 8px;
 }
 
 .btn-primary {
@@ -381,22 +367,6 @@ pre {
 .btn-dark {
     background: #111;
     color: white;
-}
-
-.btn {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.btn {
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 8px;
-}
-
-.btn-center {
-    display: block;
-    width: fit-content;
-    margin: 12px auto 0;
 }
 
 .top-card {
@@ -425,10 +395,6 @@ pre {
     font-size: 15px;
 }
 
-.message-box {
-    width: 100%;
-}
-
 .message-box pre {
     max-height: 400px;
     overflow-y: auto;
@@ -438,4 +404,19 @@ pre {
     .container {
         max-width: 700px;
     }
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px;
+}
+
+.top-card {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
 }
