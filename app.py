@@ -410,7 +410,7 @@ def leads():
         )
 
     # ✅ FINAL DATA
-    all_leads = query.order_by(Lead.date_added.desc()).all()
+    all_leads = query.all()
 
     # ADD THIS
     leads_with_analysis = []
@@ -421,6 +421,20 @@ def leads():
             "lead": lead,
             "analysis": analysis
         })
+
+
+        priority_order = {
+             "Hot": 1,
+             "Warm": 2,
+             "Cold": 3
+        }
+
+        leads_with_analysis.sort(
+            key=lambda x: (
+                priority_order.get(x["analysis"]["quality"], 4),
+                 -x["lead"].date_added.timestamp()
+             )
+        )
 
     # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()

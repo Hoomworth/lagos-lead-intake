@@ -632,3 +632,24 @@ pre {
     color: #111;
 }
 
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 14px;
+}
+
+.top-nav a:hover {
+    text-decoration: underline;
+}
+

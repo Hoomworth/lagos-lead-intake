@@ -21,20 +21,6 @@
 </div>
 
     <div class="container">
-        <!-- 🔥 NEW CRM HEADER -->
-<div class="dashboard-header">
-
-    <div>
-        <h1>REALTOR CRM DASHBOARD</h1>
-        <p>Welcome, {{ current_user.full_name }} <br><strong>AI credits:</strong> {{ credits }}</p>
-    </div>
-
-    <div>
-        <a href="{{ url_for('index') }}" class="btn primary">+ New Lead</a>
-        <a href="{{ url_for('logout') }}" class="btn danger">Logout</a>
-    </div>
-
-</div>
 
 <!-- 🔥 FILTER BUTTONS -->
 <div style="margin-bottom: 15px;">
@@ -94,12 +80,15 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
         {% for item in leads %}
         {% set lead = item.lead %}
         {% set analysis = item.analysis %}
+
         <div class="lead-card-ui">
 
          <!-- TOP -->
          <div class="lead-top">
               <div>
                    <h3>{{ lead.name }}</h3>
+                   <p style="font-size:12px;
+                   color:#666;">{{ lead.date_added.strftime('%d %b %Y') }}</p>
                    <p class="lead-phone">{{ lead.phone }}</p>
               </div>
 
@@ -147,11 +136,13 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
             Open
         </a>
 
-        <a href="tel:{{ lead.phone }}" class="btn btn-small">
-            Call
+        {% if analysis.quality == 'Hot' %}
+        <a href="tel:{{ lead.phone }}" class="btn btn-small" style="background: #16a34a;color: white;">
+            Call Now
         </a>
+        {% endif %}
 
-        <a href="https://wa.me/{{ lead.phone }}" target="_blank" class="btn btn-small" style="background:#22c55e; color:white;">
+        <a href="https://wa.me/{{ lead.phone | replace('0', '234', 1) }}" target="_blank" class="btn btn-small" style="background:#22c55e; color:white;">
             WhatsApp
         </a>
 
