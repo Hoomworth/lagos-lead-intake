@@ -79,7 +79,11 @@ textarea {
 }
 
 .message-container {
-    margin-bottom: 24px;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
 }
 
 .message-container h2 {
@@ -362,6 +366,7 @@ pre {
 .btn-primary {
     background: #2563eb;
     color: white;
+    padding: 12px 20px;
 }
 
 .btn-dark {
@@ -419,4 +424,80 @@ pre {
     margin-bottom: 20px;
     border: 1px solid #eee;
     box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.navbar {
+    background: #111;
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.nav-right a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 16px;
+    font-size: 14px;
+}
+
+.nav-right a.logout {
+    color: #f87171;
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lead-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-hot {
+    background: #16a34a;
+    color: white;
+}
+
+.status-warm {
+    background: #f59e0b;
+    color: white;
+}
+
+.status-cold {
+    background: #6b7280;
+    color: white;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.credit {
+    font-size: 13px;
+    color: #777;
+}
+
+.action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-success {
+    background: #22c55e;
+    color: white;
 }
