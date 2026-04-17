@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
+    <div class="navbar">
+    <div class="nav-left">
+        <span class="logo">Hoomworth CRM</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('leads') }}">Leads</a>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+</div>
+
     <div class="container">
         <!-- 🔥 NEW CRM HEADER -->
 <div class="dashboard-header">
@@ -78,7 +91,9 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
 
         <div class="leads-list">
 
-        {% for lead in leads %}
+        {% for item in leads %}
+        {% set lead = item.lead %}
+        {% set analysis = item.analysis %}
         <div class="lead-card-ui">
 
          <!-- TOP -->
@@ -96,6 +111,27 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
                {{ lead.status }}
              </span>
          </div>
+
+
+         <div class="lead-intel">
+
+             <span class="badge 
+                 {% if analysis.quality == 'Hot' %}badge-hot
+                 {% elif analysis.quality == 'Warm' %}badge-warm
+                 {% else %}badge-cold{% endif %}
+                 ">
+                 {{ analysis.quality }}
+            </span>
+
+          <span class="badge badge-dark">
+                {{ analysis.intent }}
+          </span>
+
+         <span class="badge badge-light">
+               {{ analysis.score }}%
+         </span>
+
+        </div>
 
     <!-- BODY -->
     <div class="lead-body">

@@ -412,6 +412,15 @@ def leads():
     # ✅ FINAL DATA
     all_leads = query.order_by(Lead.date_added.desc()).all()
 
+    # ADD THIS
+    leads_with_analysis = []
+    for lead in all_leads:
+    analysis = analyze_lead(lead)
+    leads_with_analysis.append({
+        "lead": lead,
+        "analysis": analysis
+    })
+
     # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()
     new_leads = Lead.query.filter_by(user_id=current_user.id, status='New').count()
@@ -422,7 +431,7 @@ def leads():
 
     return render_template(
         'leads.html',
-        leads=all_leads,
+        leads=leads_with_analysis,
         current_user=current_user,
         total_leads=total_leads,
         new_leads=new_leads,
