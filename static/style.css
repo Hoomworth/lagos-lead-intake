@@ -99,17 +99,21 @@ textarea {
 
 .message-box {
     background: #ffffff;
-    padding: 14px;
+    padding: 16px;
     border-radius: 12px;
-    margin-top: 8px;
-    border: 1px solid #f1f1f1;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-top: 10px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
 pre {
     margin: 0;
     white-space: pre-wrap; /* Ensures content wraps */
     word-wrap: break-word; /* Breaks long words if needed */
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
 }
 
 
