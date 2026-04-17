@@ -414,12 +414,13 @@ def leads():
 
     # ADD THIS
     leads_with_analysis = []
+
     for lead in all_leads:
-    analysis = analyze_lead(lead)
-    leads_with_analysis.append({
-        "lead": lead,
-        "analysis": analysis
-    })
+        analysis = analyze_lead(lead)
+        leads_with_analysis.append({
+            "lead": lead,
+            "analysis": analysis
+        })
 
     # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()
