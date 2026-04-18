@@ -38,7 +38,42 @@
     input, select, textarea {
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-  </style>
+
+    .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #000;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 12px;
+}
+
+.nav-left .logo {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.nav-right {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.nav-right a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-right a:hover {
+    opacity: 0.7;
+}
+
+.nav-right .text-red-400 {
+    color: #f87171;
+}
+</style>
 </head>
 <body class="min-h-screen p-4 md:p-8 bg-gray-100">
 
@@ -66,9 +101,9 @@
 <div class="bg-white rounded-xl overflow-hidden sm:grid-cols-3" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
 <!-- BEGIN: FormHeader -->
 
-<div class="top-card" style="border-left: 4px solid #2563eb; padding:16px;">
-  <h1 style="margin-bottom:6px; font-size:20px;">New Lead Intake</h1>
-    <p class="subtitle" style="font-size:14px;">
+<div style="padding:20px; text-align:center;">
+  <h1 style="margin-bottom:6px; font-size:22px; font-weight:600;">New Lead Intake</h1>
+    <p style="font-size:14px; color:#6b7280;">
         Capture prospect details to generate follow-up messages and track your pipeline.
     </p>
 </div>
