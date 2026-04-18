@@ -397,32 +397,6 @@ pre {
     box-shadow: 0 4px 10px rgba(0,0,0,0.04);
 }
 
-.navbar {
-    background: #111;
-    color: #fff;
-    padding: 14px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.logo {
-    font-weight: 700;
-    font-size: 16px;
-}
-
-.nav-right a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 16px;
-    font-size: 14px;
-}
-
-.nav-right a.logout {
-    color: #f87171;
-}
-
 .top-header {
     display: flex;
     justify-content: space-between;
@@ -617,8 +591,57 @@ body {
 /* ===== NAVBAR IMPROVEMENT ===== */
 
 .navbar {
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background: #0b0b0c;
+    color: #fff;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+/* LEFT SIDE */
+.nav-left {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+/* RIGHT SIDE */
+.nav-right {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+
+    /* 🔥 THIS FIXES YOUR PROBLEM */
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* LINKS */
+.nav-right a {
+    color: #e5e7eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.nav-right a:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+/* LOGOUT */
+.nav-right a.logout {
+    color: #f87171;
+}
+
+.navbar {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
 /* ===== LEAD CARD IMPROVEMENT ===== */
