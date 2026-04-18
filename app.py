@@ -697,9 +697,11 @@ def generate_script(lead_id):
 
 
 
-    @app.route('/insights')
-    def insights():
-        return render_template('insights.html')
+@app.route('/insights')
+@login_required
+def insights():
+    return render_template('insights.html')
+   
 
     
 # -----------------------------
