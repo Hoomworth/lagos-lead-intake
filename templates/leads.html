@@ -122,11 +122,27 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
 
         </div>
 
+        <div class="urgency">
+           <span class="urgency-badge 
+              {% if analysis.timing == 'Immediate' %}urgency-hot
+              {% elif analysis.timing == 'Soon' %}urgency-warm
+              {% else %}urgency-cold{% endif %}
+    ">          ⏱ {{ analysis.timing }}
+          </span>
+        </div>
+
     <!-- BODY -->
     <div class="lead-body">
         <p><strong>Type:</strong> {{ lead.property_type }}</p>
         <p><strong>Location:</strong> {{ lead.location }}</p>
         <p><strong>Budget:</strong> {{ lead.budget }}</p>
+    </div>
+
+    <div class="lead-action-hint">
+         {{ analysis.action }}
+         <span class="hint-time">
+            • {{ analysis.timing }}
+         </span>
     </div>
 
     <!-- ACTIONS -->

@@ -97,15 +97,15 @@ def analyze_lead(lead):
     if score >= 70:
         quality = "Hot"
         action = "Call immediately"
-        timing = "Within 5 minutes"
+        timing = "Immediate"
     elif score >= 40:
         quality = "Warm"
         action = "Send WhatsApp first"
-        timing = "Within 30 minutes"
+        timing = "Soon"
     else:
         quality = "Cold"
         action = "Nurture with follow-up message"
-        timing = "Later in the day"
+        timing = "Later"
 
     objections = "May worry about price or location fit"
 

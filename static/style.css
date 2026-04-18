@@ -236,29 +236,6 @@ pre {
     margin: 0;
 }
 
-.badge {
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.badge-hot {
-    background: #16a34a;
-    color: white;
-}
-
-.badge-warm {
-    background: #f59e0b;
-    color: white;
-}
-
-.badge-cold {
-    background: #6b7280;
-    color: white;
-}
-
 /* ===== FINAL LEAD INTELLIGENCE POLISH ===== */
 
 .lead-card {
@@ -409,12 +386,6 @@ pre {
     .container {
         max-width: 700px;
     }
-}
-
-.container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 20px 16px;
 }
 
 .top-card {
@@ -632,24 +603,225 @@ pre {
     color: #111;
 }
 
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* ===== CLEAN SPACING SYSTEM ===== */
+
+body {
+    padding: 16px;
+}
+
+.container {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* ===== NAVBAR IMPROVEMENT ===== */
+
+.navbar {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ===== LEAD CARD IMPROVEMENT ===== */
+
+.lead-card-ui {
+    transition: all 0.2s ease;
+}
+
+.lead-card-ui:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* ===== MAKE HOT LEADS STAND OUT ===== */
+
+.badge-hot {
+    background: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22,163,74,0.15);
+}
+
+/* Slight highlight for hot leads */
+.lead-card-ui:has(.badge-hot) {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+}
+
+/* ===== IMPROVE TEXT HIERARCHY ===== */
+
+.lead-top h3 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.lead-body p {
+    margin: 4px 0;
+    font-size: 13px;
+    color: #555;
+}
+
+/* ===== BUTTON CLEANUP ===== */
+
+.lead-actions .btn {
+    border-radius: 6px;
+    font-size: 13px;
+    padding: 6px 10px;
+}
+
+/* Primary action stronger */
+.lead-actions .btn:first-child {
     background: #111;
-    padding: 12px 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.top-nav a {
     color: white;
-    text-decoration: none;
-    margin-left: 15px;
-    font-size: 14px;
 }
 
-.top-nav a:hover {
-    text-decoration: underline;
+/* ===== MOBILE IMPROVEMENT ===== */
+
+@media (min-width: 768px) {
+    .leads-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+/* ===== PREMIUM PRIORITY STRIP ===== */
+
+.lead-card-ui {
+    position: relative;
+    overflow: hidden;
+}
+
+/* default strip */
+.lead-card-ui::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #e5e7eb;
+}
+
+/* HOT */
+.lead-card-ui:has(.badge-hot)::before {
+    background: #16a34a;
+}
+
+/* WARM */
+.lead-card-ui:has(.badge-warm)::before {
+    background: #f59e0b;
+}
+
+/* COLD */
+.lead-card-ui:has(.badge-cold)::before {
+    background: #6b7280;
+}
+
+/* ===== ACTION HINT ===== */
+
+.lead-action-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #111;
+    background: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+/* ===== BETTER SPACING ===== */
+
+.lead-card-ui {
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.lead-top {
+    margin-bottom: 10px;
+}
+
+.lead-intel {
+    margin: 10px 0;
+}
+
+.lead-body {
+    margin-top: 10px;
+}
+
+/* ===== HOT LEAD EMPHASIS ===== */
+
+.lead-card-ui:has(.badge-hot) {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.lead-card-ui:has(.badge-hot) h3 {
+    color: #065f46;
+}
+
+/* ===== BUTTON PRIORITY ===== */
+
+.lead-actions .btn {
+    background: #f1f5f9;
+    color: #111;
+}
+
+.lead-actions .btn:hover {
+    background: #e2e8f0;
+}
+
+/* primary action */
+.lead-actions .btn:first-child {
+    background: #111;
+    color: #fff;
+}
+
+/* whatsapp stays green */
+.lead-actions a[style*="22c55e"] {
+    font-weight: 600;
+}
+
+@media (min-width: 768px) {
+    .leads-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+}
+
+/* ===== URGENCY SYSTEM ===== */
+
+.urgency {
+    margin-top: 6px;
+}
+
+.urgency-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* Immediate = red tone */
+.urgency-hot {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Soon = amber */
+.urgency-warm {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Later = gray */
+.urgency-cold {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.hint-time {
+    color: #777;
+    font-weight: 400;
+    margin-left: 6px;
 }
 
