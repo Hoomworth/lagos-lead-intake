@@ -17,6 +17,7 @@
     <div class="nav-right">
         <a href="{{ url_for('index') }}">Dashboard</a>
         <a href="{{ url_for('leads') }}">Leads</a>
+        <a href="{{ url_for('result', lead_id=lead.id) }}">Insights</a>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
 </div>
@@ -55,7 +56,7 @@
         {% endwith %}
 
 <div class="message-container">
-    <h2>Lead Intelligence Summary</h2>
+    <h2 class="intel-title">Lead Intelligence Summary</h2>
 
     <div class="message-box lead-card">
 
@@ -149,7 +150,8 @@
     <h2>SMS Message</h2>
 
     <div class="message-box sms-box">
-        <pre id="sms">{{ sms if sms else "Click 'Generate AI Reply' to create SMS message" }}
+        <pre id="sms">{{ sms if sms else "Hi " ~ lead.name ~ ", I have options for " ~ lead.property_type ~ " in " ~ lead.location ~ ". 
+            Let me know if you're still interested." }}
         </pre>
     </div>
 
@@ -172,12 +174,8 @@
     <a 
     href="{{ url_for('generate_sms', lead_id=lead.id) }}" 
     class="btn btn-center btn-primary">
-    Generate SMS with AI
+    Generate SMS with AI<br><small>1 credit</small>
     </a>
-
-    <p style="text-align:center; font-size:12px; color:#777;">
-    Takes 1 credit
-    </p>
     {% endif %}
 
 </div>
@@ -192,7 +190,17 @@
 
         {{ email_body }}
         {% else %}
-        Click "Generate AI Reply" to create email message
+
+        Subject: Property Options in {{ lead.location }}
+
+        Hello {{ lead.name }},
+
+        I have a few options that match your interest in a {{ lead.property_type }} within your budget.
+
+        Let me know if you would like me to send details or schedule a viewing.
+
+        Best regards,
+        {{ lead.agent_name }}
         {% endif %}
         </pre>
     </div>
@@ -216,12 +224,8 @@
     <a 
     href="{{ url_for('generate_email', lead_id=lead.id) }}" 
     class="btn btn-center btn-dark">
-    Generate Email with AI
+    Generate Email with AI<br><small>1 credit</small>
     </a>
-
-    <p style="text-align:center; font-size:12px; color:#777;">
-    Takes 1 credit
-    </p>
     {% endif %}
 
 </div>
@@ -231,7 +235,10 @@
             <h2>Message 2: 24-Hour Follow-Up</h2>
 
             <div class="message-box">
-                <pre id="message2">{{ message2 if message2 else "Click to generate follow-up message" }}</pre>
+                <pre id="message2">
+                    {{ message2 if message2 else "Hi {{ lead.name }}, just checking in. 
+                    Are you still interested in properties in {{ lead.location }}?" }}
+                </pre>
             </div>
 
             {% if message2 %}
@@ -249,7 +256,10 @@
             <h2>Message 3: Short Call Script</h2>
 
             <div class="message-box">
-                <pre id="call_script">{{ call_script if call_script else "Click to generate call script" }}</pre>
+                <pre id="call_script">
+                    {{ call_script if call_script else "Hi {{ lead.name }}, this is {{ lead.agent_name }}. 
+                    You made an enquiry about a {{ lead.property_type }} in {{ lead.location }}. Is this a good time to talk?" }}
+                </pre>
             </div>
 
             {% if call_script %}

@@ -40,7 +40,25 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-8" style="background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);">
+<body class="min-h-screen p-4 md:p-8"
+ style="background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);">
+
+ <div class="w-full max-w-6xl mx-auto mb-6">
+    <div class="bg-black text-white px-6 py-4 rounded-xl flex justify-between items-center shadow-md">
+
+        <div class="font-semibold text-lg">
+            Hoomworth CRM
+        </div>
+
+        <div class="flex gap-6 text-sm">
+            <a href="{{ url_for('index') }}" class="hover:opacity-80">Dashboard</a>
+            <a href="{{ url_for('leads') }}" class="hover:opacity-80">Leads</a>
+            <a href="{{ url_for('logout') }}" class="text-red-400 hover:opacity-80">Logout</a>
+        </div>
+
+    </div>
+</div>
+
 <!-- BEGIN: MainContainer -->
 <main class="w-full max-w-2xl" data-purpose="form-wrapper">
 <!-- BEGIN: IntakeCard -->

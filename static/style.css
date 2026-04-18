@@ -825,3 +825,14 @@ body {
     margin-left: 6px;
 }
 
+.intel-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.lead-card {
+    text-align: center;
+}
+
