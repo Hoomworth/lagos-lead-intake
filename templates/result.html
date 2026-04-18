@@ -139,7 +139,7 @@
             href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
             target="_blank"
             onclick="fetch('{{ url_for('mark_contacted', lead_id=lead.id) }}', {method: 'POST'})"
-            class="btn btn-success">
+            class="btn btn-copy">
             WhatsApp
         </a>
     </div>
@@ -150,9 +150,7 @@
     <h2>SMS Message</h2>
 
     <div class="message-box sms-box">
-        <pre id="sms">{{ sms if sms else "Hi " ~ lead.name ~ ", I have options for " ~ lead.property_type ~ " in " ~ lead.location ~ ". 
-            Let me know if you're still interested." }}
-        </pre>
+        <pre id="sms">{{ sms if sms else "Hi " ~ lead.name ~ ", I have options for " ~ lead.property_type ~ " in " ~ lead.location ~ ". Let me know if you're still interested." }}</pre>
     </div>
 
     {% if sms %}
@@ -174,7 +172,7 @@
     <a 
     href="{{ url_for('generate_sms', lead_id=lead.id) }}" 
     class="btn btn-center btn-primary">
-    Generate SMS with AI<br><small>1 credit</small>
+    Generate SMS with AI (1 credit)
     </a>
     {% endif %}
 
@@ -185,13 +183,9 @@
     <h2>Email Message</h2>
 
     <div class="message-box email-box">
-        <pre id="email">{% if email_subject %}
-        Subject: {{ email_subject }}
+        <pre id="email">{% if email_subject %}Subject: {{ email_subject }}
 
-        {{ email_body }}
-        {% else %}
-
-        Subject: Property Options in {{ lead.location }}
+        {{ email_body }}{% else %}Subject: Property Options in {{ lead.location }}
 
         Hello {{ lead.name }},
 
@@ -199,9 +193,8 @@
 
         Let me know if you would like me to send details or schedule a viewing.
 
-        Best regards,
-        {{ lead.agent_name }}
-        {% endif %}
+        Best regards,  
+        {{ lead.agent_name }}{% endif %}
         </pre>
     </div>
 
@@ -224,7 +217,7 @@
     <a 
     href="{{ url_for('generate_email', lead_id=lead.id) }}" 
     class="btn btn-center btn-dark">
-    Generate Email with AI<br><small>1 credit</small>
+    Generate Email with AI (1 credit)
     </a>
     {% endif %}
 
@@ -235,10 +228,7 @@
             <h2>Message 2: 24-Hour Follow-Up</h2>
 
             <div class="message-box">
-                <pre id="message2">
-                    {{ message2 if message2 else "Hi {{ lead.name }}, just checking in. 
-                    Are you still interested in properties in {{ lead.location }}?" }}
-                </pre>
+                <pre id="message2">{{ message2 if message2 else "Hi " ~ lead.name ~ ", just checking in. Are you still interested in properties in " ~ lead.location ~ "?" }}</pre>
             </div>
 
             {% if message2 %}
@@ -256,10 +246,7 @@
             <h2>Message 3: Short Call Script</h2>
 
             <div class="message-box">
-                <pre id="call_script">
-                    {{ call_script if call_script else "Hi {{ lead.name }}, this is {{ lead.agent_name }}. 
-                    You made an enquiry about a {{ lead.property_type }} in {{ lead.location }}. Is this a good time to talk?" }}
-                </pre>
+                <pre id="call_script">{{ call_script if call_script else "Hi " ~ lead.name ~ ", this is " ~ lead.agent_name ~ ". You made an enquiry about a " ~ lead.property_type ~ " in " ~ lead.location ~ ". Is this a good time to talk?" }}</pre>
             </div>
 
             {% if call_script %}
