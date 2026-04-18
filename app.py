@@ -330,6 +330,7 @@ def add_lead():
 @app.route('/result/<int:lead_id>')
 @login_required
 def result(lead_id):
+    session['last_lead_id'] = lead_id
     current_user = get_current_user()
 
     if not current_user:
@@ -703,7 +704,17 @@ def insights():
     return render_template('insights.html')
    
 
-    
+@app.route('/lead')
+@login_required
+def open_last_lead():
+    lead_id = session.get('last_lead_id')
+
+    if not lead_id:
+        return redirect(url_for('leads'))
+
+    return redirect(url_for('result', lead_id=lead_id))
+
+
 # -----------------------------
 # RUN
 # -----------------------------
