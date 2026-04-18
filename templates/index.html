@@ -40,10 +40,9 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-8"
- style="background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);">
+<body class="min-h-screen p-4 md:p-8">
 
- <div class="w-full max-w-6xl mx-auto mb-6">
+ <div class="container">
     <div class="bg-black text-white px-6 py-4 rounded-xl flex justify-between items-center shadow-md">
 
         <div class="font-semibold text-lg">
@@ -66,10 +65,14 @@
 <!-- BEGIN: IntakeCard -->
 <div class="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden sm:grid-cols-3">
 <!-- BEGIN: FormHeader -->
-<header class="px-8 pt-8 pb-6 border-b text-center" style="background: linear-gradient(to right, #e811ea, #00d4ff); border-bottom: none;">
-<h1 class="text-2xl font-bold tracking-tight text-center text-white" style="">NEW LEAD INTAKE</h1>
-<p class="mt-2 text-sm leading-relaxed text-center text-white/90">Capture prospect details to automatically generate personalized follow-up messages and track your pipeline.</p>
-</header>
+
+<div class="top-card">
+    <h1>New Lead Intake</h1>
+    <p class="subtitle">
+        Capture prospect details to generate follow-up messages and track your pipeline.
+    </p>
+</div>
+
 <!-- END: FormHeader -->
 <!-- BEGIN: IntakeForm -->
 <form action="/add_lead" method="POST" class="p-8 space-y-6" data-purpose="lead-capture-form">
@@ -156,11 +159,12 @@
 </div>
 <!-- Submit Button -->
 <div class="pt-4">
-<button class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors focus:ring-[#FF0000]" style="background: linear-gradient(to right, #e811ea, #00d4ff); color: white;" type="submit">
+<button class="btn btn-primary btn-full" type="submit">
             Save Lead &amp; Generate Messages
           </button>
 </div>
 </form>
+
 <!-- END: IntakeForm -->
 <!-- BEGIN: FormFooter -->
 <footer class="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-center">
