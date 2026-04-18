@@ -704,13 +704,23 @@ def insights():
     return render_template('insights.html')
    
 
-@app.route('/lead')
+@app.route('/prospect')
 @login_required
-def open_last_lead():
+def open_prospect():
     lead_id = session.get('last_lead_id')
 
+    # If no last lead, get latest lead from DB
     if not lead_id:
-        return redirect(url_for('leads'))
+        current_user = get_current_user()
+
+        last_lead = Lead.query.filter_by(user_id=current_user.id)\
+            .order_by(Lead.date_added.desc())\
+            .first()
+
+        if not last_lead:
+            return redirect(url_for('leads'))
+
+        return redirect(url_for('result', lead_id=last_lead.id))
 
     return redirect(url_for('result', lead_id=lead_id))
 
