@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <span class="logo">Hoomworth CRM</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('leads') }}">Leads</a>
+        <a href="{{ url_for('insights') }}">Insights</a>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="top-card">
+        <h1>Insights</h1>
+        <p class="subtitle">Overview of your leads and performance</p>
+    </div>
+
+    <div class="card">
+        <h3>Coming Soon</h3>
+        <p>You will see lead analytics, conversion data, and performance insights here.</p>
+    </div>
+</div>
+
+</body>
+</html>

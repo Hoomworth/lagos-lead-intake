@@ -695,6 +695,12 @@ def generate_script(lead_id):
 
     return redirect(url_for('result', lead_id=lead_id))
 
+
+
+    @app.route('/insights')
+    def insights():
+        return render_template('insights.html')
+
     
 # -----------------------------
 # RUN
