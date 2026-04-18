@@ -40,7 +40,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
+<body class="min-h-screen p-4 md:p-8 bg-gray-100">
 
  <div class="container">
     <div class="bg-black text-white px-6 py-4 rounded-xl flex justify-between items-center shadow-md">
@@ -63,11 +63,11 @@
 <!-- BEGIN: MainContainer -->
 <main class="w-full max-w-2xl" data-purpose="form-wrapper">
 <!-- BEGIN: IntakeCard -->
-<div class="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden sm:grid-cols-3">
+<div class="bg-white rounded-xl overflow-hidden sm:grid-cols-3" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
 <!-- BEGIN: FormHeader -->
 
-<div class="top-card">
-    <h1>New Lead Intake</h1>
+<div class="top-card" style="border-left: 4px solid #2563eb;">
+  <h1 style="margin-bottom:6px;">New Lead Intake</h1>
     <p class="subtitle">
         Capture prospect details to generate follow-up messages and track your pipeline.
     </p>
@@ -75,7 +75,7 @@
 
 <!-- END: FormHeader -->
 <!-- BEGIN: IntakeForm -->
-<form action="/add_lead" method="POST" class="p-8 space-y-6" data-purpose="lead-capture-form">
+<form action="/add_lead" method="POST" class="p-8 space-y-7" data-purpose="lead-capture-form">
 <!-- Grid Container for paired fields -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <!-- Agent Name -->
@@ -159,9 +159,9 @@
 </div>
 <!-- Submit Button -->
 <div class="pt-4">
-<button class="btn btn-primary btn-full" type="submit">
-            Save Lead &amp; Generate Messages
-          </button>
+<button class="btn btn-primary btn-full" style="font-size:15px;">
+    Save Lead & Generate Messages
+</button>
 </div>
 </form>
 

@@ -865,3 +865,13 @@ body {
     flex-wrap: wrap; /* prevents crowding */
 }
 
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
