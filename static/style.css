@@ -556,6 +556,14 @@ pre {
     font-weight: 600;
 }
 
+.badge svg {
+    color: white;
+}
+
+.badge-warm svg {
+    color: #fff8e1;
+}
+
 .badge-hot {
     background: #16a34a;
     color: white;
