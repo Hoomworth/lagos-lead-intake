@@ -104,25 +104,43 @@ style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
          </div>
 
 
-         <div class="lead-intel">
+    <div class="lead-intel">
 
-             <span class="badge 
-                 {% if analysis.quality == 'Hot' %}badge-hot
-                 {% elif analysis.quality == 'Warm' %}badge-warm
-                 {% else %}badge-cold{% endif %}
-                 ">
-                 {{ analysis.quality }}
-            </span>
+    <!-- QUALITY -->
+    <span class="badge 
+        {% if analysis.quality == 'Hot' %}badge-hot
+        {% elif analysis.quality == 'Warm' %}badge-warm
+        {% else %}badge-cold{% endif %}
+        " style="display:flex; align-items:center; gap:4px;">
 
-          <span class="badge badge-dark">
-                {{ analysis.intent }}
-          </span>
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 2a6 6 0 00-6 6c0 4 6 10 6 10s6-6 6-10a6 6 0 00-6-6z"></path>
+        </svg>
 
-         <span class="badge badge-light">
-               {{ analysis.score }}%
-         </span>
+        {{ analysis.quality }}
+    </span>
 
-        </div>
+    <!-- INTENT -->
+    <span class="badge badge-dark" style="display:flex; align-items:center; gap:4px;">
+
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 3h14v14H3z"></path>
+        </svg>
+
+        {{ analysis.intent }}
+    </span>
+
+    <!-- SCORE -->
+    <span class="badge badge-light" style="display:flex; align-items:center; gap:4px;">
+
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 13h2v4H3v-4zm4-6h2v10H7V7zm4-4h2v14h-2V3zm4 8h2v6h-2v-6z"></path>
+        </svg>
+
+        {{ analysis.score }}%
+    </span>
+
+   </div>
 
         <div class="urgency">
            <span class="urgency-badge 
