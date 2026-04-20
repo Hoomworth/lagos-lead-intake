@@ -73,6 +73,29 @@
 .nav-right .text-red-400 {
     color: #f87171;
 }
+
+.intake-header {
+    background: #f1f5f9;
+    padding: 24px 16px;
+    border-radius: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.intake-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+    color: #111;
+}
+
+.intake-header p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #64748b;
+}
+
 </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 bg-gray-100">
@@ -101,11 +124,11 @@
 <div class="bg-white rounded-xl overflow-hidden sm:grid-cols-3" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
 <!-- BEGIN: FormHeader -->
 
-<div style="padding:20px; text-align:center;">
-  <h1 style="margin-bottom:6px; font-size:22px; font-weight:600;">New Lead Intake</h1>
-    <p style="font-size:14px; color:#6b7280;">
-        Capture prospect details to generate follow-up messages and track your pipeline.
-    </p>
+<div class="intake-header">
+  <h1>New Lead Intake</h1>
+  <p>
+    Capture prospect details to generate follow-up messages and track your pipeline.
+  </p>
 </div>
 
 <!-- END: FormHeader -->
