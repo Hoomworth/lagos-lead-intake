@@ -108,7 +108,7 @@
 
             <p>
                 <span class="label"> <i data-lucide="alert" class="icon"></i> Risk</span>
-                <span class="value">{{ analysis.objections }}</span>
+                <span class="value"> {{ analysis.risk if analysis.risk else analysis.objections }} </span>
             </p>
 
         </div>
