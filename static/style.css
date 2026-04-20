@@ -896,3 +896,39 @@ body {
         font-size: 14px;
     }
 }
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #000;
+    color: #fff;
+
+    padding: 12px 14px;
+    border-radius: 12px;
+
+    gap: 8px;
+}
+
+.nav-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-right a {
+    font-size: 13px;
+    padding: 4px 6px;
+}
+
+.nav-left .logo {
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.navbar + * {
+    margin-top: 12px;
+}
