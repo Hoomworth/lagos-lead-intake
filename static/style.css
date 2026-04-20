@@ -556,6 +556,10 @@ pre {
     font-weight: 600;
 }
 
+.badge svg {
+    display: block;
+}
+
 .badge-warm svg {
     stroke: white;
 }
