@@ -115,7 +115,7 @@ def analyze_lead(lead):
         "intent": intent,
         "action": action,
         "timing": timing,
-        "objections": objections
+        "risk": objections
     }
 
 def get_current_user():
@@ -568,7 +568,7 @@ Return ONLY valid JSON in this format:
             "score": ai_data.get("score", 50),
             "action": ai_data.get("action", "Follow up"),
             "timing": ai_data.get("timing", "Soon"),
-            "objections": ai_data.get("objection", "No major concern")
+            "risk": ai_data.get("objection", "No major concern")
         }
 
         # deduct credit
