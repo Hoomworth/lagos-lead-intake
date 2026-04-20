@@ -25,7 +25,7 @@
     <div class="container">
 
 <!-- 🔥 FILTER BUTTONS -->
-<div style="margin-bottom: 15px;">
+<div style="margin-bottom:15px; display:flex; gap:8px; flex-wrap:wrap;">
     <a href="{{ url_for('leads') }}" class="btn btn-small">All</a>
     <a href="{{ url_for('leads', status='New') }}" class="btn btn-small">New</a>
     <a href="{{ url_for('leads', status='Contacted') }}" class="btn btn-small">Contacted</a>
@@ -33,8 +33,36 @@
 
         <!-- 🔧 SEARCH BAR FIX (ADD HERE) -->
 <form method="GET" action="{{ url_for('leads') }}" 
-style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:center;">
 
+<input 
+  type="text" 
+  name="search" 
+  placeholder="Search name or phone"
+  value="{{ request.args.get('search', '') }}"
+  style="
+    padding:10px; 
+    border:1px solid #ccc; 
+    border-radius:8px; 
+    flex:1; 
+    min-width:0;
+    font-size:14px;
+  "
+>
+
+<button 
+  type="submit" 
+  class="btn"
+  style="
+    height:40px;
+    padding:0 14px;
+    font-size:14px;
+    white-space:nowrap;
+  ">
+  Search
+</button>
+
+</form>
 <input 
   type="text" 
   name="search" 
