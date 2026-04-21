@@ -838,11 +838,12 @@ body {
     justify-content: space-between;
     align-items: center;
 
-    background: #000;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     color: #fff;
 
     padding: 14px 16px;
     border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(26, 58, 82, 0.2);
 
     position: relative;
 }
@@ -890,9 +891,10 @@ body {
         top: 60px;
         right: 0;
 
-        background: #000;
+        background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
         border-radius: 10px;
         padding: 12px;
+        box-shadow: 0 8px 24px rgba(26, 58, 82, 0.2);
 
         flex-direction: column;
         gap: 10px;
@@ -919,10 +921,11 @@ body {
 /* ===== INDEX NAVBAR ONLY ===== */
 
 .navbar-index {
-    background: #000;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     color: #fff;
     padding: 14px;
     border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(26, 58, 82, 0.2);
     position: relative;
 }
 
@@ -955,9 +958,10 @@ body {
     top: 55px;
     right: 10px;
 
-    background: #000;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     padding: 12px;
     border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(26, 58, 82, 0.2);
     width: 180px;
 }
 
