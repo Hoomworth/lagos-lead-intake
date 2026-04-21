@@ -998,7 +998,7 @@ body {
     }
 
     .navbar-index .nav-menu {
-        display: flex;
+        display: flex !important;
         position: static;
         flex-direction: row;
         gap: 18px;
