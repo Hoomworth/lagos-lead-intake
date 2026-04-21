@@ -8,6 +8,10 @@ body {
     padding: 20px;
 }
 
+.navbar {
+    margin-bottom: 20px;
+}
+
 h1 {
     font-size: 28px;
     color: #333;
@@ -857,10 +861,6 @@ body {
 }
 
 /* MENU LINKS */
-.nav-menu {
-    display: flex;
-    gap: 18px;
-}
 
 .nav-menu a {
     color: #e5e7eb;
@@ -1002,4 +1002,10 @@ body {
         padding: 0;
         width: auto;
     }
+}
+
+/* ONLY for normal navbar pages */
+.navbar .nav-menu {
+    display: flex;
+    gap: 18px;
 }
