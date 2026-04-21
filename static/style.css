@@ -847,6 +847,10 @@ body {
     position: relative;
 }
 
+.navbar .nav-menu {
+    display: none;
+}
+
 /* LOGO */
 .logo {
     font-size: 16px;
