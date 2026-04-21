@@ -947,7 +947,7 @@ body {
 
 /* MENU (HIDDEN BY DEFAULT) */
 .navbar-index .nav-menu {
-    display: none;
+    display: none !important;
     flex-direction: column;
     gap: 10px;
 
@@ -963,7 +963,7 @@ body {
 
 /* SHOW MENU WHEN CLICKED */
 .navbar-index .nav-menu.show {
-    display: flex;
+    display: flex !important;
 }
 
 /* LINKS */
