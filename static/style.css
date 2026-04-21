@@ -1005,7 +1005,9 @@ body {
 }
 
 /* ONLY for normal navbar pages */
-.navbar .nav-menu {
-    display: flex;
-    gap: 18px;
+@media (min-width: 601px) {
+    .navbar .nav-menu {
+        display: flex;
+        gap: 18px;
+    }
 }
