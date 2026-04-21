@@ -602,43 +602,6 @@ body {
     margin: 0 auto;
 }
 
-/* ===== NAVBAR IMPROVEMENT ===== */
-
-/* LEFT SIDE */
-.nav-left {
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 1.2;
-}
-
-/* RIGHT SIDE */
-.nav-right {
-    display: flex;
-    flex-wrap: wrap; /* ✅ THIS IS THE KEY FIX */
-    gap: 12px;
-    align-items: center;
-}
-
-/* LINKS */
-.nav-right a {
-    color: #e5e7eb;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 6px 8px;
-    border-radius: 6px;
-    flex-shrink: 0;
-}
-
-.nav-right a:hover {
-    background: rgba(255,255,255,0.08);
-}
-
-/* LOGOUT */
-.nav-right a.logout {
-    color: #f87171;
-}
-
 /* ===== LEAD CARD IMPROVEMENT ===== */
 
 .lead-card-ui {
@@ -864,102 +827,85 @@ body {
     background: #1d4ed8;
 }
 
-@media (max-width: 600px) {
-    .nav-right a {
-        font-size: 13px;
-    }
-
-    .nav-left .logo {
-        font-size: 14px;
-    }
-}
-
-.nav-right {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-
-.nav-right a {
-    font-size: 13px;
-    padding: 4px 6px;
-}
-
-.nav-left .logo {
-    font-size: 15px;
-    line-height: 1.2;
-}
-
-.navbar + * {
-    margin-top: 12px;
-}
-
-/* ===== FINAL NAVBAR (CLEAN + MOBILE FIXED) ===== */
+/* ===== NAVBAR CLEAN SYSTEM ===== */
 
 .navbar {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
 
     background: #000;
     color: #fff;
 
-    padding: 14px;
+    padding: 14px 16px;
     border-radius: 12px;
 
-    gap: 10px;
+    position: relative;
 }
 
 /* LOGO */
-.nav-left .logo {
+.logo {
     font-size: 16px;
     font-weight: 700;
 }
 
-/* LINKS */
-.nav-right {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    width: 100%;
+/* MENU ICON */
+.menu-toggle {
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
 }
 
-/* LINK STYLE */
-.nav-right a {
-    font-size: 13px;
-    padding: 6px 10px;
+/* MENU LINKS */
+.nav-menu {
+    display: flex;
+    gap: 18px;
+}
 
-    background: rgba(255,255,255,0.06);
-    border-radius: 6px;
-
+.nav-menu a {
     color: #e5e7eb;
     text-decoration: none;
-
-    white-space: nowrap;
+    font-size: 14px;
 }
 
-/* LOGOUT */
-.nav-right a.logout {
+.nav-menu a.logout {
     color: #f87171;
 }
 
-/* DESKTOP */
-@media (min-width: 768px) {
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
 
-    .navbar {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+    .menu-toggle {
+        display: block;
     }
 
-    .nav-right {
-        width: auto;
-        gap: 16px;
+    .nav-menu {
+        display: none;
+
+        position: absolute;
+        top: 60px;
+        right: 0;
+
+        background: #000;
+        border-radius: 10px;
+        padding: 12px;
+
+        flex-direction: column;
+        gap: 10px;
+
+        width: 180px;
     }
 
-    .nav-right a {
-        background: none;
-        padding: 0;
+    .nav-menu a {
+        padding: 8px;
+        border-radius: 6px;
+    }
+
+    .nav-menu a:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+    .nav-menu.show {
+        display: flex;
     }
 }

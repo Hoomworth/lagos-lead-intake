@@ -103,19 +103,23 @@
  <div style="max-width:1100px; margin:0 auto 20px;">
     <div class="navbar">
 
-        <div class="nav-left">
-           <span class="logo">Hoomworth CRM</span>
-        </div>
-
-        <div class="nav-right">
-            <a href="{{ url_for('index') }}" class="hover:opacity-80">Dashboard</a>
-            <a href="{{ url_for('leads') }}" class="hover:opacity-80">Leads</a>
-            <a href="{{ url_for('open_prospect') }}">Prospect</a>
-            <a href="{{ url_for('insights') }}">Insights</a>
-            <a href="{{ url_for('logout') }}" class="text-red-400 hover:opacity-80">Logout</a>
-        </div>
-
+    <div class="nav-left">
+        <span class="logo">Hoomworth CRM</span>
     </div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('leads') }}">Leads</a>
+        <a href="{{ url_for('open_prospect') }}">Prospect</a>
+        <a href="{{ url_for('insights') }}">Insights</a>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+
+</div>
 </div>
 
 <!-- BEGIN: MainContainer -->
@@ -256,4 +260,11 @@
       });
     });
   </script>
+
+  <script>
+    function toggleMenu() {
+        const menu = document.getElementById("navMenu");
+        menu.classList.toggle("show");
+}
+</script>
 </body></html>

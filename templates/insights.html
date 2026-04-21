@@ -9,17 +9,23 @@
 <body>
 
 <div class="navbar">
+
     <div class="nav-left">
         <span class="logo">Hoomworth CRM</span>
     </div>
 
-    <div class="nav-right">
+    <div class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
         <a href="{{ url_for('index') }}">Dashboard</a>
         <a href="{{ url_for('leads') }}">Leads</a>
-        <a href="{{ url_for('open_last_lead') }}">Current Lead</a>
+        <a href="{{ url_for('open_prospect') }}">Prospect</a>
         <a href="{{ url_for('insights') }}">Insights</a>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
+
 </div>
 
 <div class="container">
@@ -33,6 +39,13 @@
         <p>You will see lead analytics, conversion data, and performance insights here.</p>
     </div>
 </div>
+
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("navMenu");
+        menu.classList.toggle("show");
+}
+</script>
 
 </body>
 </html>

@@ -9,17 +9,23 @@
 <body>
 
     <div class="navbar">
+
     <div class="nav-left">
         <span class="logo">Hoomworth CRM</span>
     </div>
 
-    <div class="nav-right">
+    <div class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
         <a href="{{ url_for('index') }}">Dashboard</a>
         <a href="{{ url_for('leads') }}">Leads</a>
-       <a href="{{ url_for('open_prospect') }}">Prospect</a>
+        <a href="{{ url_for('open_prospect') }}">Prospect</a>
         <a href="{{ url_for('insights') }}">Insights</a>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
+
 </div>
 
     <div class="container">
@@ -243,5 +249,12 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
             <a href="{{ url_for('index') }}">Add a New Lead</a>
         </div>
     </div>
+    
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("navMenu");
+        menu.classList.toggle("show");
+}
+</script>
 </body>
 </html>
