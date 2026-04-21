@@ -912,6 +912,8 @@ body {
 
 /* ===== INDEX PAGE NAVBAR ONLY ===== */
 
+/* ===== INDEX NAVBAR ONLY ===== */
+
 .navbar-index {
     background: #000;
     color: #fff;
@@ -939,15 +941,23 @@ body {
     cursor: pointer;
 }
 
-/* MENU */
+/* MENU (HIDDEN BY DEFAULT) */
 .navbar-index .nav-menu {
     display: none;
     flex-direction: column;
     gap: 10px;
-    margin-top: 12px;
+
+    position: absolute;
+    top: 55px;
+    right: 10px;
+
+    background: #000;
+    padding: 12px;
+    border-radius: 10px;
+    width: 180px;
 }
 
-/* SHOW MENU */
+/* SHOW MENU WHEN CLICKED */
 .navbar-index .nav-menu.show {
     display: flex;
 }
@@ -957,11 +967,10 @@ body {
     color: #e5e7eb;
     text-decoration: none;
     font-size: 14px;
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
 }
 
-/* HOVER */
 .navbar-index .nav-menu a:hover {
     background: rgba(255,255,255,0.08);
 }
@@ -974,24 +983,23 @@ body {
 /* DESKTOP */
 @media (min-width: 768px) {
 
-    .navbar-index .menu-toggle {
-        display: none;
-    }
-
-    .navbar-index .nav-menu {
-        display: flex;
-        flex-direction: row;
-        gap: 18px;
-        margin-top: 0;
-    }
-
     .navbar-index {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    .navbar-index .nav-top {
-        display: block;
+    .navbar-index .menu-toggle {
+        display: none;
+    }
+
+    .navbar-index .nav-menu {
+        display: flex;
+        position: static;
+        flex-direction: row;
+        gap: 18px;
+        background: none;
+        padding: 0;
+        width: auto;
     }
 }
