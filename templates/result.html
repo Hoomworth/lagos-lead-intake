@@ -74,11 +74,7 @@
                 {% elif analysis.quality == 'Warm' %}badge-warm
                 {% else %}badge-cold{% endif %}
             ">
-             <i data-lucide="
-              {% if analysis.quality == 'Hot' %}flame
-              {% elif analysis.quality == 'Warm' %}zap
-              {% else %}snowflake{% endif %}
-              " class="icon"></i>
+             <i data-lucide="{% if analysis.quality == 'Hot' %}flame{% elif analysis.quality == 'Warm' %}zap{% else %}snowflake{% endif %}" class="icon"></i>
             
             {{ analysis.quality }}
             </span>
