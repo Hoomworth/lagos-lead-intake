@@ -47,12 +47,14 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
   placeholder="Search name or phone"
   value="{{ request.args.get('search', '') }}"
   style="
-    padding:10px; 
-    border:1px solid #ccc; 
+    padding:10px 14px; 
+    border:2px solid #e8eef5; 
     border-radius:8px; 
     flex:1; 
     min-width:0;
     font-size:14px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f4f9 100%);
+    transition: all 0.3s ease;
   "
 >
 
@@ -61,9 +63,11 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
   class="btn"
   style="
     height:40px;
-    padding:0 14px;
+    padding:0 20px;
     font-size:14px;
     white-space:nowrap;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
+    box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);
   ">
   Search
 </button>
