@@ -33,21 +33,42 @@ label {
     font-weight: 600;
     margin-bottom: 8px;
     font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    color: #1a3a52;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
 }
 
 input[type="text"],
 input[type="tel"],
 textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    box-sizing: border-box; /* Important for padding and width consistency */
+    padding: 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.2px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+textarea:focus {
+    border-color: #2d5a7b;
+    box-shadow: 0 0 0 3px rgba(45, 90, 123, 0.1);
+    outline: none;
+}
+
+select {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.2px;
 }
 
 textarea {
     resize: vertical;
+    line-height: 1.6;
 }
 
 .btn {
