@@ -114,9 +114,9 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
          <!-- TOP -->
          <div class="lead-top">
               <div>
-                   <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #1a3a52; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ lead.name }}</h3>
+                   <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #000000; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ lead.name }}</h3>
                    <p style="font-size: 13px; color: #9ca3af; font-family: 'Inter', sans-serif; margin: 4px 0; letter-spacing: 0.2px; font-weight: 500;">{{ lead.date_added.strftime('%d %b %Y') }}</p>
-                   <p class="lead-phone" style="font-size: 14px; color: #d97706; font-family: 'Montserrat', sans-serif; margin: 6px 0 0 0; font-weight: 600; letter-spacing: 0.3px;">{{ lead.phone }}</p>
+                   <p class="lead-phone" style="font-size: 14px; color: #000000; font-family: 'Montserrat', sans-serif; margin: 6px 0 0 0; font-weight: 700; letter-spacing: 0.3px;">{{ lead.phone }}</p>
               </div>
 
               <span class="status 
@@ -150,35 +150,29 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </span>
 
     <!-- INTENT -->
-    <span class="badge badge-dark" style="display:flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
+    <span class="badge badge-dark" style="display:inline-flex; align-items:center; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; min-width: 140px; padding: 6px 12px; border-radius: 20px;">
 
-        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M3 3h14v14H3z"></path>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" stroke="none" style="flex-shrink: 0;">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
         </svg>
 
         {{ analysis.intent }}
     </span>
 
     <!-- SCORE -->
-    <span class="badge badge-light" style="display:flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
+    <span class="badge badge-light" style="display:inline-flex; align-items:center; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; min-width: 140px; padding: 6px 12px; border-radius: 20px;">
 
-        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M3 13h2v4H3v-4zm4-6h2v10H7V7zm4-4h2v14h-2V3zm4 8h2v6h-2v-6z"></path>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" stroke="none" style="flex-shrink: 0;">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+            <line x1="9" y1="19" x2="15" y2="19"></line>
         </svg>
 
-        {{ analysis.score }}%
+        {% if analysis.score >= 75 %}High{% elif analysis.score >= 50 %}Medium{% else %}Low{% endif %}
     </span>
 
    </div>
-
-        <div class="urgency">
-           <span class="urgency-badge 
-              {% if analysis.timing == 'Immediate' %}urgency-hot
-              {% elif analysis.timing == 'Soon' %}urgency-warm
-              {% else %}urgency-cold{% endif %}
-    " style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; font-weight: 600;">          ⏱ {{ analysis.timing }}
-          </span>
-        </div>
 
     <!-- BODY -->
     <div class="lead-body">
@@ -189,9 +183,6 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
 
     <div class="lead-action-hint" style="font-family: 'Inter', sans-serif; color: #4b5563; font-size: 13px; margin: 12px 0; letter-spacing: 0.2px;">
          {{ analysis.action }}
-         <span class="hint-time" style="color: #9ca3af; font-weight: 500;">
-            • {{ analysis.timing }}
-         </span>
     </div>
 
 
