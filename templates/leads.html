@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Leads - Lagos Real Estate</title>
+    <!-- Premium Luxury Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -110,17 +114,16 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
          <!-- TOP -->
          <div class="lead-top">
               <div>
-                   <h3>{{ lead.name }}</h3>
-                   <p style="font-size:12px;
-                   color:#666;">{{ lead.date_added.strftime('%d %b %Y') }}</p>
-                   <p class="lead-phone">{{ lead.phone }}</p>
+                   <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #1a3a52; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ lead.name }}</h3>
+                   <p style="font-size: 13px; color: #9ca3af; font-family: 'Inter', sans-serif; margin: 4px 0; letter-spacing: 0.2px; font-weight: 500;">{{ lead.date_added.strftime('%d %b %Y') }}</p>
+                   <p class="lead-phone" style="font-size: 14px; color: #d97706; font-family: 'Montserrat', sans-serif; margin: 6px 0 0 0; font-weight: 600; letter-spacing: 0.3px;">{{ lead.phone }}</p>
               </div>
 
               <span class="status 
                {% if lead.status == 'New' %}status-new
                {% elif lead.status == 'Contacted' %}status-contacted
                {% else %}status-closed{% endif %}
-               ">
+               " style="font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">
                {{ lead.status }}
              </span>
          </div>
@@ -133,7 +136,7 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
         {% if analysis.quality == 'Hot' %}badge-hot
         {% elif analysis.quality == 'Warm' %}badge-warm
         {% else %}badge-cold{% endif %}
-        " style="display:inline-flex; align-items:center; gap:6px;">
+        " style="display:inline-flex; align-items:center; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
 
         <svg width="14" height="14" viewBox="0 0 24 24" 
              fill="none" 
@@ -147,7 +150,7 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </span>
 
     <!-- INTENT -->
-    <span class="badge badge-dark" style="display:flex; align-items:center; gap:4px;">
+    <span class="badge badge-dark" style="display:flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
 
         <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
             <path d="M3 3h14v14H3z"></path>
@@ -157,7 +160,7 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </span>
 
     <!-- SCORE -->
-    <span class="badge badge-light" style="display:flex; align-items:center; gap:4px;">
+    <span class="badge badge-light" style="display:flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
 
         <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
             <path d="M3 13h2v4H3v-4zm4-6h2v10H7V7zm4-4h2v14h-2V3zm4 8h2v6h-2v-6z"></path>
@@ -173,28 +176,28 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
               {% if analysis.timing == 'Immediate' %}urgency-hot
               {% elif analysis.timing == 'Soon' %}urgency-warm
               {% else %}urgency-cold{% endif %}
-    ">          ⏱ {{ analysis.timing }}
+    " style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; font-weight: 600;">          ⏱ {{ analysis.timing }}
           </span>
         </div>
 
     <!-- BODY -->
     <div class="lead-body">
-        <p><strong>Type:</strong> {{ lead.property_type }}</p>
-        <p><strong>Location:</strong> {{ lead.location }}</p>
-        <p><strong>Budget:</strong> {{ lead.budget }}</p>
+        <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Type:</strong> <span style="color: #4b5563;">{{ lead.property_type }}</span></p>
+        <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Location:</strong> <span style="color: #4b5563;">{{ lead.location }}</span></p>
+        <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Budget:</strong> <span style="color: #4b5563;">{{ lead.budget }}</span></p>
     </div>
 
-    <div class="lead-action-hint">
+    <div class="lead-action-hint" style="font-family: 'Inter', sans-serif; color: #4b5563; font-size: 13px; margin: 12px 0; letter-spacing: 0.2px;">
          {{ analysis.action }}
-         <span class="hint-time">
+         <span class="hint-time" style="color: #9ca3af; font-weight: 500;">
             • {{ analysis.timing }}
          </span>
     </div>
 
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top: 14px; border-top: 1px solid #e5e7eb;">
 
-    <div style="display:flex; align-items:center; gap:6px; color:#6b7280; font-size:13px;">
+    <div style="display:flex; align-items:center; gap:6px; color: #6b7280; font-size:13px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px;">
 
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
             <path d="M12 9v4"></path>
@@ -205,35 +208,35 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
         <span>Risk</span>
     </div>
 
-    <div style="font-size:13px; font-weight:600;">
+    <div style="font-size:13px; font-weight:700; color: #1f2937; font-family: 'Montserrat', sans-serif;">
         {{ analysis.risk }}
     </div>
 
     </div>
 
     <!-- ACTIONS -->
-    <div class="lead-actions">
+    <div class="lead-actions" style="margin-top: 16px;">
 
-        <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small">
+        <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn btn-small" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
             Open
         </a>
 
         {% if analysis.quality == 'Hot' %}
-        <a href="tel:{{ lead.phone }}" class="btn btn-small" style="background: #16a34a;color: white;">
+        <a href="tel:{{ lead.phone }}" class="btn btn-small" style="background: #16a34a; color: white; font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
             Call Now
         </a>
         {% endif %}
 
-        <a href="https://wa.me/{{ lead.phone | replace('0', '234', 1) }}" target="_blank" class="btn btn-small" style="background:#22c55e; color:white;">
+        <a href="https://wa.me/{{ lead.phone | replace('0', '234', 1) }}" target="_blank" class="btn btn-small" style="background:#22c55e; color:white; font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
             WhatsApp
         </a>
 
-        <a href="{{ url_for('mark_closed', lead_id=lead.id) }}" class="btn btn-small" style="background:#3b82f6; color:white;">
+        <a href="{{ url_for('mark_closed', lead_id=lead.id) }}" class="btn btn-small" style="background:#3b82f6; color:white; font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
             Close
         </a>
 
         <form action="{{ url_for('delete_lead', lead_id=lead.id) }}" method="POST">
-            <button type="submit" class="btn btn-small" style="background:#dc3545;">
+            <button type="submit" class="btn btn-small" style="background:#dc3545; font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
                 Delete
             </button>
         </form>
@@ -249,8 +252,8 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
 
 </div>
 
-        <div class="footer-nav">
-            <a href="{{ url_for('index') }}">Add a New Lead</a>
+        <div class="footer-nav" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); padding: 24px; border-radius: 12px; margin-top: 30px;">
+            <a href="{{ url_for('index') }}" style="font-family: 'Montserrat', sans-serif; color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">+ Add a New Lead</a>
         </div>
     </div>
     
