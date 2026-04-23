@@ -231,7 +231,22 @@
             <h2>Message 2: 24-Hour Follow-Up</h2>
 
             <div class="message-box">
-                <pre id="message2">{{ message2 if message2 else "Hi " ~ lead.name ~ ", just checking in. Are you still interested in properties in " ~ lead.location ~ "?" }}</pre>
+                <pre id="message2">{% if message2 %}{{ message2 }}{% else %}Hello {{ lead.name }},
+
+I am checking back with you regarding your ongoing search for a {{ lead.property_type }} in the {{ lead.location }} area. I wanted to touch base and see how your search has been progressing since our last communication.
+
+Over the past few days, I have been actively keeping an eye on the market specifically for your criteria. I have managed to shortlist a few highly attractive options that I believe strongly match what you are looking for in terms of value and quality.
+
+However, before I send these exclusive listings over to you, I want to ensure that my understanding of your preferences is still perfectly accurate so that I do not waste your valuable time with properties that don't fit.
+
+Are you still actively searching and ready to make a move, or are you currently just exploring options to understand the market better? Furthermore, have there been any changes to your initial budget or your preferred timeline for moving?
+
+We recently had a couple of unlisted properties come across our desk that might be exactly what you need. Real estate moves fast here, and the best deals are often closed before they ever make it to the public market.
+
+Would you prefer I send over a quick WhatsApp presentation with pictures, or would a brief 5-minute phone call be better to explain why these specific options stand out? Let me know what works best for your schedule.
+
+Best regards,
+{{ lead.agent_name }}{% endif %}</pre>
             </div>
 
             {% if message2 %}
@@ -249,7 +264,30 @@
             <h2>Message 3: Short Call Script</h2>
 
             <div class="message-box">
-                <pre id="call_script">{{ call_script if call_script else "Hi " ~ lead.name ~ ", this is " ~ lead.agent_name ~ ". You made an enquiry about a " ~ lead.property_type ~ " in " ~ lead.location ~ ". Is this a good time to talk?" }}</pre>
+                <pre id="call_script">{% if call_script %}{{ call_script }}{% else %}LEAD SUMMARY
+Name: {{ lead.name }}
+Phone: {{ lead.phone }}
+Interest: {{ lead.property_type }} in {{ lead.location }}
+Budget: {{ lead.budget }}
+Timeline: {{ lead.timeline }}
+
+[OPENING - PARAGRAPH 1]
+Hello {{ lead.name }}, my name is {{ lead.agent_name }} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about acquiring a {{ lead.property_type }} in {{ lead.location }}. Am I catching you at a good time to speak for just two minutes?
+
+[CONTEXT - PARAGRAPH 2]
+Great! The reason for my call today is that I’ve personally reviewed your request, and I wanted to make sure I introduce myself. Our agency specializes in securing premium properties in that exact neighborhood, and I want to ensure we find exactly what you need.
+
+[QUALIFYING - PARAGRAPH 3]
+To help me filter out the noise and only present you with the best matches, I have a quick question: Are you looking to purchase this property primarily for your own personal use, or is this going to be an investment for rental income?
+
+[TIMELINE & BUDGET - PARAGRAPH 4]
+Understood. I also see you mentioned a budget of {{ lead.budget }} and a timeline of {{ lead.timeline }}. If we happen to find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
+
+[POSITIONING - PARAGRAPH 5]
+That makes perfect sense. Based on everything you’ve shared with me right now, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
+
+[CLOSING - PARAGRAPH 6]
+Here is my proposed next step: I am going to compile the details, photos, and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound like a fair plan to you?{% endif %}</pre>
             </div>
 
             {% if call_script %}
