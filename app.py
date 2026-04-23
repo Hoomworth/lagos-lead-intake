@@ -38,7 +38,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    credits = db.Column(db.Integer, default=3)
+    credits = db.Column(db.Integer, default=5)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -270,7 +270,7 @@ def login():
         session.permanent = True
 
         if user.credits is None:
-            user.credits = 3
+            user.credits = 5
             db.session.commit()
         
 
