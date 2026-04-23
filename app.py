@@ -797,21 +797,21 @@ def open_prospect():
 # -----------------------------
 # RUN
 # -----------------------------
+with app.app_context():
+    db.create_all()
+
+    # Safely upgrade existing database without deleting your data!
+    try:
+        db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at DATETIME'))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        
+    try:
+        db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at DATETIME'))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
-        # Safely upgrade existing database without deleting your data!
-        try:
-            db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at DATETIME'))
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            
-        try:
-            db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at DATETIME'))
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
