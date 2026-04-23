@@ -141,14 +141,15 @@ textarea {
     width: 100%;
 }
 
-pre {
+.message-box pre {
     margin: 0;
-    white-space: pre-wrap; /* Ensures content wraps */
-    word-wrap: break-word; /* Breaks long words if needed */
+    white-space: pre-wrap;
+    word-wrap: break-word;
     font-family: inherit;
     font-size: 15px;
     line-height: 1.7;
     color: #333;
+    overflow-y: visible;
 }
 
 
@@ -667,12 +668,12 @@ form input[type="text"][placeholder*="name"]:focus {
 }
 
 .lead-intel {
-    displ8px;
+    display: flex;
+    gap: 8px;
     margin: 14px 0;
     padding: 12px 0;
     flex-wrap: wrap;
-    border-bottom: 1px solid #f0f0f0
-    flex-wrap: wrap;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .badge {
