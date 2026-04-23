@@ -799,5 +799,22 @@ def open_prospect():
 with app.app_context():
     db.create_all()
 
+    # Auto-upgrade database specifically for Render production
+    try:
+        inspector = inspect(db.engine)
+        if 'lead' in inspector.get_table_names():
+            columns = [col['name'] for col in inspector.get_columns('lead')]
+            if 'contacted_at' not in columns:
+                db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at TIMESTAMP'))
+                db.session.commit()
+                print("Successfully added contacted_at to Render database.")
+            if 'closed_at' not in columns:
+                db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at TIMESTAMP'))
+                db.session.commit()
+                print("Successfully added closed_at to Render database.")
+    except Exception as e:
+        print(f"Migration check skipped: {e}")
+        db.session.rollback()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
