@@ -5,7 +5,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import text
+from sqlalchemy import text, inspect
 from openai import OpenAI
 
 app = Flask(__name__)
@@ -52,9 +52,9 @@ class Lead(db.Model):
     notes = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(20), default='New')
     date_added = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    # contacted_at = db.Column(db.DateTime, nullable=True)
-    # closed_at = db.Column(db.DateTime, nullable=True)
-
+    contacted_at = db.Column(db.DateTime, nullable=True)
+    closed_at = db.Column(db.DateTime, nullable=True)
+    
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
@@ -483,8 +483,8 @@ def mark_closed(lead_id):
 
     if lead:
         lead.status = 'Closed'
-        # if not lead.closed_at:
-        #     lead.closed_at = datetime.datetime.utcnow()
+        if not lead.closed_at:
+            lead.closed_at = datetime.datetime.utcnow()
         db.session.commit()
 
     return redirect(url_for('leads'))    
@@ -499,8 +499,8 @@ def mark_contacted(lead_id):
 
     if lead:
         lead.status = 'Contacted'
-        # if not lead.contacted_at:
-        #     lead.contacted_at = datetime.datetime.utcnow()
+        if not lead.contacted_at:
+            lead.contacted_at = datetime.datetime.utcnow()
         db.session.commit()
 
     return '', 200
@@ -720,6 +720,8 @@ def insights():
 
     # Calculate quality counts
     hot_leads = warm_leads = cold_leads = 0
+    response_times = []
+    close_times = []
     for lead in leads:
         analysis = analyze_lead(lead)
         if analysis['quality'] == 'Hot':
@@ -729,16 +731,42 @@ def insights():
         else:
             cold_leads += 1
             
+        if lead.contacted_at and lead.date_added:
+            diff = (lead.contacted_at - lead.date_added).total_seconds()
+            if diff >= 0:
+                response_times.append(diff)
+                
+        if lead.closed_at and lead.date_added:
+            diff = (lead.closed_at - lead.date_added).total_seconds()
+            if diff >= 0:
+                close_times.append(diff)
+            
     # Calculate Conversion Rate
     conversion_rate = round((closed_leads / total_leads * 100), 1) if total_leads > 0 else 0
+
+    # Calculate Averages (Response Time & Lead Close Days)
+    avg_response_time = 'N/A'
+    if response_times:
+        avg_sec = sum(response_times) / len(response_times)
+        if avg_sec < 3600:
+            avg_response_time = f"{int(avg_sec // 60)} mins"
+        elif avg_sec < 86400:
+            avg_response_time = f"{round(avg_sec / 3600, 1)} hours"
+        else:
+            avg_response_time = f"{round(avg_sec / 86400, 1)} days"
+            
+    lead_close_days = 'N/A'
+    if close_times:
+        avg_sec = sum(close_times) / len(close_times)
+        lead_close_days = f"{round(avg_sec / 86400, 1)} days"
 
     return render_template('insights.html',
                            total_leads=total_leads, new_leads=new_leads,
                            contacted_leads=contacted_leads, closed_leads=closed_leads,
                            hot_leads=hot_leads, warm_leads=warm_leads, cold_leads=cold_leads,
                            conversion_rate=conversion_rate,
-                           avg_response_time='N/A',
-                           lead_close_days='N/A')
+                           avg_response_time=avg_response_time,
+                           lead_close_days=lead_close_days)
    
 
 @app.route('/prospect')
@@ -767,6 +795,25 @@ def open_prospect():
 # -----------------------------
 with app.app_context():
     db.create_all()
+    
+    # THE SAFE INSPECTOR: Only add columns if they are missing
+    inspector = inspect(db.engine)
+    if 'lead' in inspector.get_table_names():
+        columns = [col['name'] for col in inspector.get_columns('lead')]
+        
+        if 'contacted_at' not in columns:
+            try:
+                db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at DATETIME'))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+                
+        if 'closed_at' not in columns:
+            try:
+                db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at DATETIME'))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
