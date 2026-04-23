@@ -411,9 +411,33 @@ textarea {
     padding: 14px;
 }
 
+.first-contact-box {
+    background: #f0fdfa; /* Light teal tint */
+    border-left: 6px solid #0d9488;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.followup-box {
+    background: #fffbeb; /* Light amber tint */
+    border-left: 6px solid #d97706;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.script-box {
+    background: #fdf4ff; /* Light fuchsia/slate tint */
+    border-left: 6px solid #c026d3;
+    border-radius: 10px;
+    padding: 14px;
+}
+
 /* Improve text inside boxes */
 .sms-box pre,
-.email-box pre {
+.email-box pre,
+.first-contact-box pre,
+.followup-box pre,
+.script-box pre {
     margin: 0;
     font-size: 14px;
     color: #333;

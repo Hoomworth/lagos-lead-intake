@@ -129,7 +129,7 @@
         <span class="credit">Credits: {{ current_user.credits }}</span>
     </div>
 
-    <div class="message-box">
+    <div class="message-box first-contact-box">
         <pre id="message1">{{ message1 }}</pre>
     </div>
 
@@ -145,6 +145,14 @@
             class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">
             WhatsApp
         </a>
+
+        {% if not is_ai_message1 %}
+        <a 
+            href="{{ url_for('generate_first_contact', lead_id=lead.id) }}"
+            class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
+            Generate AI (1 Credit)
+        </a>
+        {% endif %}
     </div>
 
 </div>
@@ -188,17 +196,24 @@
     <div class="message-box email-box">
         <pre id="email">{% if email_subject %}Subject: {{ email_subject }}
 
-        {{ email_body }}{% else %}Subject: Property Options in {{ lead.location }}
+{{ email_body }}{% else %}Subject: Exclusive {{ lead.property_type }} Options in {{ lead.location }}
 
-        Hello {{ lead.name }},
+Hello {{ lead.name }},
 
-        I have a few options that match your interest in a {{ lead.property_type }} within your budget.
+Thank you for reaching out regarding your interest in acquiring a {{ lead.property_type }} in {{ lead.location }} within your specified budget of {{ lead.budget }}. I have received your details and I am thrilled to assist you in finding the perfect match.
 
-        Let me know if you would like me to send details or schedule a viewing.
+My name is {{ lead.agent_name }}, and I am a specialized real estate consultant focusing on verified, premium listings within this specific area. I have carefully noted your requirements, and my team is already checking our exclusive inventory for options that perfectly align with your vision.
 
-        Best regards,  
-        {{ lead.agent_name }}{% endif %}
-        </pre>
+The real estate market in {{ lead.location }} is highly dynamic right now, offering some fantastic opportunities whether you are looking for long-term appreciation, rental yield, or a beautiful place to call home. Having the right insights will give you a significant advantage.
+
+To ensure I do not overwhelm you with the wrong listings, I would love to quickly confirm a few finer details. Are you primarily buying for personal use or investment? Do you prefer brand-new modern builds or something with room for custom renovations?
+
+Additionally, how important is proximity to major roads, and is your budget slightly flexible if we find an off-market property that truly checks every single box on your wishlist?
+
+Once you provide these quick details, I will handpick 2 to 3 of the most solid, verified options and send them over for your review. I look forward to working closely with you to secure the best possible deal.
+
+Best regards,
+{{ lead.agent_name }}{% endif %}</pre>
     </div>
 
     {% if email_subject %}
@@ -230,7 +245,7 @@
         <div class="message-container">
             <h2>Message 2: 24-Hour Follow-Up</h2>
 
-            <div class="message-box">
+            <div class="message-box followup-box">
                 <pre id="message2">{% if message2 %}{{ message2 }}{% else %}Hello {{ lead.name }},
 
 I am checking back with you regarding your ongoing search for a {{ lead.property_type }} in the {{ lead.location }} area. I wanted to touch base and see how your search has been progressing since our last communication.
@@ -263,7 +278,7 @@ Best regards,
         <div class="message-container">
             <h2>Message 3: Short Call Script</h2>
 
-            <div class="message-box">
+            <div class="message-box script-box">
                 <pre id="call_script">{% if call_script %}{{ call_script }}{% else %}LEAD SUMMARY
 Name: {{ lead.name }}
 Phone: {{ lead.phone }}

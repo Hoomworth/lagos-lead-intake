@@ -146,18 +146,17 @@ def generate_message_1(lead):
     return f"""
 Hello {lead.name.title()},
 
-Thank you for reaching out regarding a {lead.property_type} in {lead.location} within a budget of {lead.budget}.
+Thank you for reaching out regarding your interest in acquiring a {lead.property_type} in {lead.location} within your specified budget of {lead.budget}. I have received your details and I am thrilled to assist you in finding the perfect match.
 
-My name is {lead.agent_name}, and I handle verified listings within this area. I’ve noted your request and I’m currently checking options that match what you’re looking for.
+My name is {lead.agent_name}, and I am a specialized real estate consultant focusing on verified, premium listings within this specific area. I have carefully noted your requirements, and my team is already checking our exclusive inventory for options that perfectly align with your vision.
 
-To make sure I don’t send you the wrong listings, I need to quickly confirm a few things:
+The real estate market in {lead.location} is highly dynamic right now, offering some fantastic opportunities whether you are looking for long-term appreciation, rental yield, or a beautiful place to call home. Having the right insights will give you a significant advantage.
 
-- Are you buying for personal use or investment?
-- Do you prefer new builds or something already developed?
-- How important is proximity to major roads or work location?
-- Is your budget flexible if we find something that truly fits?
+To ensure I do not overwhelm you with the wrong listings, I would love to quickly confirm a few finer details. Are you primarily buying for personal use or investment? Do you prefer brand-new modern builds or something with room for custom renovations?
 
-Once I have this, I will send you 2–3 solid options that match exactly what you want.
+Additionally, how important is proximity to major roads, and is your budget slightly flexible if we find an off-market property that truly checks every single box on your wishlist?
+
+Once you provide these quick details, I will handpick 2 to 3 of the most solid, verified options and send them over for your review. I look forward to working closely with you to secure the best possible deal.
 
 Looking forward to your response.
 
@@ -196,20 +195,23 @@ Interest: {lead.property_type} in {lead.location}
 Budget: {lead.budget}
 Timeline: {lead.timeline}
 
-OPENING
-Hi {lead.name}, this is {lead.agent_name}. You made an inquiry about a {lead.property_type} in {lead.location}. Is this a good time to talk for a minute?
+[OPENING - PARAGRAPH 1]
+Hello {lead.name}, my name is {lead.agent_name} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about acquiring a {lead.property_type} in {lead.location}. Am I catching you at a good time to speak for just two minutes?
 
-QUALIFYING QUESTIONS
-- Are you buying for personal use or investment?
-- What exactly are you looking for?
-- How soon are you planning to move? ({lead.timeline})
-- Is your budget of {lead.budget} fixed or flexible?
+[CONTEXT - PARAGRAPH 2]
+Great! The reason for my call today is that I’ve personally reviewed your request, and I wanted to make sure I introduce myself. Our agency specializes in securing premium properties in that exact neighborhood, and I want to ensure we find exactly what you need.
 
-POSITIONING
-Based on what you’ve shared, I have options that match your needs.
+[QUALIFYING - PARAGRAPH 3]
+To help me filter out the noise and only present you with the best matches, I have a quick question: Are you looking to purchase this property primarily for your own personal use, or is this going to be an investment for rental income?
 
-CLOSING
-I will send you suitable options on WhatsApp shortly. If anything stands out, we can schedule a viewing.
+[TIMELINE & BUDGET - PARAGRAPH 4]
+Understood. I also see you mentioned a budget of {lead.budget} and a timeline of {lead.timeline}. If we happen to find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
+
+[POSITIONING - PARAGRAPH 5]
+That makes perfect sense. Based on everything you’ve shared with me right now, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
+
+[CLOSING - PARAGRAPH 6]
+Here is my proposed next step: I am going to compile the details, photos, and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound like a fair plan to you?
 """
 
 
@@ -376,6 +378,7 @@ def result(lead_id):
         current_user=current_user,
         analysis=analysis,
         message1=ai_whatsapp if ai_whatsapp else generate_message_1(lead),
+        is_ai_message1=bool(ai_whatsapp),
         message2=message2,
         call_script=call_script,
         phone=phone,
@@ -545,10 +548,10 @@ Return ONLY valid JSON in this format:
   "timing": "When to follow up",
   "objection": "Likely concern",
 
-  "whatsapp": "Friendly WhatsApp message (highly detailed, exactly 6 or more paragraphs)",
+  "whatsapp": "Write a highly detailed, 6-paragraph WhatsApp follow-up. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 6 complete paragraphs.",
   "sms": "Short SMS under 160 characters",
   "email_subject": "Email subject line",
-  "email_body": "Professional email message (highly detailed, exactly 6 or more paragraphs with proper spacing)"
+  "email_body": "Write a highly detailed, 6-paragraph professional email. Separate each paragraph with a double line break (\\n\\n) for perfect spacing. Do NOT write less than 6 complete paragraphs."
 }}
 """
 
@@ -591,6 +594,32 @@ Return ONLY valid JSON in this format:
     return redirect(url_for('result', lead_id=lead.id))
 
 
+@app.route('/generate_first_contact/<int:lead_id>')
+@login_required
+def generate_first_contact(lead_id):
+    current_user = get_current_user()
+
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('result', lead_id=lead_id))
+
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    prompt = f"Write a highly detailed, 6-paragraph WhatsApp first-contact message for a real estate client named {lead.name} inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 6 complete paragraphs."
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    session['ai_whatsapp'] = response.choices[0].message.content
+
+    current_user.credits -= 1
+    db.session.commit()
+
+    return redirect(url_for('result', lead_id=lead_id))
+
+
 @app.route('/generate_sms/<int:lead_id>')
 @login_required
 def generate_sms(lead_id):
@@ -630,7 +659,7 @@ def generate_email(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a professional, highly detailed real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}. Ensure perfect spacing and paragraph alignment. You MUST write exactly 6 or more complete paragraphs."
+    prompt = f"Write a highly detailed, professional real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) for perfect spacing and alignment."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -659,7 +688,7 @@ def generate_followup(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}. Ensure proper spacing. You MUST write exactly 6 or more complete paragraphs."
+    prompt = f"Write a highly detailed follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n)."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -687,7 +716,7 @@ def generate_script(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a comprehensive phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}. Ensure proper formatting and spacing. You MUST write exactly 6 or more complete paragraphs."
+    prompt = f"Write a comprehensive phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) to ensure proper spacing."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
