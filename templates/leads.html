@@ -115,7 +115,7 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
          <div class="lead-top">
               <div>
                    <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #000000; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ lead.name }}</h3>
-                   <p style="font-size: 13px; color: #9ca3af; font-family: 'Inter', sans-serif; margin: 4px 0; letter-spacing: 0.2px; font-weight: 500;">{{ lead.date_added.strftime('%d %b %Y') }}</p>
+                   <p style="font-size: 13px; color: #9ca3af; font-family: 'Inter', sans-serif; margin: 4px 0; letter-spacing: 0.2px; font-weight: 500;">{{ lead.date_added.strftime('%d %b %Y') if lead.date_added else 'N/A' }}</p>
                    <p class="lead-phone" style="font-size: 14px; color: #000000; font-family: 'Montserrat', sans-serif; margin: 6px 0 0 0; font-weight: 700; letter-spacing: 0.3px;">{{ lead.phone }}</p>
               </div>
 

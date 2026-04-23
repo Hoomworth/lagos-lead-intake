@@ -5,6 +5,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import text
 from openai import OpenAI
 
 app = Flask(__name__)
@@ -433,7 +434,7 @@ def leads():
         leads_with_analysis.sort(
             key=lambda x: (
                 priority_order.get(x["analysis"]["quality"], 4),
-                 -x["lead"].date_added.timestamp()
+                 -x["lead"].date_added.timestamp() if x["lead"].date_added else 0
              )
         )
 
@@ -799,5 +800,18 @@ def open_prospect():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
+        # Safely upgrade existing database without deleting your data!
+        try:
+            db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at DATETIME'))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            
+        try:
+            db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at DATETIME'))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
 
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
