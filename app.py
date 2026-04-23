@@ -424,19 +424,18 @@ def leads():
             "analysis": analysis
         })
 
-
-        priority_order = {
-             "Hot": 1,
-             "Warm": 2,
-             "Cold": 3
-        }
-
-        leads_with_analysis.sort(
-            key=lambda x: (
-                priority_order.get(x["analysis"]["quality"], 4),
-                 -x["lead"].date_added.timestamp() if x["lead"].date_added else 0
-             )
-        )
+    # Sort the leads outside of the loop for correctness and performance
+    priority_order = {
+            "Hot": 1,
+            "Warm": 2,
+            "Cold": 3
+    }
+    leads_with_analysis.sort(
+        key=lambda x: (
+            priority_order.get(x["analysis"]["quality"], 4),
+                -x["lead"].date_added.timestamp() if x["lead"].date_added else 0
+            )
+    )
 
     # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()
@@ -804,13 +803,19 @@ with app.app_context():
     try:
         db.session.execute(text('ALTER TABLE lead ADD COLUMN contacted_at DATETIME'))
         db.session.commit()
-    except Exception:
+        print("SUCCESS: Column 'contacted_at' was added to the database.")
+    except Exception as e:
+        # This usually means the column already exists, which is fine.
+        print(f"INFO: Could not add 'contacted_at'. It probably exists already. Details: {e}")
         db.session.rollback()
         
     try:
         db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at DATETIME'))
         db.session.commit()
-    except Exception:
+        print("SUCCESS: Column 'closed_at' was added to the database.")
+    except Exception as e:
+        # This usually means the column already exists, which is fine.
+        print(f"INFO: Could not add 'closed_at'. It probably exists already. Details: {e}")
         db.session.rollback()
 
 if __name__ == '__main__':
