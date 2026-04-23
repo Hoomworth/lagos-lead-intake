@@ -545,10 +545,10 @@ Return ONLY valid JSON in this format:
   "timing": "When to follow up",
   "objection": "Likely concern",
 
-  "whatsapp": "Friendly WhatsApp message",
+  "whatsapp": "Friendly WhatsApp message (highly detailed, exactly 6 or more paragraphs)",
   "sms": "Short SMS under 160 characters",
   "email_subject": "Email subject line",
-  "email_body": "Professional email message"
+  "email_body": "Professional email message (highly detailed, exactly 6 or more paragraphs with proper spacing)"
 }}
 """
 
@@ -630,7 +630,7 @@ def generate_email(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a professional real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}"
+    prompt = f"Write a professional, highly detailed real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}. Ensure perfect spacing and paragraph alignment. You MUST write exactly 6 or more complete paragraphs."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -659,7 +659,7 @@ def generate_followup(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}"
+    prompt = f"Write a highly detailed follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}. Ensure proper spacing. You MUST write exactly 6 or more complete paragraphs."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -687,7 +687,7 @@ def generate_script(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a short phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}"
+    prompt = f"Write a comprehensive phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}. Ensure proper formatting and spacing. You MUST write exactly 6 or more complete paragraphs."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",

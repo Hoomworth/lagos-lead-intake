@@ -8,6 +8,11 @@ body {
     padding: 20px;
 }
 
+/* Authentication Pages Background */
+body.auth-page {
+    background-color: #2563eb !important;
+}
+
 .navbar {
     margin-bottom: 20px;
 }
@@ -428,9 +433,12 @@ textarea {
 }
 
 .btn-primary {
-    background: #2563eb;
-    color: white;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
+    color: #fff;
     padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);
+    border: none;
+    transition: all 0.3s ease;
 }
 
 .btn-dark {
@@ -465,8 +473,8 @@ textarea {
 }
 
 .message-box pre {
-    max-height: 400px;
-    overflow-y: auto;
+    max-height: none;
+    overflow-y: visible;
 }
 
 @media (min-width: 768px) {
@@ -955,13 +963,17 @@ body {
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     color: #fff;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);
+    transition: all 0.3s ease;
+    border: none;
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    box-shadow: 0 6px 16px rgba(26, 58, 82, 0.3);
+    transform: translateY(-2px);
 }
 
 /* ===== NAVBAR CLEAN SYSTEM ===== */
