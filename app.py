@@ -55,6 +55,7 @@ class User(db.Model):
     credits = db.Column(db.Integer, default=5)
     gender = db.Column(db.String(20), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -151,6 +152,16 @@ def login_required(route_function):
         if 'user_id' not in session:
             flash('Please log in to continue.', 'error')
             return redirect(url_for('login'))
+        return route_function(*args, **kwargs)
+    return wrapper
+
+def admin_required(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        user = get_current_user()
+        if not user or not getattr(user, 'is_admin', False):
+            flash('Admin access required.', 'error')
+            return redirect(url_for('index'))
         return route_function(*args, **kwargs)
     return wrapper
 
@@ -374,6 +385,29 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
+@app.route('/admin')
+@login_required
+@admin_required
+def admin():
+    users = User.query.all()
+    return render_template('admin.html', current_user=get_current_user(), users=users)
+
+
+@app.route('/admin/add_credits/<int:user_id>', methods=['POST'])
+@login_required
+@admin_required
+def admin_add_credits(user_id):
+    user = User.query.get_or_404(user_id)
+    try:
+        credits_to_add = int(request.form.get('credits', 0))
+        user.credits += credits_to_add
+        db.session.commit()
+        flash(f"Successfully added {credits_to_add} credits to {user.full_name}.", "success")
+    except ValueError:
+        flash("Invalid credit amount.", "error")
+    return redirect(url_for('admin'))
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -406,7 +440,7 @@ def profile():
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html')
+    return render_template('index.html', current_user=get_current_user())
 
 
 @app.route('/add_lead', methods=['POST'])
@@ -939,7 +973,8 @@ def insights():
                            hot_leads=hot_leads, warm_leads=warm_leads, cold_leads=cold_leads,
                            conversion_rate=conversion_rate,
                            avg_response_time=avg_response_time,
-                           lead_close_days=lead_close_days)
+                           lead_close_days=lead_close_days,
+                           current_user=current_user)
    
 
 @app.route('/prospect')
@@ -993,6 +1028,11 @@ with app.app_context():
                 db.session.execute(text('ALTER TABLE "user" ADD COLUMN phone VARCHAR(20)'))
                 db.session.commit()
                 print("Successfully added phone to user table.")
+            if 'is_admin' not in user_columns:
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN is_admin BOOLEAN DEFAULT 0'))
+                db.session.execute(text('UPDATE "user" SET is_admin = 1 WHERE id = 1'))
+                db.session.commit()
+                print("Successfully added is_admin to user table.")
     except Exception as e:
         print(f"Migration check skipped: {e}")
         db.session.rollback()

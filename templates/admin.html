@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hoomworth CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <span class="logo">Hoomworth CRM</span>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <div class="nav-menu" id="navMenu">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('leads') }}">Leads</a>
+            <a href="{{ url_for('open_prospect') }}">Prospect</a>
+            <a href="{{ url_for('insights') }}">Insights</a>
+            <a href="{{ url_for('profile') }}">My Account</a>
+            {% if current_user and current_user.is_admin %}
+            <a href="{{ url_for('admin') }}" style="color: #f59e0b;">Admin</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1000px;">
+        <div class="top-card">
+            <h1>Admin Dashboard</h1>
+            <p class="subtitle" style="font-family: 'Montserrat', sans-serif;">Manage your registered realtors and allocate AI credits.</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div style="padding:12px; border-radius:6px; margin-bottom:15px; font-weight: 600; {% if category == 'success' %}background:#d1fae5; color:#065f46;{% else %}background:#fee2e2; color:#991b1b;{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="lead-card-ui" style="overflow-x: auto;">
+            <table class="leads-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Name</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Email</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Phone</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Leads</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Credits</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                            <strong>{{ user.full_name }}</strong>
+                            {% if user.is_admin %}
+                            <span class="badge" style="background:#1a3a52; color:white; font-size:10px; padding:2px 6px; margin-left:4px;">Admin</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">{{ user.email }}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">{{ user.phone or 'N/A' }}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">{{ user.leads|length }}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #d97706;">{{ user.credits }}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                            <form method="POST" action="{{ url_for('admin_add_credits', user_id=user.id) }}" style="display: flex; gap: 8px;">
+                                <input type="number" name="credits" value="10" style="width: 60px; padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px;" required>
+                                <button type="submit" class="btn btn-small" style="background: #16a34a; color: white; border: none; cursor: pointer;">+ Add</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("navMenu");
+            menu.classList.toggle("show");
+        }
+    </script>
+</body>
+</html>
