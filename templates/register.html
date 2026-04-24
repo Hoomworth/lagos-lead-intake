@@ -33,8 +33,22 @@
       </div>
 
       <div>
+        <label class="block text-sm font-semibold mb-1">Phone Number</label>
+        <input type="tel" name="phone" required class="w-full rounded-lg border border-gray-300 px-4 py-3">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-1">Gender</label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="gender" value="Male" required class="text-blue-600"> Male</label>
+          <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="gender" value="Female" required class="text-blue-600"> Female</label>
+        </div>
+      </div>
+
+      <div>
         <label class="block text-sm font-semibold mb-1">Password</label>
-        <input type="password" name="password" required class="w-full rounded-lg border border-gray-300 px-4 py-3">
+        <input type="password" name="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number" class="w-full rounded-lg border border-gray-300 px-4 py-3">
+        <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters, include 1 uppercase, 1 lowercase, and 1 number.</p>
       </div>
 
       <div>

@@ -1,5 +1,6 @@
 import os
 import datetime
+import re
 from functools import wraps
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
@@ -52,6 +53,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     credits = db.Column(db.Integer, default=5)
+    gender = db.Column(db.String(20), nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -238,13 +241,20 @@ def register():
         email = request.form.get('email').lower()
         password = request.form.get('password')
         confirm = request.form.get('confirm_password')
+        gender = request.form.get('gender')
+        phone = request.form.get('phone')
 
-        if not full_name or not email or not password or not confirm:
+        if not full_name or not email or not password or not confirm or not gender or not phone:
             flash('Fill all fields', 'error')
             return redirect(url_for('register'))
 
         if password != confirm:
             flash('Passwords do not match', 'error')
+            return redirect(url_for('register'))
+
+        # Password strength validation
+        if len(password) < 8 or not re.search(r"[a-z]", password) or not re.search(r"[A-Z]", password) or not re.search(r"[0-9]", password):
+            flash('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.', 'error')
             return redirect(url_for('register'))
 
         if User.query.filter_by(email=email).first():
@@ -254,7 +264,9 @@ def register():
         user = User(
             full_name=full_name,
             email=email,
-            password_hash=generate_password_hash(password)
+            password_hash=generate_password_hash(password),
+            gender=gender,
+            phone=phone
         )
 
         db.session.add(user)
@@ -970,6 +982,17 @@ with app.app_context():
                 db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at TIMESTAMP'))
                 db.session.commit()
                 print("Successfully added closed_at to Render database.")
+                
+        if 'user' in inspector.get_table_names():
+            user_columns = [col['name'] for col in inspector.get_columns('user')]
+            if 'gender' not in user_columns:
+                db.session.execute(text('ALTER TABLE user ADD COLUMN gender VARCHAR(20)'))
+                db.session.commit()
+                print("Successfully added gender to user table.")
+            if 'phone' not in user_columns:
+                db.session.execute(text('ALTER TABLE user ADD COLUMN phone VARCHAR(20)'))
+                db.session.commit()
+                print("Successfully added phone to user table.")
     except Exception as e:
         print(f"Migration check skipped: {e}")
         db.session.rollback()
