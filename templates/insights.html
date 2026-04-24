@@ -67,6 +67,7 @@
         <a href="{{ url_for('leads') }}">Leads</a>
         <a href="{{ url_for('open_prospect') }}">Prospect</a>
         <a href="{{ url_for('insights') }}">Insights</a>
+        <a href="{{ url_for('profile') }}">My Account</a>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
 </div>
@@ -108,6 +109,22 @@
             <p style="margin: 0; font-size: 14px; color: #4b5563;">
                 <strong style="color: #1a3a52;">Lead Quality Distribution:</strong> Your leads are strategically segmented to help you focus on high-potential prospects. Track quality scores to identify which leads are most likely to convert.
             </p>
+        </div>
+    </div>
+
+    <!-- VISUAL ANALYTICS (CHART.JS) -->
+    <div class="insights-card">
+        <h2 class="section-title" style="font-size: 22px; color: #1a3a52; margin-bottom: 20px;">📈 Visual Analytics</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <!-- Status Bar Chart -->
+            <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <canvas id="statusChart"></canvas>
+            </div>
+            <!-- Quality Doughnut Chart -->
+            <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <canvas id="qualityChart"></canvas>
+            </div>
         </div>
     </div>
 
@@ -197,6 +214,54 @@
         const menu = document.getElementById("navMenu");
         menu.classList.toggle("show");
     }
+</script>
+
+<!-- CHART.JS SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Status Chart (Bar)
+    const ctxStatus = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'bar',
+        data: {
+            labels: ['New', 'Contacted', 'Closed'],
+            datasets: [{
+                label: 'Number of Leads',
+                data: [{{ new_leads|default(0) }}, {{ contacted_leads|default(0) }}, {{ closed_leads|default(0) }}],
+                backgroundColor: ['#2563eb', '#f59e0b', '#16a34a'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Lead Funnel Pipeline', font: { size: 16, family: 'Montserrat' } }
+            }
+        }
+    });
+
+    // Quality Chart (Doughnut)
+    const ctxQuality = document.getElementById('qualityChart').getContext('2d');
+    new Chart(ctxQuality, {
+        type: 'doughnut',
+        data: {
+            labels: ['Hot', 'Warm', 'Cold'],
+            datasets: [{
+                data: [{{ hot_leads|default(0) }}, {{ warm_leads|default(0) }}, {{ cold_leads|default(0) }}],
+                backgroundColor: ['#ef4444', '#f59e0b', '#6b7280'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Lead Quality Distribution', font: { size: 16, family: 'Montserrat' } }
+            }
+        }
+    });
 </script>
 
 </body>
