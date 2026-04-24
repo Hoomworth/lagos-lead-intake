@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import text, inspect
 from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail, Message
 from openai import OpenAI
 
 app = Flask(__name__)
@@ -17,6 +18,14 @@ if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Email Configuration (100% Free via Gmail)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
 
 api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -28,6 +37,7 @@ client = OpenAI(api_key=api_key)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
 
 # Serializer for generating secure password reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -305,6 +315,16 @@ def forgot_password():
             print(reset_url, flush=True)
             print("="*50 + "\n", flush=True)
             
+            # Actually send the email to the user's inbox
+            if app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD']:
+                try:
+                    msg = Message("Reset Your Password - Hoomworth CRM", recipients=[email])
+                    msg.body = f"Hello,\n\nTo reset your password, please click the link below:\n\n{reset_url}\n\nIf you did not request a password reset, please ignore this email.\n\nBest regards,\nHoomworth CRM"
+                    mail.send(msg)
+                    print(f"Successfully sent reset email to {email}", flush=True)
+                except Exception as e:
+                    print(f"Failed to send email: {e}", flush=True)
+
             flash('If an account exists, a password reset link has been generated. Check your server logs!', 'success')
         else:
             # Display the same message even if the email doesn't exist (security best practice)
