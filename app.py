@@ -362,6 +362,32 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    current_user = get_current_user()
+    if request.method == 'POST':
+        full_name = request.form.get('full_name')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if full_name:
+            current_user.full_name = full_name
+        
+        if new_password:
+            if new_password == confirm_password:
+                current_user.password_hash = generate_password_hash(new_password)
+            else:
+                flash("Passwords do not match.", "error")
+                return redirect(url_for('profile'))
+        
+        db.session.commit()
+        flash("Profile updated successfully.", "success")
+        return redirect(url_for('profile'))
+        
+    return render_template('profile.html', current_user=current_user)
+
+
 # -----------------------------
 # Lead Routes
 # -----------------------------
@@ -408,6 +434,32 @@ def add_lead():
     db.session.commit()
 
     return redirect(url_for('result', lead_id=lead.id))
+
+
+@app.route('/edit_lead/<int:lead_id>', methods=['GET', 'POST'])
+@login_required
+def edit_lead(lead_id):
+    current_user = get_current_user()
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+
+    if not lead:
+        flash("Lead not found.", "error")
+        return redirect(url_for('leads'))
+
+    if request.method == 'POST':
+        lead.name = request.form.get('name')
+        lead.phone = request.form.get('phone')
+        lead.budget = request.form.get('budget')
+        lead.location = request.form.get('location')
+        lead.property_type = request.form.get('property_type')
+        lead.timeline = request.form.get('timeline')
+        lead.notes = request.form.get('notes')
+        
+        db.session.commit()
+        flash("Lead updated successfully.", "success")
+        return redirect(url_for('result', lead_id=lead.id))
+
+    return render_template('edit_lead.html', lead=lead, current_user=current_user)
 
 
 @app.route('/result/<int:lead_id>')

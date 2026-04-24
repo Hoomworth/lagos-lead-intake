@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lead - Lagos Real Estate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <span class="logo">Hoomworth CRM</span>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <div class="nav-menu" id="navMenu">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('leads') }}">Leads</a>
+            <a href="{{ url_for('open_prospect') }}">Prospect</a>
+            <a href="{{ url_for('insights') }}">Insights</a>
+            <a href="{{ url_for('profile') }}">My Account</a>
+            <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-card">
+            <h1>Edit Lead: {{ lead.name }}</h1>
+            <p class="subtitle" style="font-family: 'Montserrat', sans-serif;">Update the details below to keep your CRM accurate.</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('edit_lead', lead_id=lead.id) }}" class="lead-card-ui" style="display:block;">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Name</label>
+                <input type="text" name="name" value="{{ lead.name }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Phone</label>
+                <input type="tel" name="phone" value="{{ lead.phone }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Budget</label>
+                <input type="text" name="budget" value="{{ lead.budget }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Location</label>
+                <input type="text" name="location" value="{{ lead.location }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Property Type</label>
+                <input type="text" name="property_type" value="{{ lead.property_type }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Timeline</label>
+                <input type="text" name="timeline" value="{{ lead.timeline }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Notes</label>
+                <textarea name="notes" rows="4">{{ lead.notes }}</textarea>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Save Changes</button>
+            <a href="{{ url_for('result', lead_id=lead.id) }}" class="btn" style="width: 100%; margin-top:10px; background: #e5e7eb; color: #111; text-align:center;">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

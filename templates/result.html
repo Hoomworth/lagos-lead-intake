@@ -24,6 +24,7 @@
         <a href="{{ url_for('leads') }}">Leads</a>
         <a href="{{ url_for('open_prospect') }}">Prospect</a>
         <a href="{{ url_for('insights') }}">Insights</a>
+        <a href="{{ url_for('profile') }}">My Account</a>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
 
@@ -37,13 +38,16 @@
                     <p class="subtitle" style="font-family: 'Montserrat', sans-serif;">Everything you need to convert this lead</p>
                  </div>
 
-                 <div class="lead-status 
-                            {% if analysis.quality == 'Hot' %}status-hot
-                            {% elif analysis.quality == 'Warm' %}status-warm
-                            {% else %}status-cold{% endif %}
-                            " style="font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">
-                            {{ analysis.quality }}
-                </div>
+                 <div style="display: flex; align-items: center; gap: 10px;">
+                     <a href="{{ url_for('edit_lead', lead_id=lead.id) }}" class="btn btn-small" style="background:#f59e0b; color:white; font-family: 'Montserrat', sans-serif; font-weight: 700; border-radius: 20px; text-decoration: none;">Edit</a>
+                     <div class="lead-status 
+                                {% if analysis.quality == 'Hot' %}status-hot
+                                {% elif analysis.quality == 'Warm' %}status-warm
+                                {% else %}status-cold{% endif %}
+                                " style="font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">
+                                {{ analysis.quality }}
+                    </div>
+                 </div>
              </div>
 
         <div class="lead-name" style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: #000000; margin-top: 16px; letter-spacing: -0.5px;">

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Lagos Real Estate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <span class="logo">Hoomworth CRM</span>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <div class="nav-menu" id="navMenu">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('leads') }}">Leads</a>
+            <a href="{{ url_for('open_prospect') }}">Prospect</a>
+            <a href="{{ url_for('insights') }}">Insights</a>
+            <a href="{{ url_for('profile') }}">My Account</a>
+            <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-card">
+            <h1>My Account</h1>
+            <p class="subtitle" style="font-family: 'Montserrat', sans-serif;">Manage your profile and check your AI credits.</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div style="padding:12px; border-radius:6px; margin-bottom:15px; font-weight: 600; {% if category == 'success' %}background:#d1fae5; color:#065f46;{% else %}background:#fee2e2; color:#991b1b;{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="stats-grid">
+            <div class="card" style="grid-column: span 2; border-left-color: #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);">
+                <h3 style="font-family: 'Montserrat', sans-serif;">Available AI Credits</h3>
+                <p style="font-size: 48px; color: #d97706;">{{ current_user.credits }}</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('profile') }}" class="lead-card-ui" style="display:block;">
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 20px; font-size: 22px;">Update Profile</h2>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Full Name</label>
+                <input type="text" name="full_name" value="{{ current_user.full_name }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Email Address</label>
+                <input type="email" value="{{ current_user.email }}" disabled style="width: 100%; padding: 14px; border: 1.5px solid #d1d5db; border-radius: 8px; background: #f3f4f6; color: #6b7280; cursor: not-allowed; font-family: 'Inter', sans-serif;">
+            </div>
+            
+            <hr style="border:none; border-top:1px solid #e5e7eb; margin:25px 0;">
+            
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 10px; font-size: 22px;">Change Password</h2>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px; font-family: 'Inter', sans-serif;">Leave these blank if you do not want to change your password.</p>
+            
+            <div class="form-group" style="margin-bottom: 15px;"><label>New Password</label><input type="password" name="new_password" style="width: 100%; padding: 14px; border: 1.5px solid #d1d5db; border-radius: 8px;"></div>
+            <div class="form-group" style="margin-bottom: 20px;"><label>Confirm New Password</label><input type="password" name="confirm_password" style="width: 100%; padding: 14px; border: 1.5px solid #d1d5db; border-radius: 8px;"></div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Update Settings</button>
+        </form>
+    </div>
+</body>
+</html>
