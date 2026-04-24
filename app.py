@@ -986,11 +986,11 @@ with app.app_context():
         if 'user' in inspector.get_table_names():
             user_columns = [col['name'] for col in inspector.get_columns('user')]
             if 'gender' not in user_columns:
-                db.session.execute(text('ALTER TABLE user ADD COLUMN gender VARCHAR(20)'))
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN gender VARCHAR(20)'))
                 db.session.commit()
                 print("Successfully added gender to user table.")
             if 'phone' not in user_columns:
-                db.session.execute(text('ALTER TABLE user ADD COLUMN phone VARCHAR(20)'))
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN phone VARCHAR(20)'))
                 db.session.commit()
                 print("Successfully added phone to user table.")
     except Exception as e:
