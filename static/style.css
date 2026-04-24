@@ -1070,6 +1070,7 @@ body {
         gap: 10px;
 
         width: 180px;
+        z-index: 1000;
     }
 
     .nav-menu a {
@@ -1133,6 +1134,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(26, 58, 82, 0.2);
     width: 180px;
+    z-index: 1000;
 }
 
 /* SHOW MENU WHEN CLICKED */
