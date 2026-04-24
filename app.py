@@ -1029,8 +1029,8 @@ with app.app_context():
                 db.session.commit()
                 print("Successfully added phone to user table.")
             if 'is_admin' not in user_columns:
-                db.session.execute(text('ALTER TABLE "user" ADD COLUMN is_admin BOOLEAN DEFAULT 0'))
-                db.session.execute(text('UPDATE "user" SET is_admin = 1 WHERE id = 1'))
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN is_admin BOOLEAN DEFAULT FALSE'))
+                db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
                 db.session.commit()
                 print("Successfully added is_admin to user table.")
     except Exception as e:
