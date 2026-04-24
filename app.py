@@ -1006,6 +1006,10 @@ with app.app_context():
 
     # Auto-upgrade database specifically for Render production
     try:
+        # Force the very first registered user to ALWAYS be an admin
+        db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
+        db.session.commit()
+
         inspector = inspect(db.engine)
         if 'lead' in inspector.get_table_names():
             columns = [col['name'] for col in inspector.get_columns('lead')]
