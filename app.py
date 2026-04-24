@@ -74,6 +74,7 @@ class Lead(db.Model):
     date_added = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     contacted_at = db.Column(db.DateTime, nullable=True)
     closed_at = db.Column(db.DateTime, nullable=True)
+    source = db.Column(db.String(50), default='Manual')
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -473,7 +474,8 @@ def add_lead():
         property_type=property_type,
         timeline=timeline,
         notes=notes,
-        user_id=current_user.id
+        user_id=current_user.id,
+        source='Manual'
     )
 
     db.session.add(lead)
@@ -908,6 +910,42 @@ def generate_script(lead_id):
     return redirect(url_for('result', lead_id=lead_id))
 
 
+# -----------------------------
+# Internal Scraper API (The "Door")
+# -----------------------------
+@app.route('/api/add_scraped_lead', methods=['POST'])
+def api_add_scraped_lead():
+    data = request.get_json()
+    if not data:
+        return {"error": "No data provided"}, 400
+
+    # DEALER LOGIC: Find the user with the fewest leads to ensure fair distribution
+    users = User.query.all()
+    if not users:
+        return {"error": "No users in system"}, 400
+        
+    # Sort users by their total number of leads, and pick the one with the lowest count
+    assigned_user = sorted(users, key=lambda u: len(u.leads))[0]
+
+    lead = Lead(
+        agent_name=data.get('agent_name', 'Hoomworth Bot'),
+        name=data.get('name', 'Unknown Prospect'),
+        phone=data.get('phone', 'No phone provided'),
+        budget=data.get('budget', 'Flexible'),
+        location=data.get('location', 'Lagos'),
+        property_type=data.get('property_type', 'Any'),
+        timeline=data.get('timeline', 'Flexible'),
+        notes=data.get('notes', 'Imported automatically via Lead Scraper Engine.'),
+        source='Scraper',
+        user_id=assigned_user.id
+    )
+
+    db.session.add(lead)
+    db.session.commit()
+
+    print(f"✅ SCRAPER: Successfully dealt new lead to {assigned_user.full_name}")
+    return {"status": "success", "assigned_to": assigned_user.full_name}, 201
+
 
 @app.route('/insights')
 @login_required
@@ -1021,6 +1059,10 @@ with app.app_context():
                 db.session.execute(text('ALTER TABLE lead ADD COLUMN closed_at TIMESTAMP'))
                 db.session.commit()
                 print("Successfully added closed_at to Render database.")
+            if 'source' not in columns:
+                db.session.execute(text("ALTER TABLE lead ADD COLUMN source VARCHAR(50) DEFAULT 'Manual'"))
+                db.session.commit()
+                print("Successfully added source to lead table.")
                 
         if 'user' in inspector.get_table_names():
             user_columns = [col['name'] for col in inspector.get_columns('user')]
