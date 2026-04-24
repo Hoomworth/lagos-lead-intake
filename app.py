@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import text, inspect
+from itsdangerous import URLSafeTimedSerializer
 from openai import OpenAI
 
 app = Flask(__name__)
@@ -28,6 +29,8 @@ client = OpenAI(api_key=api_key)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Serializer for generating secure password reset tokens
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 # -----------------------------
 # Database Models
@@ -283,6 +286,60 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email').lower()
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Generate a secure token valid for 1 hour
+            token = s.dumps(email, salt='email-confirm')
+            reset_url = url_for('reset_password', token=token, _external=True)
+            
+            # For now, print the link directly to the server logs so you can test it
+            print("\n" + "="*50)
+            print(f"PASSWORD RESET LINK FOR {email}:")
+            print(reset_url)
+            print("="*50 + "\n")
+            
+            flash('If an account exists, a password reset link has been generated. Check your server logs!', 'success')
+        else:
+            # Display the same message even if the email doesn't exist (security best practice)
+            flash('If an account exists, a password reset link has been generated. Check your server logs!', 'success')
+            
+        return redirect(url_for('login'))
+        
+    return render_template('forgot_password.html')
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        # Verify the token is valid and hasn't expired (3600 seconds = 1 hour)
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except Exception:
+        flash('The reset link is invalid or has expired.', 'error')
+        return redirect(url_for('forgot_password'))
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm = request.form.get('confirm_password')
+
+        if password != confirm:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('reset_password', token=token))
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.password_hash = generate_password_hash(password)
+            db.session.commit()
+            flash('Your password has been successfully updated! You can now log in.', 'success')
+            return redirect(url_for('login'))
+
+    return render_template('reset_password.html', token=token)
 
 
 # -----------------------------
