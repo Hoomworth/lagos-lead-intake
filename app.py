@@ -300,10 +300,10 @@ def forgot_password():
             reset_url = url_for('reset_password', token=token, _external=True)
             
             # For now, print the link directly to the server logs so you can test it
-            print("\n" + "="*50)
-            print(f"PASSWORD RESET LINK FOR {email}:")
-            print(reset_url)
-            print("="*50 + "\n")
+            print("\n" + "="*50, flush=True)
+            print(f"PASSWORD RESET LINK FOR {email}:", flush=True)
+            print(reset_url, flush=True)
+            print("="*50 + "\n", flush=True)
             
             flash('If an account exists, a password reset link has been generated. Check your server logs!', 'success')
         else:
