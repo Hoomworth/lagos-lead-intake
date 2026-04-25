@@ -918,6 +918,40 @@ def api_add_scraped_lead():
     data = request.get_json()
     if not data:
         return {"error": "No data provided"}, 400
+        
+    # 🧠 AI PARSING: If the scraper sent raw, messy text, let OpenAI organize it!
+    if 'raw_text' in data:
+        prompt = f"""
+        You are a real estate data extraction assistant. Extract lead details from this messy public forum post:
+        "{data['raw_text']}"
+        
+        Return ONLY valid JSON in this exact format. Do NOT include markdown formatting.
+        {{
+            "name": "Extract name if present, else 'Unknown Prospect'",
+            "phone": "Extract phone if present, else 'No phone provided'",
+            "budget": "Extract budget if present, else 'Flexible'",
+            "location": "Extract location if present, else 'Lagos'",
+            "property_type": "Extract type (e.g. 2 Bedroom, Land) if present, else 'Any'",
+            "timeline": "Extract timeline if present, else 'Flexible'"
+        }}
+        """
+        try:
+            import json
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            content = response.choices[0].message.content.strip()
+            # Clean up markdown if OpenAI includes it
+            if content.startswith('```json'): content = content[7:-3].strip()
+            elif content.startswith('```'): content = content[3:-3].strip()
+            
+            ai_parsed = json.loads(content)
+            data.update(ai_parsed) # Merge AI organized data into the payload
+            data['notes'] = f"Original Scraped Post: '{data['raw_text']}'"
+        except Exception as e:
+            print("AI Parsing Error:", e)
+            data['notes'] = f"Raw Unparsed Post: '{data['raw_text']}'"
 
     # DEALER LOGIC: Find the user with the fewest leads to ensure fair distribution
     users = User.query.all()
