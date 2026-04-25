@@ -19,6 +19,8 @@ if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=30)
 
 # Email Configuration (100% Free via Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -510,7 +512,7 @@ def edit_lead(lead_id):
     return render_template('edit_lead.html', lead=lead, current_user=current_user)
 
 
-@app.route('/result/<int:lead_id>')
+@app.route('/prospect/<int:lead_id>')
 @login_required
 def result(lead_id):
     session['last_lead_id'] = lead_id

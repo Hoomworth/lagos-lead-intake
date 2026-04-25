@@ -57,6 +57,24 @@
             Lead: {{ lead.name }}
         </div>  
 
+        <!-- ORIGINAL REQUEST FOR SCRAPED LEADS -->
+        {% if lead.source and 'Scraper' in lead.source %}
+        <div style="margin-top: 16px; padding: 14px; background: #f0f4f9; border-left: 4px solid #3b82f6; border-radius: 8px; font-size: 14px; color: #4b5563; text-align: left;">
+            <strong style="color: #1a3a52; font-family: 'Montserrat', sans-serif; font-size: 15px;">Original Scraped Request:</strong><br>
+            <div style="margin-top: 8px;">
+                {% if lead.notes and '[LINK]' in lead.notes %}
+                    {% set text_part = lead.notes.split('[LINK]')[0] %}
+                    {% set url_part = lead.notes.split('[LINK]')[1].split('[/LINK]')[0] | trim %}
+                    <span style="font-style: italic; white-space: pre-wrap;">{{ text_part }}</span><br>
+                    <a href="{{ url_part }}" target="_blank" rel="noopener noreferrer" class="btn btn-small" style="background: #0ea5e9; color: white; display: inline-block; margin-top: 12px; border-radius: 6px;">🔗 View Original Post</a>
+                {% else %}
+                    <span style="font-style: italic; white-space: pre-wrap;">{{ lead.notes }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
@@ -211,11 +229,7 @@ Thank you for reaching out regarding your interest in acquiring a {{ lead.proper
 
 My name is {{ lead.agent_name }}, and I am a specialized real estate consultant focusing on verified, premium listings within this specific area. I have carefully noted your requirements, and my team is already checking our exclusive inventory for options that perfectly align with your vision.
 
-The real estate market in {{ lead.location }} is highly dynamic right now, offering some fantastic opportunities whether you are looking for long-term appreciation, rental yield, or a beautiful place to call home. Having the right insights will give you a significant advantage.
-
-To ensure I do not overwhelm you with the wrong listings, I would love to quickly confirm a few finer details. Are you primarily buying for personal use or investment? Do you prefer brand-new modern builds or something with room for custom renovations?
-
-Additionally, how important is proximity to major roads, and is your budget slightly flexible if we find an off-market property that truly checks every single box on your wishlist?
+To ensure I do not overwhelm you with the wrong listings, I would love to quickly confirm a few finer details. Are you primarily buying for personal use or investment? Do you prefer brand-new modern builds or something with room for custom renovations? Also, is your budget slightly flexible if we find an off-market property that truly checks every single box on your wishlist?
 
 Once you provide these quick details, I will handpick 2 to 3 of the most solid, verified options and send them over for your review. I look forward to working closely with you to secure the best possible deal.
 
@@ -259,11 +273,7 @@ I am checking back with you regarding your ongoing search for a {{ lead.property
 
 Over the past few days, I have been actively keeping an eye on the market specifically for your criteria. I have managed to shortlist a few highly attractive options that I believe strongly match what you are looking for in terms of value and quality.
 
-However, before I send these exclusive listings over to you, I want to ensure that my understanding of your preferences is still perfectly accurate so that I do not waste your valuable time with properties that don't fit.
-
-Are you still actively searching and ready to make a move, or are you currently just exploring options to understand the market better? Furthermore, have there been any changes to your initial budget or your preferred timeline for moving?
-
-We recently had a couple of unlisted properties come across our desk that might be exactly what you need. Real estate moves fast here, and the best deals are often closed before they ever make it to the public market.
+However, before I send these exclusive listings over, I want to ensure my understanding of your preferences is still perfectly accurate. Are you still actively searching, or are you currently just exploring options? Have there been any changes to your initial budget or your preferred timeline for moving?
 
 Would you prefer I send over a quick WhatsApp presentation with pictures, or would a brief 5-minute phone call be better to explain why these specific options stand out? Let me know what works best for your schedule.
 
@@ -293,23 +303,16 @@ Interest: {{ lead.property_type }} in {{ lead.location }}
 Budget: {{ lead.budget }}
 Timeline: {{ lead.timeline }}
 
-[OPENING - PARAGRAPH 1]
-Hello {{ lead.name }}, my name is {{ lead.agent_name }} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about acquiring a {{ lead.property_type }} in {{ lead.location }}. Am I catching you at a good time to speak for just two minutes?
+[OPENING & CONTEXT]
+Hello {{ lead.name }}, my name is {{ lead.agent_name }} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about a {{ lead.property_type }} in {{ lead.location }}. Our agency specializes in premium properties in that exact neighborhood, and I want to ensure we find exactly what you need. Am I catching you at a good time to speak for just two minutes?
 
-[CONTEXT - PARAGRAPH 2]
-Great! The reason for my call today is that I’ve personally reviewed your request, and I wanted to make sure I introduce myself. Our agency specializes in securing premium properties in that exact neighborhood, and I want to ensure we find exactly what you need.
-
-[QUALIFYING - PARAGRAPH 3]
-To help me filter out the noise and only present you with the best matches, I have a quick question: Are you looking to purchase this property primarily for your own personal use, or is this going to be an investment for rental income?
-
-[TIMELINE & BUDGET - PARAGRAPH 4]
+[QUALIFYING & TIMELINE]
 Understood. I also see you mentioned a budget of {{ lead.budget }} and a timeline of {{ lead.timeline }}. If we happen to find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
 
-[POSITIONING - PARAGRAPH 5]
+[POSITIONING & CLOSING]
 That makes perfect sense. Based on everything you’ve shared with me right now, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
 
-[CLOSING - PARAGRAPH 6]
-Here is my proposed next step: I am going to compile the details, photos, and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound like a fair plan to you?{% endif %}</pre>
+Here is my proposed next step: I am going to compile the details and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound fair?{% endif %}</pre>
             </div>
 
             {% if call_script %}
@@ -322,23 +325,6 @@ Here is my proposed next step: I am going to compile the details, photos, and ex
             </a>
             {% endif %}
         </div>
-
-        <!-- ORIGINAL REQUEST FOR SCRAPED LEADS (MOVED TO BOTTOM) -->
-        {% if lead.source and 'Scraper' in lead.source %}
-        <div class="message-container" style="background: #f8fafc; border-left: 4px solid #3b82f6; text-align: left;">
-            <h2 style="font-size: 16px; color: #1a3a52;">Original Scraped Request</h2>
-            <div style="font-size: 14px; color: #4b5563; margin-top: 10px;">
-                {% if lead.notes and '[LINK]' in lead.notes %}
-                    {% set text_part = lead.notes.split('[LINK]')[0] %}
-                    {% set url_part = lead.notes.split('[LINK]')[1].split('[/LINK]')[0] | trim %}
-                    <p style="font-style: italic; white-space: pre-wrap;">{{ text_part }}</p>
-                    <a href="{{ url_part }}" target="_blank" rel="noopener noreferrer" class="btn btn-small" style="background: #0ea5e9; color: white; margin-top: 10px;">🔗 View Original Post</a>
-                {% else %}
-                    <p style="font-style: italic; white-space: pre-wrap;">{{ lead.notes }}</p>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
 
         <div class="footer-nav">
             <a href="{{ url_for('index') }}">Add Another Lead</a> |
