@@ -596,9 +596,17 @@ def leads():
 
     for lead in all_leads:
         analysis = analyze_lead(lead)
+        
+        # Safe date formatting to prevent crashes if DB returns a string instead of datetime
+        if isinstance(lead.date_added, datetime.datetime):
+            formatted_date = lead.date_added.strftime('%d %b %Y')
+        else:
+            formatted_date = str(lead.date_added).split(' ')[0] if lead.date_added else 'N/A'
+            
         leads_with_analysis.append({
             "lead": lead,
-            "analysis": analysis
+            "analysis": analysis,
+            "formatted_date": formatted_date
         })
 
     # Sort the leads outside of the loop for correctness and performance
@@ -610,7 +618,7 @@ def leads():
     leads_with_analysis.sort(
         key=lambda x: (
             priority_order.get(x["analysis"]["quality"], 4),
-                -x["lead"].date_added.timestamp() if x["lead"].date_added else 0
+            -x["lead"].id
             )
     )
 
@@ -1009,12 +1017,12 @@ def insights():
         else:
             cold_leads += 1
             
-        if lead.contacted_at and lead.date_added:
+        if isinstance(lead.contacted_at, datetime.datetime) and isinstance(lead.date_added, datetime.datetime):
             diff = (lead.contacted_at - lead.date_added).total_seconds()
             if diff >= 0:
                 response_times.append(diff)
                 
-        if lead.closed_at and lead.date_added:
+        if isinstance(lead.closed_at, datetime.datetime) and isinstance(lead.date_added, datetime.datetime):
             diff = (lead.closed_at - lead.date_added).total_seconds()
             if diff >= 0:
                 close_times.append(diff)
