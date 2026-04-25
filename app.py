@@ -17,10 +17,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///app.db')
 if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_SECURE'] = True
-app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=30)
+app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=365)
 
 # Email Configuration (100% Free via Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -173,76 +173,53 @@ def admin_required(route_function):
 # Message Generators
 # -----------------------------
 def generate_message_1(lead):
-    return f"""
-Hello {lead.name.title()},
+    return f"""Hello {lead.name.title()},
 
-Thank you for reaching out regarding your interest in acquiring a {lead.property_type} in {lead.location} within your specified budget of {lead.budget}. I have received your details and I am thrilled to assist you in finding the perfect match.
+Thank you for reaching out regarding your interest in a {lead.property_type} in {lead.location} within your specified budget of {lead.budget}. My name is {lead.agent_name}, and I specialize in premium, verified listings in this exact area.
 
-My name is {lead.agent_name}, and I am a specialized real estate consultant focusing on verified, premium listings within this specific area. I have carefully noted your requirements, and my team is already checking our exclusive inventory for options that perfectly align with your vision.
+To ensure I don't overwhelm you with the wrong options, I'd love to quickly confirm a few details. Are you primarily buying for personal use or investment, and do you prefer modern builds or properties with room for renovation?
 
-The real estate market in {lead.location} is highly dynamic right now, offering some fantastic opportunities whether you are looking for long-term appreciation, rental yield, or a beautiful place to call home. Having the right insights will give you a significant advantage.
+Also, is your budget slightly flexible if we find an off-market property that perfectly matches your vision?
 
-To ensure I do not overwhelm you with the wrong listings, I would love to quickly confirm a few finer details. Are you primarily buying for personal use or investment? Do you prefer brand-new modern builds or something with room for custom renovations?
-
-Additionally, how important is proximity to major roads, and is your budget slightly flexible if we find an off-market property that truly checks every single box on your wishlist?
-
-Once you provide these quick details, I will handpick 2 to 3 of the most solid, verified options and send them over for your review. I look forward to working closely with you to secure the best possible deal.
-
-Looking forward to your response.
+Once you provide these quick details, I will handpick 2 to 3 of our most solid options and send them over for your review. I look forward to helping you secure the best deal.
 
 Best regards,  
-{lead.agent_name}
-"""
+{lead.agent_name}"""
 
 
 def generate_message_2(lead):
-    return f"""
-Hello {lead.name.title()},
+    return f"""Hello {lead.name.title()},
 
-Just checking back with you regarding your request for a {lead.property_type} in {lead.location}.
+I am checking back with you regarding your ongoing search for a {lead.property_type} in the {lead.location} area.
 
-I have shortlisted a few options that could match what you’re looking for, but I need a bit more clarity before sending them so I don’t waste your time.
+Over the past few days, I have managed to shortlist a few highly attractive, off-market options that strongly match your criteria in terms of value and quality.
 
-Are you still actively searching or just exploring options for now?
+However, before I send these exclusive listings over, I want to ensure my understanding of your preferences is still perfectly accurate. Are you still actively searching, and have there been any changes to your timeline or budget?
 
-Also, would you prefer:
-- A quick WhatsApp walkthrough
-- Or a short call to explain the best available options
-
-Let me know what works best for you.
+Let me know if you would prefer a quick WhatsApp presentation with pictures, or a brief 5-minute call to explain why these specific options stand out.
 
 Best regards,  
-{lead.agent_name}
-"""
+{lead.agent_name}"""
 
 
 def generate_call_script(lead):
-    return f"""
-LEAD SUMMARY
+    return f"""LEAD SUMMARY
 Name: {lead.name}
 Phone: {lead.phone}
 Interest: {lead.property_type} in {lead.location}
 Budget: {lead.budget}
 Timeline: {lead.timeline}
 
-[OPENING - PARAGRAPH 1]
-Hello {lead.name}, my name is {lead.agent_name} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about acquiring a {lead.property_type} in {lead.location}. Am I catching you at a good time to speak for just two minutes?
+[OPENING & CONTEXT]
+Hello {lead.name}, my name is {lead.agent_name} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about a {lead.property_type} in {lead.location}. Our agency specializes in premium properties in that exact neighborhood, and I want to ensure we find exactly what you need. Am I catching you at a good time to speak for just two minutes?
 
-[CONTEXT - PARAGRAPH 2]
-Great! The reason for my call today is that I’ve personally reviewed your request, and I wanted to make sure I introduce myself. Our agency specializes in securing premium properties in that exact neighborhood, and I want to ensure we find exactly what you need.
+[QUALIFYING & TIMELINE]
+To help me filter out the noise, are you purchasing this primarily for personal use or as an investment? I also see your budget is {lead.budget} and your timeline is {lead.timeline}. If we find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
 
-[QUALIFYING - PARAGRAPH 3]
-To help me filter out the noise and only present you with the best matches, I have a quick question: Are you looking to purchase this property primarily for your own personal use, or is this going to be an investment for rental income?
+[POSITIONING & CLOSING]
+That makes perfect sense. Based on what you’ve shared, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
 
-[TIMELINE & BUDGET - PARAGRAPH 4]
-Understood. I also see you mentioned a budget of {lead.budget} and a timeline of {lead.timeline}. If we happen to find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
-
-[POSITIONING - PARAGRAPH 5]
-That makes perfect sense. Based on everything you’ve shared with me right now, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
-
-[CLOSING - PARAGRAPH 6]
-Here is my proposed next step: I am going to compile the details, photos, and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound like a fair plan to you?
-"""
+Here is my proposed next step: I am going to compile the details and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can schedule a private viewing. Does that sound fair?"""
 
 
 # -----------------------------
@@ -483,7 +460,7 @@ def add_lead():
     db.session.add(lead)
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead.id))
+    return redirect(url_for('set_prospect', lead_id=lead.id))
 
 
 @app.route('/edit_lead/<int:lead_id>', methods=['GET', 'POST'])
@@ -507,19 +484,34 @@ def edit_lead(lead_id):
         
         db.session.commit()
         flash("Lead updated successfully.", "success")
-        return redirect(url_for('result', lead_id=lead.id))
+        return redirect(url_for('prospect'))
 
     return render_template('edit_lead.html', lead=lead, current_user=current_user)
 
 
-@app.route('/prospect/<int:lead_id>')
+@app.route('/set_prospect/<int:lead_id>')
 @login_required
-def result(lead_id):
+def set_prospect(lead_id):
     session['last_lead_id'] = lead_id
+    return redirect(url_for('prospect'))
+
+@app.route('/prospect')
+@login_required
+def prospect():
     current_user = get_current_user()
 
     if not current_user:
         return redirect(url_for('login'))
+
+    lead_id = session.get('last_lead_id')
+    if not lead_id:
+        last_lead = Lead.query.filter_by(user_id=current_user.id)\
+            .order_by(Lead.date_added.desc())\
+            .first()
+        if not last_lead:
+            return redirect(url_for('leads'))
+        lead_id = last_lead.id
+        session['last_lead_id'] = lead_id
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -770,7 +762,7 @@ Return ONLY valid JSON in this format:
         print("AI ERROR:", e)
         flash("AI failed. Try again.", "error")
 
-    return redirect(url_for('result', lead_id=lead.id))
+    return redirect(url_for('prospect'))
 
 
 @app.route('/generate_first_contact/<int:lead_id>')
@@ -780,7 +772,7 @@ def generate_first_contact(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -806,7 +798,7 @@ def generate_sms(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -834,7 +826,7 @@ def generate_email(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -863,7 +855,7 @@ def generate_followup(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -891,7 +883,7 @@ def generate_script(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -1056,26 +1048,6 @@ def insights():
                            current_user=current_user)
    
 
-@app.route('/prospect')
-@login_required
-def open_prospect():
-    lead_id = session.get('last_lead_id')
-
-    # If no last lead, get latest lead from DB
-    if not lead_id:
-        current_user = get_current_user()
-
-        last_lead = Lead.query.filter_by(user_id=current_user.id)\
-            .order_by(Lead.date_added.desc())\
-            .first()
-
-        if not last_lead:
-            return redirect(url_for('leads'))
-
-        return redirect(url_for('result', lead_id=last_lead.id))
-
-    return redirect(url_for('result', lead_id=lead_id))
-
 
 # -----------------------------
 # RUN
@@ -1085,10 +1057,6 @@ with app.app_context():
 
     # Auto-upgrade database specifically for Render production
     try:
-        # Force the very first registered user to ALWAYS be an admin
-        db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
-        db.session.commit()
-
         inspector = inspect(db.engine)
         if 'lead' in inspector.get_table_names():
             columns = [col['name'] for col in inspector.get_columns('lead')]
@@ -1120,6 +1088,10 @@ with app.app_context():
                 db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
                 db.session.commit()
                 print("Successfully added is_admin to user table.")
+
+        # Force the very first registered user to ALWAYS be an admin safely after tables exist
+        db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
+        db.session.commit()
     except Exception as e:
         print(f"Migration check skipped: {e}")
         db.session.rollback()
