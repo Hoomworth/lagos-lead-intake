@@ -22,7 +22,7 @@
     <div class="nav-menu" id="navMenu">
         <a href="{{ url_for('index') }}">Dashboard</a>
         <a href="{{ url_for('leads') }}">Leads</a>
-        <a href="{{ url_for('open_prospect') }}">Prospect</a>
+        <a href="{{ url_for('prospect') }}">Prospect</a>
         <a href="{{ url_for('insights') }}">Insights</a>
         <a href="{{ url_for('profile') }}">My Account</a>
         {% if current_user and current_user.is_admin %}
@@ -56,24 +56,6 @@
         <div class="lead-name" style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: #000000; margin-top: 16px; letter-spacing: -0.5px;">
             Lead: {{ lead.name }}
         </div>  
-
-        <!-- ORIGINAL REQUEST FOR SCRAPED LEADS -->
-        {% if lead.source and 'Scraper' in lead.source %}
-        <div style="margin-top: 16px; padding: 14px; background: #f0f4f9; border-left: 4px solid #3b82f6; border-radius: 8px; font-size: 14px; color: #4b5563; text-align: left;">
-            <strong style="color: #1a3a52; font-family: 'Montserrat', sans-serif; font-size: 15px;">Original Scraped Request:</strong><br>
-            <div style="margin-top: 8px;">
-                {% if lead.notes and '[LINK]' in lead.notes %}
-                    {% set text_part = lead.notes.split('[LINK]')[0] %}
-                    {% set url_part = lead.notes.split('[LINK]')[1].split('[/LINK]')[0] | trim %}
-                    <span style="font-style: italic; white-space: pre-wrap;">{{ text_part }}</span><br>
-                    <a href="{{ url_part }}" target="_blank" rel="noopener noreferrer" class="btn btn-small" style="background: #0ea5e9; color: white; display: inline-block; margin-top: 12px; border-radius: 6px;">🔗 View Original Post</a>
-                {% else %}
-                    <span style="font-style: italic; white-space: pre-wrap;">{{ lead.notes }}</span>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-
 
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

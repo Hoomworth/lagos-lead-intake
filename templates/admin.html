@@ -16,7 +16,7 @@
         <div class="nav-menu" id="navMenu">
             <a href="{{ url_for('index') }}">Dashboard</a>
             <a href="{{ url_for('leads') }}">Leads</a>
-            <a href="{{ url_for('open_prospect') }}">Prospect</a>
+            <a href="{{ url_for('prospect') }}">Prospect</a>
             <a href="{{ url_for('insights') }}">Insights</a>
             <a href="{{ url_for('profile') }}">My Account</a>
             {% if current_user and current_user.is_admin %}
