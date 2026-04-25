@@ -725,10 +725,10 @@ Return ONLY valid JSON in this format:
   "timing": "When to follow up",
   "objection": "Likely concern",
 
-  "whatsapp": "Write a highly detailed, 6-paragraph WhatsApp follow-up. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 6 complete paragraphs.",
+  "whatsapp": "Write a highly detailed, 4-paragraph WhatsApp follow-up. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 4 complete paragraphs.",
   "sms": "Short SMS under 160 characters",
   "email_subject": "Email subject line",
-  "email_body": "Write a highly detailed, 6-paragraph professional email. Separate each paragraph with a double line break (\\n\\n) for perfect spacing. Do NOT write less than 6 complete paragraphs."
+  "email_body": "Write a highly detailed, 4-paragraph professional email. Separate each paragraph with a double line break (\\n\\n) for perfect spacing. Do NOT write less than 4 complete paragraphs."
 }}
 """
 
@@ -782,7 +782,7 @@ def generate_first_contact(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed, 6-paragraph WhatsApp first-contact message for a real estate client named {lead.name} inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 6 complete paragraphs."
+    prompt = f"Write a highly detailed, 4-paragraph WhatsApp first-contact message for a real estate client named {lead.name} inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 4 complete paragraphs."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -836,7 +836,7 @@ def generate_email(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed, professional real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) for perfect spacing and alignment."
+    prompt = f"Write a highly detailed, professional real estate email for {lead.name} about a {lead.property_type} in {lead.location}, budget {lead.budget}. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) for perfect spacing and alignment."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -865,7 +865,7 @@ def generate_followup(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n)."
+    prompt = f"Write a highly detailed follow-up WhatsApp message for a real estate client named {lead.name} who showed interest in a {lead.property_type} in {lead.location}. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n)."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -893,7 +893,7 @@ def generate_script(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a comprehensive phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}. You MUST write exactly 6 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) to ensure proper spacing."
+    prompt = f"Write a comprehensive phone call script for a real estate agent speaking to {lead.name} about a {lead.property_type} in {lead.location}. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) to ensure proper spacing."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
