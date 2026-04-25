@@ -927,11 +927,11 @@ def api_add_scraped_lead():
         
         Return ONLY valid JSON in this exact format. Do NOT include markdown formatting.
         {{
-            "name": "Extract name if present, else 'Unknown Prospect'",
-            "phone": "Extract phone if present, else 'No phone provided'",
+            "name": "Extract name if present, else 'Property Buyer'",
+            "phone": "Extract phone if present, else 'N/A'",
             "budget": "Extract budget if present, else 'Flexible'",
             "location": "Extract location if present, else 'Lagos'",
-            "property_type": "Extract type (e.g. 2 Bedroom, Land) if present, else 'Any'",
+            "property_type": "Extract type (e.g. 2 Bedroom, Land) if present, else 'Property'",
             "timeline": "Extract timeline if present, else 'Flexible'"
         }}
         """
@@ -948,10 +948,15 @@ def api_add_scraped_lead():
             
             ai_parsed = json.loads(content)
             data.update(ai_parsed) # Merge AI organized data into the payload
-            data['notes'] = f"Original Scraped Post: '{data['raw_text']}'"
+            
+            # Save the raw text and embed the URL securely
+            raw_notes = f"{data['raw_text']}"
+            if 'url' in data:
+                raw_notes += f"\n\n[LINK]{data['url']}[/LINK]"
+            data['notes'] = raw_notes
         except Exception as e:
             print("AI Parsing Error:", e)
-            data['notes'] = f"Raw Unparsed Post: '{data['raw_text']}'"
+            data['notes'] = f"{data.get('raw_text', '')}\n\n[LINK]{data.get('url', '')}[/LINK]"
 
     # DEALER LOGIC: Find the user with the fewest leads to ensure fair distribution
     users = User.query.all()
@@ -963,8 +968,8 @@ def api_add_scraped_lead():
 
     lead = Lead(
         agent_name=data.get('agent_name', 'Hoomworth Bot'),
-        name=data.get('name', 'Unknown Prospect'),
-        phone=data.get('phone', 'No phone provided'),
+        name=data.get('name', 'Property Buyer'),
+        phone=data.get('phone', 'N/A'),
         budget=data.get('budget', 'Flexible'),
         location=data.get('location', 'Lagos'),
         property_type=data.get('property_type', 'Any'),

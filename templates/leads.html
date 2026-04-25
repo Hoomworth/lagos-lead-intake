@@ -183,6 +183,18 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
         <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Type:</strong> <span style="color: #4b5563;">{{ lead.property_type }}</span></p>
         <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Location:</strong> <span style="color: #4b5563;">{{ lead.location }}</span></p>
         <p style="font-family: 'Inter', sans-serif; margin: 8px 0; color: #374151; letter-spacing: 0.2px;"><strong style="font-family: 'Montserrat', sans-serif; color: #1a3a52; font-weight: 700;">Budget:</strong> <span style="color: #4b5563;">{{ lead.budget }}</span></p>
+        
+        {% if lead.source == 'Nairaland Scraper' or lead.source == 'Scraper' %}
+        <div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 6px; font-size: 13px; color: #4b5563;">
+            <strong style="color: #1a3a52; font-family: 'Montserrat', sans-serif;">Original Request:</strong><br>
+            {% if '[LINK]' in lead.notes %}
+                <span style="font-style: italic;">{{ lead.notes.split('[LINK]')[0] }}</span><br>
+                <a href="{{ lead.notes.split('[LINK]')[1].split('[/LINK]')[0] }}" target="_blank" class="btn btn-small" style="background: #0ea5e9; color: white; display: inline-block; margin-top: 10px; border-radius: 6px;">🔗 Reply on Nairaland</a>
+            {% else %}
+                <span style="font-style: italic;">{{ lead.notes }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 
     <div class="lead-action-hint" style="font-family: 'Inter', sans-serif; color: #4b5563; font-size: 13px; margin: 12px 0; letter-spacing: 0.2px;">
