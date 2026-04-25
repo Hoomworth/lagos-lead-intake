@@ -17,9 +17,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///app.db')
 if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=365)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=30)
 
 # Email Configuration (100% Free via Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -482,8 +483,7 @@ def add_lead():
     db.session.add(lead)
     db.session.commit()
 
-    session['last_lead_id'] = lead.id
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead.id))
 
 
 @app.route('/edit_lead/<int:lead_id>', methods=['GET', 'POST'])
@@ -507,35 +507,19 @@ def edit_lead(lead_id):
         
         db.session.commit()
         flash("Lead updated successfully.", "success")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead.id))
 
     return render_template('edit_lead.html', lead=lead, current_user=current_user)
 
 
-@app.route('/set_prospect/<int:lead_id>')
+@app.route('/prospect/<int:lead_id>')
 @login_required
-def set_prospect(lead_id):
+def result(lead_id):
     session['last_lead_id'] = lead_id
-    return redirect(url_for('prospect'))
-
-@app.route('/prospect')
-@login_required
-def prospect():
     current_user = get_current_user()
 
     if not current_user:
         return redirect(url_for('login'))
-        
-    lead_id = session.get('last_lead_id')
-
-    if not lead_id:
-        last_lead = Lead.query.filter_by(user_id=current_user.id)\
-            .order_by(Lead.date_added.desc())\
-            .first()
-        if not last_lead:
-            return redirect(url_for('leads'))
-        lead_id = last_lead.id
-        session['last_lead_id'] = lead_id
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -714,7 +698,7 @@ def generate_ai(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left. Please upgrade.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -786,7 +770,7 @@ Return ONLY valid JSON in this format:
         print("AI ERROR:", e)
         flash("AI failed. Try again.", "error")
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead.id))
 
 
 @app.route('/generate_first_contact/<int:lead_id>')
@@ -796,7 +780,7 @@ def generate_first_contact(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -812,7 +796,7 @@ def generate_first_contact(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 @app.route('/generate_sms/<int:lead_id>')
@@ -822,7 +806,7 @@ def generate_sms(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -840,7 +824,7 @@ def generate_sms(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 @app.route('/generate_email/<int:lead_id>')
@@ -850,7 +834,7 @@ def generate_email(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -869,7 +853,7 @@ def generate_email(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 @app.route('/generate_followup/<int:lead_id>')
@@ -879,7 +863,7 @@ def generate_followup(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -897,7 +881,7 @@ def generate_followup(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 @app.route('/generate_script/<int:lead_id>')
@@ -907,7 +891,7 @@ def generate_script(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('result', lead_id=lead_id))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -925,7 +909,7 @@ def generate_script(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('prospect'))
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 # -----------------------------
@@ -1072,6 +1056,25 @@ def insights():
                            current_user=current_user)
    
 
+@app.route('/prospect')
+@login_required
+def open_prospect():
+    lead_id = session.get('last_lead_id')
+
+    # If no last lead, get latest lead from DB
+    if not lead_id:
+        current_user = get_current_user()
+
+        last_lead = Lead.query.filter_by(user_id=current_user.id)\
+            .order_by(Lead.date_added.desc())\
+            .first()
+
+        if not last_lead:
+            return redirect(url_for('leads'))
+
+        return redirect(url_for('result', lead_id=last_lead.id))
+
+    return redirect(url_for('result', lead_id=lead_id))
 
 
 # -----------------------------
