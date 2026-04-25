@@ -597,11 +597,14 @@ def leads():
     for lead in all_leads:
         analysis = analyze_lead(lead)
         
-        # Safe date formatting to prevent crashes if DB returns a string instead of datetime
-        if isinstance(lead.date_added, datetime.datetime):
-            formatted_date = lead.date_added.strftime('%d %b %Y')
-        else:
-            formatted_date = str(lead.date_added).split(' ')[0] if lead.date_added else 'N/A'
+        # Bulletproof date formatting
+        try:
+            if hasattr(lead.date_added, 'strftime'):
+                formatted_date = lead.date_added.strftime('%d %b %Y')
+            else:
+                formatted_date = str(lead.date_added).split(' ')[0] if lead.date_added else 'N/A'
+        except Exception:
+            formatted_date = 'N/A'
             
         leads_with_analysis.append({
             "lead": lead,
@@ -615,12 +618,15 @@ def leads():
             "Warm": 2,
             "Cold": 3
     }
-    leads_with_analysis.sort(
-        key=lambda x: (
-            priority_order.get(x["analysis"]["quality"], 4),
-            -x["lead"].id
+    try:
+        leads_with_analysis.sort(
+            key=lambda x: (
+                priority_order.get(x["analysis"]["quality"], 4),
+                -int(x["lead"].id or 0)
             )
-    )
+        )
+    except Exception as e:
+        print("Sorting error safely bypassed:", e)
 
     # ✅ COUNTS
     total_leads = Lead.query.filter_by(user_id=current_user.id).count()
@@ -638,7 +644,8 @@ def leads():
         new_leads=new_leads,
         contacted_leads=contacted_leads,
         closed_leads=closed_leads,
-        credits=current_user.credits
+        credits=current_user.credits,
+        search_query=search or ''
     )
 
 # ✅ DELETE ROUTE (FIXED)
