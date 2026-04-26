@@ -136,32 +136,32 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     <div class="lead-intel" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start; align-items:center; gap:8px; margin: 12px 0; width: 100%;">
 
     <!-- QUALITY -->
-    <span class="badge {% if analysis.quality == 'Hot' %}badge-hot{% elif analysis.quality == 'Warm' %}badge-warm{% else %}badge-cold{% endif %}" style="display:inline-flex; align-items:center; justify-content:center; height:24px; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 10px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; line-height: 1;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+    <div class="badge {% if analysis.quality == 'Hot' %}badge-hot{% elif analysis.quality == 'Warm' %}badge-warm{% else %}badge-cold{% endif %}" style="display:flex; flex-direction:row; align-items:center; justify-content:center; height:26px; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 12px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; border: none; max-width: max-content;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block; flex-shrink: 0;">
             <path d="M8 14a4 4 0 0 0 8 0c0-4-4-6-4-10 0 4-4 6-4 10z"></path>
         </svg>
-        {{ analysis.quality }}
-    </span>
+        <span style="display:block; transform: translateY(1px);">{{ analysis.quality }}</span>
+    </div>
 
     <!-- INTENT -->
-    <span class="badge badge-dark" style="display:inline-flex; align-items:center; justify-content:center; height:24px; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 10px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; line-height: 1;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" style="flex-shrink: 0;">
+    <div class="badge badge-dark" style="display:flex; flex-direction:row; align-items:center; justify-content:center; height:26px; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 12px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; border: none; max-width: max-content;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" style="display:block; flex-shrink: 0;">
             <circle cx="12" cy="12" r="10"></circle>
             <circle cx="12" cy="12" r="4"></circle>
         </svg>
-        {{ analysis.intent }}
-    </span>
+        <span style="display:block; transform: translateY(1px);">{{ analysis.intent }}</span>
+    </div>
 
     <!-- SCORE -->
-    <span class="badge badge-light" style="display:inline-flex; align-items:center; justify-content:center; height:24px; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 10px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; line-height: 1;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="flex-shrink: 0;">
+    <div class="badge badge-light" style="display:flex; flex-direction:row; align-items:center; justify-content:center; height:26px; gap:6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 0 12px; font-size: 11px; font-weight: 600; border-radius: 20px; white-space: nowrap; box-sizing: border-box; margin: 0; border: none; max-width: max-content;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:block; flex-shrink: 0;">
             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
             <polyline points="13 2 13 9 20 9"></polyline>
             <line x1="9" y1="15" x2="15" y2="15"></line>
             <line x1="9" y1="19" x2="15" y2="19"></line>
         </svg>
-        {% if analysis.score >= 75 %}High{% elif analysis.score >= 50 %}Medium{% else %}Low{% endif %}
-    </span>
+        <span style="display:block; transform: translateY(1px);">{% if analysis.score >= 75 %}High{% elif analysis.score >= 50 %}Medium{% else %}Low{% endif %}</span>
+    </div>
 
    </div>
 
