@@ -7,12 +7,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
 from sqlalchemy import text, inspect
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
 from openai import OpenAI
 
 app = Flask(__name__)
+
+# Trust Render's reverse proxy so mobile network switching doesn't drop the session
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///app.db')
 if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
@@ -20,6 +25,7 @@ if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SESSION_COOKIE_SECURE'] = True # Disabled to prevent mobile logouts on reverse proxies
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=365)
 
 # Email Configuration (100% Free via Gmail)
