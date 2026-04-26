@@ -584,8 +584,7 @@ def leads():
     # ✅ APPLY SEARCH FILTER
     if search:
         query = query.filter(
-            (Lead.name.ilike(f"%{search}%")) |
-            (Lead.phone.ilike(f"%{search}%"))
+            db.or_(Lead.name.ilike(f"%{search}%"), Lead.phone.ilike(f"%{search}%"))
         )
 
     # ✅ FINAL DATA
@@ -595,9 +594,12 @@ def leads():
     leads_with_analysis = []
 
     for lead in all_leads:
-        analysis = analyze_lead(lead)
+        try:
+            analysis = analyze_lead(lead)
+        except Exception:
+            analysis = {"quality": "Cold", "intent": "Exploring", "score": 10, "action": "Follow up", "risk": "N/A"}
         
-        # Bulletproof date formatting
+        # Safe Date Formatting
         try:
             if hasattr(lead.date_added, 'strftime'):
                 formatted_date = lead.date_added.strftime('%d %b %Y')
@@ -606,10 +608,37 @@ def leads():
         except Exception:
             formatted_date = 'N/A'
             
+        # Safe WhatsApp Phone Generator
+        try:
+            wa_phone = str(lead.phone).strip()
+            if wa_phone.startswith('0'):
+                wa_phone = '234' + wa_phone[1:]
+            if wa_phone.startswith('+'):
+                wa_phone = wa_phone[1:]
+        except Exception:
+            wa_phone = ''
+
+        # Safe Scraper Notes & URL Extractor
+        extracted_text = ''
+        extracted_url = ''
+        try:
+            if lead.notes and '[LINK]' in lead.notes:
+                parts = lead.notes.split('[LINK]')
+                extracted_text = parts[0]
+                if '[/LINK]' in parts[1]:
+                    extracted_url = parts[1].split('[/LINK]')[0].strip()
+            else:
+                extracted_text = str(lead.notes) if lead.notes else ''
+        except Exception:
+            extracted_text = str(lead.notes) if lead.notes else ''
+
         leads_with_analysis.append({
             "lead": lead,
             "analysis": analysis,
-            "formatted_date": formatted_date
+            "formatted_date": formatted_date,
+            "wa_phone": wa_phone,
+            "extracted_text": extracted_text,
+            "extracted_url": extracted_url
         })
 
     # Sort the leads outside of the loop for correctness and performance
