@@ -49,10 +49,17 @@ def scrape_leads():
             'couple looking', 'bachelor looking', 'bq needed', 'boys quarter needed'
         ]
         
+        # Negative Keywords to filter out ads and spam
+        negative_keywords = [
+            'call', 'whatsapp', 'check out', 'look no further', 'our services',
+            'we sell', 'custom', 'working drawings', 'stamp', 'for any property you need',
+            'contact us', 'hire us', 'available for sale', 'to let'
+        ]
+        
         for topic in valid_topics[:100]: # Scan the top 100 links
             title_text = topic.text.strip()
             
-            if any(kw in title_text.lower() for kw in keywords):
+            if any(kw in title_text.lower() for kw in keywords) and not any(n_kw in title_text.lower() for n_kw in negative_keywords):
                 thread_url = "https://www.nairaland.com/" + topic.get('href').lstrip('/')
                 print(f"📝 Found Match: {title_text}")
                 print(f"   🔗 Deep Scraping Thread: {thread_url}")

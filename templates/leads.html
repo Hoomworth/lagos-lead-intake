@@ -133,16 +133,16 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
          </div>
 
 
-    <div class="lead-intel">
+    <div class="lead-intel" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px;">
 
     <!-- QUALITY -->
     <span class="badge 
         {% if analysis.quality == 'Hot' %}badge-hot
         {% elif analysis.quality == 'Warm' %}badge-warm
         {% else %}badge-cold{% endif %}
-    " style="display:inline-flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 4px 8px; font-size: 11px; border-radius: 20px;">
+    " style="display:inline-flex; align-items:center; gap:3px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 2px 6px; font-size: 10px; border-radius: 20px;">
 
-    <svg width="12" height="12" viewBox="0 0 24 24" 
+    <svg width="10" height="10" viewBox="0 0 24 24" 
              fill="none" 
              stroke="#111" 
              stroke-width="2"
@@ -154,9 +154,9 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </span>
 
     <!-- INTENT -->
-    <span class="badge badge-dark" style="display:inline-flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 4px 8px; font-size: 11px; border-radius: 20px;">
+    <span class="badge badge-dark" style="display:inline-flex; align-items:center; gap:3px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 2px 6px; font-size: 10px; border-radius: 20px;">
 
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" style="flex-shrink: 0;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" style="flex-shrink: 0;">
             <circle cx="12" cy="12" r="10"></circle>
             <circle cx="12" cy="12" r="4"></circle>
         </svg>
@@ -165,9 +165,9 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </span>
 
     <!-- SCORE -->
-    <span class="badge badge-light" style="display:inline-flex; align-items:center; gap:4px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 4px 8px; font-size: 11px; border-radius: 20px;">
+    <span class="badge badge-light" style="display:inline-flex; align-items:center; gap:3px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.2px; padding: 2px 6px; font-size: 10px; border-radius: 20px;">
 
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="#111" stroke="none" style="flex-shrink: 0;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="#111" stroke="none" style="flex-shrink: 0;">
             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
             <polyline points="13 2 13 9 20 9"></polyline>
             <line x1="9" y1="15" x2="15" y2="15"></line>
@@ -223,7 +223,7 @@ style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; align-items:ce
     </div>
 
     <!-- ACTIONS -->
-    <div class="lead-actions" style="margin-top: 16px;">
+    <div class="lead-actions" style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
 
         <a href="{{ url_for('set_prospect', lead_id=lead.id) }}" class="btn btn-small" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.3px; font-weight: 700;">
             Open

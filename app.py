@@ -19,7 +19,7 @@ if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_COOKIE_SECURE'] = True
+# app.config['SESSION_COOKIE_SECURE'] = True # Disabled to prevent mobile logouts on reverse proxies
 app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=365)
 
 # Email Configuration (100% Free via Gmail)
@@ -173,53 +173,33 @@ def admin_required(route_function):
 # Message Generators
 # -----------------------------
 def generate_message_1(lead):
-    return f"""Hello {lead.name.title()},
-
-Thank you for reaching out regarding your interest in a {lead.property_type} in {lead.location} within your specified budget of {lead.budget}. My name is {lead.agent_name}, and I specialize in premium, verified listings in this exact area.
+    return f"""Hello {lead.name.title()}, thank you for reaching out regarding your interest in a {lead.property_type} in {lead.location} within your specified budget of {lead.budget}. My name is {lead.agent_name}, and I specialize in premium, verified listings in this exact area.
 
 To ensure I don't overwhelm you with the wrong options, I'd love to quickly confirm a few details. Are you primarily buying for personal use or investment, and do you prefer modern builds or properties with room for renovation?
 
 Also, is your budget slightly flexible if we find an off-market property that perfectly matches your vision?
 
-Once you provide these quick details, I will handpick 2 to 3 of our most solid options and send them over for your review. I look forward to helping you secure the best deal.
-
-Best regards,  
-{lead.agent_name}"""
+Once you provide these quick details, I will handpick 2 to 3 of our most solid options and send them over for your review. I look forward to helping you secure the best deal. Best regards, {lead.agent_name}"""
 
 
 def generate_message_2(lead):
-    return f"""Hello {lead.name.title()},
-
-I am checking back with you regarding your ongoing search for a {lead.property_type} in the {lead.location} area.
+    return f"""Hello {lead.name.title()}, I am checking back with you regarding your ongoing search for a {lead.property_type} in the {lead.location} area.
 
 Over the past few days, I have managed to shortlist a few highly attractive, off-market options that strongly match your criteria in terms of value and quality.
 
 However, before I send these exclusive listings over, I want to ensure my understanding of your preferences is still perfectly accurate. Are you still actively searching, and have there been any changes to your timeline or budget?
 
-Let me know if you would prefer a quick WhatsApp presentation with pictures, or a brief 5-minute call to explain why these specific options stand out.
-
-Best regards,  
-{lead.agent_name}"""
+Let me know if you would prefer a quick WhatsApp presentation with pictures, or a brief 5-minute call to explain why these specific options stand out. Best regards, {lead.agent_name}"""
 
 
 def generate_call_script(lead):
-    return f"""LEAD SUMMARY
-Name: {lead.name}
-Phone: {lead.phone}
-Interest: {lead.property_type} in {lead.location}
-Budget: {lead.budget}
-Timeline: {lead.timeline}
+    return f"""Hello {lead.name}, my name is {lead.agent_name} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about a {lead.property_type} in {lead.location}. Our agency specializes in premium properties in that exact neighborhood, and I want to ensure we find exactly what you need. Am I catching you at a good time to speak for just two minutes?
 
-[OPENING & CONTEXT]
-Hello {lead.name}, my name is {lead.agent_name} calling from Hoomworth CRM. I am reaching out regarding the inquiry you made about a {lead.property_type} in {lead.location}. Our agency specializes in premium properties in that exact neighborhood, and I want to ensure we find exactly what you need. Am I catching you at a good time to speak for just two minutes?
+To help me filter out the noise, are you purchasing this primarily for personal use or as an investment? I also see your budget is {lead.budget} and your timeline is {lead.timeline}.
 
-[QUALIFYING & TIMELINE]
-To help me filter out the noise, are you purchasing this primarily for personal use or as an investment? I also see your budget is {lead.budget} and your timeline is {lead.timeline}. If we find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling?
+If we find a property that completely blows you away but sits just slightly above that budget, is there any flexibility, or is that a hard ceiling? That makes perfect sense. Based on what you’ve shared, I actually have two specific properties in mind that recently became available.
 
-[POSITIONING & CLOSING]
-That makes perfect sense. Based on what you’ve shared, I actually have two specific properties in mind that recently became available. They haven't been heavily marketed yet, and they align beautifully with your criteria.
-
-Here is my proposed next step: I am going to compile the details and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can schedule a private viewing. Does that sound fair?"""
+They haven't been heavily marketed yet, and they align beautifully with your criteria. Here is my proposed next step: I am going to compile the details and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can schedule a private viewing. Does that sound fair?"""
 
 
 # -----------------------------
