@@ -9,6 +9,16 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Permanently kill the orange/yellow edge stripe from the CSS file */
+        .lead-card-ui::before, 
+        .lead-card-ui::after {
+            display: none !important;
+        }
+        .lead-card-ui {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; /* Removes any shadow-based colored edges */
+        }
+    </style>
 </head>
 <body>
 
