@@ -208,6 +208,19 @@ If we find a property that completely blows you away but sits just slightly abov
 They haven't been heavily marketed yet, and they align beautifully with your criteria. Here is my proposed next step: I am going to compile the details and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can schedule a private viewing. Does that sound fair?"""
 
 
+def generate_objection_default(lead):
+    return f"Hi {lead.name.title()}, I completely understand your hesitation regarding the price. However, premium {lead.property_type}s in {lead.location} rarely stay on the market for long due to incredibly high demand.\n\nEven if this sits slightly outside your initial budget of {lead.budget}, the long-term value and rapid appreciation make it a highly profitable deal. Let's jump on a quick 2-minute call so I can break down the true numbers for you."
+
+def generate_inspection_default(lead):
+    return f"Hi {lead.name.title()}, I have just arranged exclusive access to a stunning {lead.property_type} in {lead.location} that perfectly matches your exact requirements.\n\nI am setting up private viewings for my top clients this weekend. Would you prefer a physical inspection on Saturday morning, or a virtual video tour so you can lock it down quickly before it's gone?"
+
+def generate_fomo_default(lead):
+    return f"Hi {lead.name.title()}, just a quick market update: The {lead.location} area is currently seeing a massive surge in demand. Prices for a {lead.property_type} are projected to jump significantly in the coming months.\n\nIf you are ready to move forward with your {lead.budget} budget, securing a property right now is the smartest investment decision you can make. Let me know if we should lock something down today."
+
+def generate_offmarket_default(lead):
+    return f"Hi {lead.name.title()}, an exclusive off-market {lead.property_type} just came up in {lead.location} that perfectly fits your {lead.budget} budget.\n\nIt is not public yet, and I am only showing it to my VIP clients right now. Let me know if I should send the pictures directly to your WhatsApp before I open it up to other buyers."
+
+
 # -----------------------------
 # Auth Routes
 # -----------------------------
@@ -520,6 +533,10 @@ def prospect():
     analysis = session.pop('ai_analysis', None)
     ai_followup = session.pop('ai_followup', None)
     ai_script = session.pop('ai_script', None)
+    ai_objection = session.pop('ai_objection', None)
+    ai_inspection = session.pop('ai_inspection', None)
+    ai_fomo = session.pop('ai_fomo', None)
+    ai_offmarket = session.pop('ai_offmarket', None)
 
     message2 = ai_followup if ai_followup else None
     call_script = ai_script if ai_script else None
@@ -543,8 +560,18 @@ def prospect():
         sms=ai_sms,
         email_subject=ai_email_subject,
         email_body=ai_email_body,
-
-
+        
+        objection_text=ai_objection if ai_objection else generate_objection_default(lead),
+        is_ai_objection=bool(ai_objection),
+        
+        inspection_text=ai_inspection if ai_inspection else generate_inspection_default(lead),
+        is_ai_inspection=bool(ai_inspection),
+        
+        fomo_text=ai_fomo if ai_fomo else generate_fomo_default(lead),
+        is_ai_fomo=bool(ai_fomo),
+        
+        offmarket_text=ai_offmarket if ai_offmarket else generate_offmarket_default(lead),
+        is_ai_offmarket=bool(ai_offmarket)
     )
 
 
@@ -720,7 +747,7 @@ def generate_ai(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left. Please upgrade.", "error")
-        return redirect(url_for('result', lead_id=lead_id))
+        return redirect(url_for('prospect'))
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -802,7 +829,7 @@ def generate_first_contact(lead_id):
 
     if current_user.credits <= 0:
         flash("No credits left.", "error")
-        return redirect(url_for('prospect'))
+        return redirect(url_for('prospect')) # Stay on prospect
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
@@ -818,7 +845,7 @@ def generate_first_contact(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return redirect(url_for('prospect'))
 
 
 @app.route('/generate_sms/<int:lead_id>')
@@ -846,7 +873,7 @@ def generate_sms(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return redirect(url_for('prospect'))
 
 
 @app.route('/generate_email/<int:lead_id>')
@@ -875,7 +902,7 @@ def generate_email(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return redirect(url_for('prospect'))
 
 
 @app.route('/generate_followup/<int:lead_id>')
@@ -903,7 +930,7 @@ def generate_followup(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return redirect(url_for('prospect'))
 
 
 @app.route('/generate_script/<int:lead_id>')
@@ -931,7 +958,91 @@ def generate_script(lead_id):
     current_user.credits -= 1
     db.session.commit()
 
-    return redirect(url_for('result', lead_id=lead_id))
+    return redirect(url_for('prospect'))
+
+
+@app.route('/generate_objection/<int:lead_id>')
+@login_required
+def generate_objection(lead_id):
+    current_user = get_current_user()
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('prospect'))
+        
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+    prompt = f"Write a highly persuasive, 2-paragraph objection-crusher WhatsApp script for a real estate agent to use when a client named {lead.name} hesitates on a {lead.property_type} in {lead.location} due to their {lead.budget} budget. Give exact word-for-word responses to justify the value and appreciation."
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    session['ai_objection'] = response.choices[0].message.content
+    current_user.credits -= 1
+    db.session.commit()
+    return redirect(url_for('prospect'))
+
+
+@app.route('/generate_inspection/<int:lead_id>')
+@login_required
+def generate_inspection(lead_id):
+    current_user = get_current_user()
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('prospect'))
+        
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+    prompt = f"Write a highly persuasive, 2-paragraph WhatsApp template specifically designed to lock in a physical or virtual viewing this weekend for a {lead.property_type} in {lead.location} with {lead.name}."
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    session['ai_inspection'] = response.choices[0].message.content
+    current_user.credits -= 1
+    db.session.commit()
+    return redirect(url_for('prospect'))
+
+
+@app.route('/generate_fomo/<int:lead_id>')
+@login_required
+def generate_fomo(lead_id):
+    current_user = get_current_user()
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('prospect'))
+        
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+    prompt = f"Write a short, data-driven 2-paragraph WhatsApp message about {lead.location} highlighting why buying a {lead.property_type} right now is a smart investment. Create high FOMO (Fear Of Missing Out) for {lead.name} given their {lead.budget} budget."
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    session['ai_fomo'] = response.choices[0].message.content
+    current_user.credits -= 1
+    db.session.commit()
+    return redirect(url_for('prospect'))
+
+
+@app.route('/generate_offmarket/<int:lead_id>')
+@login_required
+def generate_offmarket(lead_id):
+    current_user = get_current_user()
+    if current_user.credits <= 0:
+        flash("No credits left.", "error")
+        return redirect(url_for('prospect'))
+        
+    lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
+    prompt = f"Write a short, mysterious 2-paragraph WhatsApp message for {lead.name} saying an off-market {lead.property_type} just came up in {lead.location} that perfectly matches their budget of {lead.budget}. It’s not public yet, ask if you should send pictures."
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    session['ai_offmarket'] = response.choices[0].message.content
+    current_user.credits -= 1
+    db.session.commit()
+    return redirect(url_for('prospect'))
 
 
 # -----------------------------
