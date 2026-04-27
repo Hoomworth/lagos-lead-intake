@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Follow-Up Messages - Lagos Real Estate</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        @media (max-width: 600px) {
+            .hide-on-mobile { display: none; }
+            .icon-btn-mobile { padding: 4px 8px !important; }
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
@@ -113,8 +119,8 @@
                     </span>
                     
                     <!-- GOOGLE CALENDAR BUTTON -->
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Follow+up+with+{{ lead.name | urlencode }}&details=Property:+{{ lead.property_type | urlencode }}+in+{{ lead.location | urlencode }}%0ABudget:+{{ lead.budget | urlencode }}%0APhone:+{{ phone }}&ctz=Africa/Lagos" target="_blank" style="background: #eef2ff; color: #2563eb; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c7d2fe; flex-shrink: 0; white-space: nowrap;">
-                        📅 Add to Calendar
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Follow+up+with+{{ lead.name | urlencode }}&details=Property:+{{ lead.property_type | urlencode }}+in+{{ lead.location | urlencode }}%0ABudget:+{{ lead.budget | urlencode }}%0APhone:+{{ phone }}&ctz=Africa/Lagos" target="_blank" class="icon-btn-mobile" style="background: #eef2ff; color: #2563eb; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c7d2fe; flex-shrink: 0; white-space: nowrap;">
+                        📅 <span class="hide-on-mobile">Add to Calendar</span>
                     </a>
                 </span>
             </p>
