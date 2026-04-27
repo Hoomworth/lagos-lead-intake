@@ -107,7 +107,14 @@
 
             <p>
                 <span class="label"> <i data-lucide="target" class="icon"></i> Next Step</span>
-                <span class="value">{{ analysis.action }}</span>
+                <span class="value" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    {{ analysis.action }}
+                    
+                    <!-- GOOGLE CALENDAR BUTTON -->
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Follow+up+with+{{ lead.name | urlencode }}&details=Property:+{{ lead.property_type | urlencode }}+in+{{ lead.location | urlencode }}%0ABudget:+{{ lead.budget | urlencode }}%0APhone:+{{ phone }}&ctz=Africa/Lagos" target="_blank" style="background: #eef2ff; color: #2563eb; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c7d2fe;">
+                        📅 Add to Calendar
+                    </a>
+                </span>
             </p>
 
             <p>
@@ -149,7 +156,7 @@
             href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
             target="_blank"
             onclick="fetch('{{ url_for('mark_contacted', lead_id=lead.id) }}', {method: 'POST'})"
-            class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">
+            class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">
             WhatsApp
         </a>
 
@@ -255,7 +262,7 @@ Would you prefer I send over a quick WhatsApp presentation with pictures, or wou
 
             {% if message2 %}
             <button class="btn btn-copy" onclick="copyToClipboard('message2')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">Copy Message</button>
-            <a href="https://wa.me/{{ phone }}?text={{ message2 | urlencode }}" target="_blank" class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">WhatsApp</a>
+            <a href="https://wa.me/{{ phone }}?text={{ message2 | urlencode }}" target="_blank" class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">WhatsApp</a>
              {% else %}
               <a
               href="{{ url_for('generate_followup', lead_id=lead.id) }}"
@@ -296,7 +303,7 @@ Here is my proposed next step: I am going to compile the details, photos, and ex
             </div>
             <div class="action-row" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn btn-copy" onclick="copyToClipboard('objection_text')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Copy</button>
-                <a href="https://wa.me/{{ phone }}?text={{ objection_text | urlencode }}" target="_blank" class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">WhatsApp</a>
+                <a href="https://wa.me/{{ phone }}?text={{ objection_text | urlencode }}" target="_blank" class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">WhatsApp</a>
                 {% if not is_ai_objection %}
                 <a href="{{ url_for('generate_objection', lead_id=lead.id) }}" class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Generate AI (1 Credit)</a>
                 {% endif %}
@@ -310,7 +317,7 @@ Here is my proposed next step: I am going to compile the details, photos, and ex
             </div>
             <div class="action-row" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn btn-copy" onclick="copyToClipboard('inspection_text')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Copy</button>
-                <a href="https://wa.me/{{ phone }}?text={{ inspection_text | urlencode }}" target="_blank" class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">WhatsApp</a>
+                <a href="https://wa.me/{{ phone }}?text={{ inspection_text | urlencode }}" target="_blank" class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">WhatsApp</a>
                 {% if not is_ai_inspection %}
                 <a href="{{ url_for('generate_inspection', lead_id=lead.id) }}" class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Generate AI (1 Credit)</a>
                 {% endif %}
@@ -324,7 +331,7 @@ Here is my proposed next step: I am going to compile the details, photos, and ex
             </div>
             <div class="action-row" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn btn-copy" onclick="copyToClipboard('fomo_text')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Copy</button>
-                <a href="https://wa.me/{{ phone }}?text={{ fomo_text | urlencode }}" target="_blank" class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">WhatsApp</a>
+                <a href="https://wa.me/{{ phone }}?text={{ fomo_text | urlencode }}" target="_blank" class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">WhatsApp</a>
                 {% if not is_ai_fomo %}
                 <a href="{{ url_for('generate_fomo', lead_id=lead.id) }}" class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Generate AI (1 Credit)</a>
                 {% endif %}
@@ -338,7 +345,7 @@ Here is my proposed next step: I am going to compile the details, photos, and ex
             </div>
             <div class="action-row" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn btn-copy" onclick="copyToClipboard('offmarket_text')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Copy</button>
-                <a href="https://wa.me/{{ phone }}?text={{ offmarket_text | urlencode }}" target="_blank" class="btn btn-copy" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px;">WhatsApp</a>
+                <a href="https://wa.me/{{ phone }}?text={{ offmarket_text | urlencode }}" target="_blank" class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">WhatsApp</a>
                 {% if not is_ai_offmarket %}
                 <a href="{{ url_for('generate_offmarket', lead_id=lead.id) }}" class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; border: none;">Generate AI (1 Credit)</a>
                 {% endif %}

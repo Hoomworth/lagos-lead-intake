@@ -63,6 +63,7 @@ class User(db.Model):
     credits = db.Column(db.Integer, default=5)
     gender = db.Column(db.String(20), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
+    company_name = db.Column(db.String(150), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
@@ -233,6 +234,7 @@ def register():
         confirm = request.form.get('confirm_password')
         gender = request.form.get('gender')
         phone = request.form.get('phone')
+        company_name = request.form.get('company_name')
 
         if not full_name or not email or not password or not confirm or not gender or not phone:
             flash('Fill all fields', 'error')
@@ -256,7 +258,8 @@ def register():
             email=email,
             password_hash=generate_password_hash(password),
             gender=gender,
-            phone=phone
+            phone=phone,
+            company_name=company_name
         )
 
         db.session.add(user)
@@ -393,11 +396,15 @@ def profile():
     current_user = get_current_user()
     if request.method == 'POST':
         full_name = request.form.get('full_name')
+        company_name = request.form.get('company_name')
         new_password = request.form.get('new_password')
         confirm_password = request.form.get('confirm_password')
 
         if full_name:
             current_user.full_name = full_name
+            
+        if company_name is not None:
+            current_user.company_name = company_name
         
         if new_password:
             if new_password == confirm_password:
@@ -438,6 +445,7 @@ def add_lead():
     property_type = request.form.get('property_type')
     timeline = request.form.get('timeline')
     notes = request.form.get('notes')
+    source = request.form.get('source') or 'Manual'
 
     if not all([agent_name, name, phone, budget, location, property_type, timeline]):
         flash('Fill all fields', 'error')
@@ -453,7 +461,7 @@ def add_lead():
         timeline=timeline,
         notes=notes,
         user_id=current_user.id,
-        source='Manual'
+        source=source
     )
 
     db.session.add(lead)
@@ -1224,6 +1232,10 @@ with app.app_context():
                 db.session.execute(text('ALTER TABLE "user" ADD COLUMN phone VARCHAR(20)'))
                 db.session.commit()
                 print("Successfully added phone to user table.")
+            if 'company_name' not in user_columns:
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN company_name VARCHAR(150)'))
+                db.session.commit()
+                print("Successfully added company_name to user table.")
             if 'is_admin' not in user_columns:
                 db.session.execute(text('ALTER TABLE "user" ADD COLUMN is_admin BOOLEAN DEFAULT FALSE'))
                 db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
