@@ -107,8 +107,10 @@
 
             <p>
                 <span class="label"> <i data-lucide="target" class="icon"></i> Next Step</span>
-                <span class="value" style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;">
-                    {{ analysis.action }}
+                <span class="value" style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; min-width: 0;">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">
+                        {{ analysis.action }}
+                    </span>
                     
                     <!-- GOOGLE CALENDAR BUTTON -->
                     <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Follow+up+with+{{ lead.name | urlencode }}&details=Property:+{{ lead.property_type | urlencode }}+in+{{ lead.location | urlencode }}%0ABudget:+{{ lead.budget | urlencode }}%0APhone:+{{ phone }}&ctz=Africa/Lagos" target="_blank" style="background: #eef2ff; color: #2563eb; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c7d2fe; flex-shrink: 0; white-space: nowrap;">
