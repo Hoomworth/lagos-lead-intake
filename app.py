@@ -2,6 +2,8 @@ import os
 import datetime
 import re
 from functools import wraps
+import csv
+import io
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
@@ -15,7 +17,6 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-# Trust Render's reverse proxy so mobile network switching doesn't drop the session
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-key-123')
@@ -26,6 +27,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['TEMPLATES_AUTO_RELOAD'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = datetime.timedelta(days=365)
 
 # Email Configuration (100% Free via Gmail)
@@ -468,6 +470,61 @@ def add_lead():
     db.session.commit()
 
     return redirect(url_for('set_prospect', lead_id=lead.id))
+
+
+@app.route('/upload_csv', methods=['POST'])
+@login_required
+def upload_csv():
+    current_user = get_current_user()
+    
+    if 'csv_file' not in request.files:
+        flash('No file uploaded', 'error')
+        return redirect(url_for('leads'))
+        
+    file = request.files['csv_file']
+    
+    if file.filename == '':
+        flash('No file selected', 'error')
+        return redirect(url_for('leads'))
+        
+    if not file.filename.endswith('.csv'):
+        flash('Please upload a valid .csv file', 'error')
+        return redirect(url_for('leads'))
+
+    try:
+        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.DictReader(stream)
+        
+        # Standardize headers (make them lowercase and remove spaces)
+        csv_input.fieldnames = [header.strip().lower() for header in csv_input.fieldnames]
+        
+        leads_added = 0
+        for row in csv_input:
+            if not any(row.values()): continue # Skip completely empty rows
+                
+            lead = Lead(
+                agent_name=current_user.full_name,
+                name=row.get('name', 'Unknown Buyer'),
+                phone=row.get('phone', 'N/A'),
+                budget=row.get('budget', 'Flexible'),
+                location=row.get('location', 'Open'),
+                property_type=row.get('property_type', 'Any'),
+                timeline=row.get('timeline', 'Flexible'),
+                notes=row.get('notes', 'Imported via Bulk CSV Upload.'),
+                source='CSV Upload',
+                user_id=current_user.id
+            )
+            db.session.add(lead)
+            leads_added += 1
+            
+        db.session.commit()
+        flash(f'Successfully imported {leads_added} leads!', 'success')
+        
+    except Exception as e:
+        print("CSV Upload Error:", e)
+        flash('Error processing CSV file. Ensure it is a valid CSV.', 'error')
+        
+    return redirect(url_for('leads'))
 
 
 @app.route('/edit_lead/<int:lead_id>', methods=['GET', 'POST'])
@@ -1062,6 +1119,15 @@ def api_add_scraped_lead():
     if not data:
         return {"error": "No data provided"}, 400
         
+    # DUPLICATE CHECK: Prevent importing the exact same URL twice
+    url = data.get('url')
+    if url:
+        # Check if any lead already has this exact URL embedded in its notes
+        existing_lead = Lead.query.filter(Lead.notes.like(f"%[LINK]{url}[/LINK]%")).first()
+        if existing_lead:
+            print(f"⚠️ SCRAPER API: Skipped duplicate URL -> {url}")
+            return {"status": "skipped", "message": "Lead already exists in CRM"}, 200
+        
     # 🧠 AI PARSING: If the scraper sent raw, messy text, let OpenAI organize it!
     if 'raw_text' in data:
         prompt = f"""
@@ -1104,7 +1170,18 @@ def api_add_scraped_lead():
     # DEALER LOGIC: Find the user with the fewest leads to ensure fair distribution
     users = User.query.all()
     if not users:
-        return {"error": "No users in system"}, 400
+        print("⚠️ No users found in database! Creating a default Admin user so leads can be saved.")
+        default_user = User(
+            full_name="System Admin",
+            email="admin@hoomworth.com",
+            password_hash=generate_password_hash("Password123!"),
+            gender="N/A",
+            phone="0000000000",
+            is_admin=True
+        )
+        db.session.add(default_user)
+        db.session.commit()
+        users = [default_user]
         
     # Sort users by their total number of leads, and pick the one with the lowest count
     assigned_user = sorted(users, key=lambda u: len(u.leads))[0]

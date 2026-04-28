@@ -1,8 +1,15 @@
 import requests
 import time
 import random
-import cloudscraper
-from bs4 import BeautifulSoup
+import datetime
+import re
+import urllib.parse
+
+# Selenium for Web Browser Automation
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
 # ---------------------------------------------------------
 # HOOMWORTH CRM - LEAD SCRAPER ENGINE
@@ -11,82 +18,85 @@ from bs4 import BeautifulSoup
 # It finds data, packages it, and sends it to the CRM API.
 
 # Your live Render URL
-API_ENDPOINT = "https://lagos-lead-intake.onrender.com/api/add_scraped_lead"
+# API_ENDPOINT = "https://lagos-lead-intake.onrender.com/api/add_scraped_lead"
+# LOCAL TESTING: 
+API_ENDPOINT = "http://127.0.0.1:8080/api/add_scraped_lead"
 
-def scrape_leads():
-    print("🔍 SCRAPER: Connecting to Nairaland Property Section...")
+def scrape_x_twitter():
+    print("🔍 SCRAPER: Waking up our virtual Chrome browser...")
     
-    url = "https://www.nairaland.com/properties"
-    
-    scraped_leads = []
+    # Setup Chrome (Visible, not headless, to avoid bot detection and allow manual login)
+    options = webdriver.ChromeOptions()
+    options.add_argument('--disable-blink-features=AutomationControlled')
     
     try:
-        # Create a special scraper to bypass Cloudflare security
-        scraper = cloudscraper.create_scraper()
-        response = scraper.get(url)
-        soup = BeautifulSoup(response.text, "html.parser")
-        
-        # Grab all link tags on the page
-        topics = soup.find_all('a')
-        
-        # Filter out short links and external links
-        valid_topics = [t for t in topics if t.text and len(t.text.strip()) > 15 and t.get('href') and not t.get('href').startswith('http')]
-        print(f"📡 SCRAPER: Found {len(valid_topics)} potential threads. Filtering for buyer requests...")
-        
-        # 70+ Perfect High-Intent Real Estate Keywords
-        keywords = [
-            'need a', 'needed', 'looking for', 'buyer', 'urgent', 'rent', 'lease', 'buy',
-            'searching for', 'seeking', 'budget is', 'client needs', 'direct brief', 'urgently',
-            'require', 'accommodation', 'apartment needed', 'house wanted', 'land wanted',
-            'office space', 'shop needed', 'warehouse needed', 'tenant', 'purchaser',
-            'looking to buy', 'looking to rent', 'want to buy', 'want to rent', 'in need of',
-            'ready to pay', 'ready to buy', 'ready buyer', 'urgent request', 'serious buyer',
-            'serious client', 'need a 2 bed', 'need a 3 bed', 'mini flat', 'self contain',
-            'duplex needed', 'half plot', 'full plot', 'acres needed', 'property wanted',
-            'house hunting', 'apartment hunting', 'any available', 'who has', 'where can i get',
-            'looking for a', 'search of', 'to let', 'for lease', 'shortlet needed', 'short let needed',
-            'expatriate looking', 'company looking', 'staff looking', 'family looking',
-            'couple looking', 'bachelor looking', 'bq needed', 'boys quarter needed'
-        ]
-        
-        # Negative Keywords to filter out ads and spam
-        negative_keywords = [
-            'call', 'whatsapp', 'check out', 'look no further', 'our services',
-            'we sell', 'custom', 'working drawings', 'stamp', 'for any property you need',
-            'contact us', 'hire us', 'available for sale', 'to let'
-        ]
-        
-        for topic in valid_topics[:100]: # Scan the top 100 links
-            title_text = topic.text.strip()
-            
-            if any(kw in title_text.lower() for kw in keywords) and not any(n_kw in title_text.lower() for n_kw in negative_keywords):
-                thread_url = "https://www.nairaland.com/" + topic.get('href').lstrip('/')
-                print(f"📝 Found Match: {title_text}")
-                print(f"   🔗 Deep Scraping Thread: {thread_url}")
-                
-                try:
-                    # DEEP SCRAPING: Visit the actual thread to get the full post body
-                    thread_response = scraper.get(thread_url)
-                    thread_soup = BeautifulSoup(thread_response.text, "html.parser")
-                    first_post = thread_soup.find('div', class_='narrow')
-                    full_text = first_post.text.strip() if first_post else title_text
-                    
-                    scraped_leads.append({
-                        "raw_text": full_text,
-                        "source": "Nairaland Scraper",
-                        "url": thread_url
-                    })
-                    time.sleep(1) # Be polite to the server
-                except Exception as e:
-                    print(f"   ❌ Failed to read thread: {e}")
-                
-        return scraped_leads
-        
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     except Exception as e:
-        print(f"❌ ERROR SCRAPING: {e}")
+        print(f"❌ Failed to launch Chrome: {e}")
         return []
+        
+    leads = []
+    
+    try:
+        print("🌐 Opening X (Twitter) Login Page...")
+        driver.get("https://x.com/login")
+        
+        print("\n" + "="*50)
+        print("🚨 ACTION REQUIRED 🚨")
+        print("1. A new Chrome window just opened on your screen.")
+        print("2. Please log in to a dummy/secondary X account in that window.")
+        print("3. Once you are fully logged in and see the home timeline, come back here.")
+        print("="*50 + "\n")
+        
+        input("👉 Press ENTER in this terminal when you are fully logged in... ")
+        
+        print("\n📡 Searching for live buyers in Lagos...")
+        
+        # The Ultimate Real Estate Search Query for Nigeria
+        search_query = '("need a house" OR "looking for apartment" OR "looking for a house" OR "need an agent" OR "want to rent" OR "want to buy") (Lagos OR Lekki OR Yaba OR Ikeja OR Mainland)'
+        encoded_query = urllib.parse.quote(search_query)
+        
+        # f=live means "Latest" tweets
+        search_url = f"https://x.com/search?q={encoded_query}&src=typed_query&f=live"
+        driver.get(search_url)
+        
+        print("⏳ Waiting 10 seconds for tweets to load...")
+        time.sleep(10)
+        
+        # Scroll down twice to load more results
+        for i in range(2):
+            print(f"   ⬇️ Scrolling page {i+1}...")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(4)
+            
+        # Find all tweets on the page
+        tweet_elements = driver.find_elements(By.CSS_SELECTOR, '[data-testid="tweetText"]')
+        print(f"📝 Found {len(tweet_elements)} recent tweets matching our keywords. Extracting...")
+        
+        for tweet in tweet_elements:
+            text = tweet.text.strip()
+            # Skip extremely short/empty posts
+            if len(text) > 20:
+                unique_url = f"{search_url}&unique={abs(hash(text))}"
+                leads.append({
+                    "raw_text": text,
+                    "source": "X (Twitter)",
+                    "url": unique_url
+                })
+                
+    except Exception as e:
+        print(f"❌ ERROR DURING SCRAPING: {e}")
+    finally:
+        print("🛑 Closing browser...")
+        driver.quit()
+        
+    return leads
 
 def send_to_crm(leads):
+    if not leads:
+        print("🛑 SCRAPER: No leads gathered in this session.")
+        return
+        
     for lead in leads:
         print(f"🚀 SCRAPER: Sending raw post to CRM for AI Parsing...")
         try:
@@ -94,13 +104,20 @@ def send_to_crm(leads):
             if response.status_code == 201:
                 data = response.json()
                 print(f"✅ SUCCESS: Lead securely delivered and assigned to {data['assigned_to']}!")
+            elif response.status_code == 200 and response.json().get("status") == "skipped":
+                print(f"⚠️ SKIPPED: URL already exists in CRM.")
             else:
                 print(f"❌ ERROR: Failed to deliver lead. Server responded: {response.text}")
         except requests.exceptions.ConnectionError:
             print("❌ ERROR: Could not connect to CRM. Is the Flask server running?")
 
 if __name__ == "__main__":
-    # 1. Find the leads
-    new_leads = scrape_leads()
-    # 2. Push them to the database
-    send_to_crm(new_leads)
+    print("========================================")
+    print("STARTING MULTI-SITE LEAD ENGINE")
+    print("========================================")
+    
+    all_leads = []
+    all_leads.extend(scrape_x_twitter())
+    
+    send_to_crm(all_leads)
+    print("🏁 SCRAPER: All tasks completed successfully! You can run me again later.")
