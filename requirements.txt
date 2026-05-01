@@ -5,3 +5,4 @@ openai
 Flask-Migrate
 Flask-Mail
 gunicorn
+openpyxl

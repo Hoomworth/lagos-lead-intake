@@ -477,52 +477,84 @@ def add_lead():
 def upload_csv():
     current_user = get_current_user()
     
-    if 'csv_file' not in request.files:
+    if 'file' not in request.files and 'csv_file' not in request.files:
         flash('No file uploaded', 'error')
         return redirect(url_for('leads'))
         
-    file = request.files['csv_file']
+    file = request.files.get('file') or request.files.get('csv_file')
     
     if file.filename == '':
         flash('No file selected', 'error')
         return redirect(url_for('leads'))
         
-    if not file.filename.endswith('.csv'):
-        flash('Please upload a valid .csv file', 'error')
+    if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
+        flash('Please upload a valid .csv or .xlsx file', 'error')
         return redirect(url_for('leads'))
 
     try:
-        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-        csv_input = csv.DictReader(stream)
-        
-        # Standardize headers (make them lowercase and remove spaces)
-        csv_input.fieldnames = [header.strip().lower() for header in csv_input.fieldnames]
-        
         leads_added = 0
-        for row in csv_input:
-            if not any(row.values()): continue # Skip completely empty rows
+        if file.filename.endswith('.csv'):
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_input = csv.DictReader(stream)
+            
+            # Standardize headers (make them lowercase and remove spaces)
+            csv_input.fieldnames = [header.strip().lower() for header in csv_input.fieldnames]
+            
+            for row in csv_input:
+                if not any(row.values()): continue # Skip completely empty rows
+                    
+                lead = Lead(
+                    agent_name=current_user.full_name,
+                    name=row.get('name', 'Unknown Buyer') or 'Unknown Buyer',
+                    phone=row.get('phone', 'N/A') or 'N/A',
+                    budget=row.get('budget', 'Flexible') or 'Flexible',
+                    location=row.get('location', 'Open') or 'Open',
+                    property_type=row.get('property_type', 'Any') or 'Any',
+                    timeline=row.get('timeline', 'Flexible') or 'Flexible',
+                    notes=row.get('notes', 'Imported via Bulk CSV Upload.') or 'Imported via Bulk CSV Upload.',
+                    source='CSV Upload',
+                    user_id=current_user.id
+                )
+                db.session.add(lead)
+                leads_added += 1
                 
-            lead = Lead(
-                agent_name=current_user.full_name,
-                name=row.get('name', 'Unknown Buyer'),
-                phone=row.get('phone', 'N/A'),
-                budget=row.get('budget', 'Flexible'),
-                location=row.get('location', 'Open'),
-                property_type=row.get('property_type', 'Any'),
-                timeline=row.get('timeline', 'Flexible'),
-                notes=row.get('notes', 'Imported via Bulk CSV Upload.'),
-                source='CSV Upload',
-                user_id=current_user.id
-            )
-            db.session.add(lead)
-            leads_added += 1
+        elif file.filename.endswith('.xlsx'):
+            import openpyxl
+            wb = openpyxl.load_workbook(file)
+            sheet = wb.active
+            
+            headers = []
+            for row_idx, row in enumerate(sheet.iter_rows(values_only=True)):
+                if row_idx == 0:
+                    headers = [str(cell).strip().lower() if cell else f"col_{i}" for i, cell in enumerate(row)]
+                    continue
+                
+                row_dict = dict(zip(headers, row))
+                if not any(row_dict.values()): continue
+                
+                lead = Lead(
+                    agent_name=current_user.full_name,
+                    name=str(row_dict.get('name', 'Unknown Buyer') or 'Unknown Buyer'),
+                    phone=str(row_dict.get('phone', 'N/A') or 'N/A'),
+                    budget=str(row_dict.get('budget', 'Flexible') or 'Flexible'),
+                    location=str(row_dict.get('location', 'Open') or 'Open'),
+                    property_type=str(row_dict.get('property_type', 'Any') or 'Any'),
+                    timeline=str(row_dict.get('timeline', 'Flexible') or 'Flexible'),
+                    notes=str(row_dict.get('notes', 'Imported via Bulk XLSX Upload.') or 'Imported via Bulk XLSX Upload.'),
+                    source='XLSX Upload',
+                    user_id=current_user.id
+                )
+                db.session.add(lead)
+                leads_added += 1
             
         db.session.commit()
         flash(f'Successfully imported {leads_added} leads!', 'success')
         
+    except ImportError:
+        flash('Missing openpyxl library for Excel files. Run: pip install openpyxl', 'error')
     except Exception as e:
         print("CSV Upload Error:", e)
-        flash('Error processing CSV file. Ensure it is a valid CSV.', 'error')
+        flash('Error processing file. Ensure it is a valid CSV or XLSX.', 'error')
         
     return redirect(url_for('leads'))
 
