@@ -855,32 +855,38 @@ def generate_ai(lead_id):
         return redirect(url_for('leads'))
 
     prompt = f"""
-You are a professional Lagos real estate sales expert named {lead.agent_name}.
+You are a world-class real estate sales strategist and copywriter, acting as an assistant for an agent named {lead.agent_name}.
+Your task is to analyze a client lead and generate a suite of communication materials.
 
-Analyze this lead and generate outreach messages addressed to the client, {lead.name}.
-Do NOT use any placeholders like [Your Name] or [Client Name]. Use the actual names provided.
+**Core Instructions:**
+- **Tone:** The tone must be professional, confident, and highly personable. It should feel like a helpful, expert consultant, not a pushy salesperson.
+- **Natural Language:** Use natural, human-like language. Avoid jargon and overly formal phrases. The output should be conversational.
+- **No Emojis:** Do NOT use any emojis in your responses.
+- **No Placeholders:** Do NOT use placeholders like [Your Name] or [Client Name]. Use the actual names provided in the lead details.
+- **Output Format:** You MUST return ONLY valid JSON. Do not include any text or markdown outside of the JSON structure.
 
-Lead Details:
-Client Name: {lead.name}
-Location: {lead.location}
-Budget: {lead.budget}
-Property Type: {lead.property_type}
-Timeline: {lead.timeline}
+**Lead Details to Analyze:**
+- Agent's Name: {lead.agent_name}
+- Client's Name: {lead.name}
+- Desired Location: {lead.location}
+- Client's Budget: {lead.budget}
+- Property Type: {lead.property_type}
+- Client's Timeline: {lead.timeline}
 
-Return ONLY valid JSON in this format:
+**JSON Structure to Return:**
 
 {{
-  "quality": "Hot/Warm/Cold",
-  "intent": "Type of buyer",
-  "score": number between 1-100,
-  "action": "Best next step",
-  "timing": "When to follow up",
-  "objection": "Likely concern",
+  "quality": "Analyze the lead to determine if it is 'Hot', 'Warm', or 'Cold'.",
+  "intent": "Briefly describe the buyer's likely intent.",
+  "score": "Assign a lead score from 1 to 100 based on the quality and intent.",
+  "action": "Suggest the single most effective next action for the agent.",
+  "timing": "Suggest when to perform the action.",
+  "objection": "Predict the most likely objection or concern the client might have.",
 
-  "whatsapp": "Write a highly detailed, 4-paragraph WhatsApp follow-up. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 4 complete paragraphs.",
-  "sms": "Short SMS under 160 characters",
-  "email_subject": "Email subject line",
-  "email_body": "Write a highly detailed, 4-paragraph professional email. Separate each paragraph with a double line break (\\n\\n) for perfect spacing. Do NOT write less than 4 complete paragraphs."
+  "whatsapp": "Write a detailed, 3-paragraph WhatsApp message. It should build rapport, confirm their core needs, and propose a clear next step. Do NOT use emojis. Separate paragraphs with a double line break (\\n\\n).",
+  "sms": "Write a concise and professional SMS message, strictly under 140 characters. Do NOT use emojis.",
+  "email_subject": "Create a compelling and professional email subject line. Do NOT use emojis.",
+  "email_body": "Write a comprehensive, single-paragraph professional email. It should summarize the opportunity and call to action clearly. Do NOT use emojis."
 }}
 """
 
@@ -934,7 +940,7 @@ def generate_first_contact(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed, 4-paragraph WhatsApp first-contact message to a real estate client named {lead.name} from me, the agent named {lead.agent_name}. They are inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Do NOT use any placeholders like [Your Name] or [Recipient's Name]. Separate each paragraph with a double line break (\\n\\n). Do NOT write less than 4 complete paragraphs."
+    prompt = f"Write a highly detailed, 3-paragraph WhatsApp first-contact message to a real estate client named {lead.name} from me, the agent named {lead.agent_name}. They are inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Do NOT use any placeholders like [Your Name] or [Recipient's Name]. Do NOT use emojis. Separate each paragraph with a double line break (\\n\\n)."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -960,7 +966,7 @@ def generate_sms(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Generate a short SMS under 160 characters to {lead.name} from agent {lead.agent_name} regarding a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use placeholders."
+    prompt = f"Generate a short SMS under 140 characters to {lead.name} from agent {lead.agent_name} regarding a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use placeholders. Do NOT use emojis."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -988,7 +994,7 @@ def generate_email(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed, professional real estate email to the client {lead.name}, from me, the agent {lead.agent_name}. It is about a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use any placeholders. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) for perfect spacing and alignment."
+    prompt = f"Write a concise but comprehensive, professional real estate email to the client {lead.name}, from me, the agent {lead.agent_name}. It is about a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use any placeholders. Do NOT use emojis. The email should be a single, well-structured paragraph."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1017,7 +1023,7 @@ def generate_followup(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a highly detailed follow-up WhatsApp message to a real estate client named {lead.name} from me, the agent {lead.agent_name}. They showed interest in a {lead.property_type} in {lead.location}. Do NOT use placeholders. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n)."
+    prompt = f"Write a detailed, 2-paragraph follow-up WhatsApp message to a real estate client named {lead.name} from me, the agent {lead.agent_name}. They showed interest in a {lead.property_type} in {lead.location}. Do NOT use placeholders. Do NOT use emojis. Separate each paragraph with a double line break (\\n\\n)."
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1045,7 +1051,20 @@ def generate_script(lead_id):
 
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
-    prompt = f"Write a comprehensive phone call script for me, a real estate agent named {lead.agent_name}, speaking to my client {lead.name} about a {lead.property_type} in {lead.location}. Do NOT use placeholders. You MUST write exactly 4 complete paragraphs. Separate each paragraph with a double line break (\\n\\n) to ensure proper spacing."
+    prompt = f"""
+You are an expert real estate sales coach. Create a conversational phone call script for me, an agent named {lead.agent_name}, calling my client, {lead.name}.
+
+**My Goal:** To build rapport, confirm their needs for a {lead.property_type} in {lead.location}, and schedule a follow-up.
+
+**Instructions for the script:**
+1.  **Format:** Structure it as a dialogue. Use "Agent ({lead.agent_name}):" and "Client ({lead.name}):" to show who is speaking.
+2.  **Conversational Tone:** The agent's lines should sound natural, confident, and friendly, not robotic.
+3.  **Anticipate Client:** After the agent speaks, write a *likely* client response or question. For example, "Client might say: 'I'm busy right now'" or "Client might ask: 'How did you get my number?'".
+4.  **Provide Agent's Rebuttal:** After the anticipated client response, provide a perfect, concise rebuttal or answer for the agent.
+5.  **Structure:** The script should have a clear opening, a discovery phase (asking 1-2 key questions), and a closing (setting the next step).
+6.  **No Placeholders:** Do not use placeholders like [Your Name]. Use the actual names provided.
+7.  **No Emojis:** Do NOT use emojis anywhere in the script.
+"""
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1071,7 +1090,7 @@ def generate_objection(lead_id):
         return redirect(url_for('prospect'))
         
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
-    prompt = f"Write a highly persuasive, 2-paragraph objection-crusher WhatsApp script addressed to my client {lead.name} from me, the agent {lead.agent_name}. Use this when the client hesitates on a {lead.property_type} in {lead.location} due to their {lead.budget} budget. Give exact word-for-word responses to justify the value and appreciation. Do NOT use placeholders."
+    prompt = f"Write a highly persuasive, 2-paragraph objection-crusher WhatsApp script addressed to my client {lead.name} from me, the agent {lead.agent_name}. Use this when the client hesitates on a {lead.property_type} in {lead.location} due to their {lead.budget} budget. Give exact word-for-word responses to justify the value and appreciation. Do NOT use placeholders. Do NOT use emojis."
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1092,7 +1111,7 @@ def generate_inspection(lead_id):
         return redirect(url_for('prospect'))
         
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
-    prompt = f"Write a highly persuasive, 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Specifically design it to lock in a physical or virtual viewing this weekend for a {lead.property_type} in {lead.location}. Do NOT use placeholders."
+    prompt = f"Write a highly persuasive, 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Specifically design it to lock in a physical or virtual viewing this weekend for a {lead.property_type} in {lead.location}. Do NOT use placeholders. Do NOT use emojis."
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1113,7 +1132,7 @@ def generate_fomo(lead_id):
         return redirect(url_for('prospect'))
         
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
-    prompt = f"Write a short, data-driven 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Highlight why buying a {lead.property_type} in {lead.location} right now is a smart investment, creating high FOMO (Fear Of Missing Out) for their {lead.budget} budget. Do NOT use placeholders."
+    prompt = f"Write a short, data-driven 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Highlight why buying a {lead.property_type} in {lead.location} right now is a smart investment, creating high FOMO (Fear Of Missing Out) for their {lead.budget} budget. Do NOT use placeholders. Do NOT use emojis."
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1134,7 +1153,7 @@ def generate_offmarket(lead_id):
         return redirect(url_for('prospect'))
         
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
-    prompt = f"Write a short, mysterious 2-paragraph WhatsApp message to {lead.name} from me, the agent {lead.agent_name}, saying an off-market {lead.property_type} just came up in {lead.location} that perfectly matches their budget of {lead.budget}. It’s not public yet, ask if you should send pictures. Do NOT use placeholders."
+    prompt = f"Write a short, mysterious 2-paragraph WhatsApp message to {lead.name} from me, the agent {lead.agent_name}, saying an off-market {lead.property_type} just came up in {lead.location} that perfectly matches their budget of {lead.budget}. It’s not public yet, ask if you should send pictures. Do NOT use placeholders. Do NOT use emojis."
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",
