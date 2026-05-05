@@ -89,6 +89,7 @@ class Lead(db.Model):
     contacted_at = db.Column(db.DateTime, nullable=True)
     closed_at = db.Column(db.DateTime, nullable=True)
     source = db.Column(db.String(50), default='Manual')
+    ai_data = db.Column(db.Text, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -153,6 +154,15 @@ def analyze_lead(lead):
         "timing": timing,
         "risk": objections
     }
+
+import json
+def update_lead_ai_data(lead, new_data):
+    try:
+        data = json.loads(lead.ai_data) if lead.ai_data else {}
+    except:
+        data = {}
+    data.update(new_data)
+    lead.ai_data = json.dumps(data)
 
 def get_current_user():
     user_id = session.get('user_id')
@@ -626,17 +636,24 @@ def prospect():
     if phone.startswith('+'):
         phone = phone[1:]
 
-    ai_whatsapp = session.pop('ai_whatsapp', None)
-    ai_sms = session.pop('ai_sms', None)
-    ai_email_subject = session.pop('ai_email_subject', None)
-    ai_email_body = session.pop('ai_email_body', None)
-    analysis = session.pop('ai_analysis', None)
-    ai_followup = session.pop('ai_followup', None)
-    ai_script = session.pop('ai_script', None)
-    ai_objection = session.pop('ai_objection', None)
-    ai_inspection = session.pop('ai_inspection', None)
-    ai_fomo = session.pop('ai_fomo', None)
-    ai_offmarket = session.pop('ai_offmarket', None)
+    # Load permanently saved AI messages from the database
+    try:
+        import json
+        saved_ai = json.loads(lead.ai_data) if lead.ai_data else {}
+    except Exception:
+        saved_ai = {}
+
+    ai_whatsapp = saved_ai.get('ai_whatsapp') or session.pop('ai_whatsapp', None)
+    ai_sms = saved_ai.get('ai_sms') or session.pop('ai_sms', None)
+    ai_email_subject = saved_ai.get('ai_email_subject') or session.pop('ai_email_subject', None)
+    ai_email_body = saved_ai.get('ai_email_body') or session.pop('ai_email_body', None)
+    analysis = saved_ai.get('ai_analysis') or session.pop('ai_analysis', None)
+    ai_followup = saved_ai.get('ai_followup') or session.pop('ai_followup', None)
+    ai_script = saved_ai.get('ai_script') or session.pop('ai_script', None)
+    ai_objection = saved_ai.get('ai_objection') or session.pop('ai_objection', None)
+    ai_inspection = saved_ai.get('ai_inspection') or session.pop('ai_inspection', None)
+    ai_fomo = saved_ai.get('ai_fomo') or session.pop('ai_fomo', None)
+    ai_offmarket = saved_ai.get('ai_offmarket') or session.pop('ai_offmarket', None)
 
     message2 = ai_followup if ai_followup else None
     call_script = ai_script if ai_script else None
@@ -901,20 +918,21 @@ Your task is to analyze a client lead and generate a suite of communication mate
         import json
         ai_data = json.loads(response.choices[0].message.content)
 
-        # Save to session
-        session['ai_whatsapp'] = ai_data.get("whatsapp")
-        session['ai_sms'] = ai_data.get("sms")
-        session['ai_email_subject'] = ai_data.get("email_subject")
-        session['ai_email_body'] = ai_data.get("email_body")
-
-        session['ai_analysis'] = {
-            "quality": ai_data.get("quality", "Warm"),
-            "intent": ai_data.get("intent", "Buyer"),
-            "score": ai_data.get("score", 50),
-            "action": ai_data.get("action", "Follow up"),
-            "timing": ai_data.get("timing", "Soon"),
-            "risk": ai_data.get("objection", "No major concern")
-        }
+        # Save permanently to Database
+        update_lead_ai_data(lead, {
+            'ai_whatsapp': ai_data.get("whatsapp"),
+            'ai_sms': ai_data.get("sms"),
+            'ai_email_subject': ai_data.get("email_subject"),
+            'ai_email_body': ai_data.get("email_body"),
+            'ai_analysis': {
+                "quality": ai_data.get("quality", "Warm"),
+                "intent": ai_data.get("intent", "Buyer"),
+                "score": ai_data.get("score", 50),
+                "action": ai_data.get("action", "Follow up"),
+                "timing": ai_data.get("timing", "Soon"),
+                "risk": ai_data.get("objection", "No major concern")
+            }
+        })
 
         # deduct credit
         current_user.credits -= 1
@@ -947,7 +965,7 @@ def generate_first_contact(lead_id):
         messages=[{"role": "user", "content": prompt}]
     )
 
-    session['ai_whatsapp'] = response.choices[0].message.content
+    update_lead_ai_data(lead, {'ai_whatsapp': response.choices[0].message.content})
 
     current_user.credits -= 1
     db.session.commit()
@@ -975,7 +993,7 @@ def generate_sms(lead_id):
 
     sms = response.choices[0].message.content
 
-    session['ai_sms'] = sms
+    update_lead_ai_data(lead, {'ai_sms': sms})
 
     current_user.credits -= 1
     db.session.commit()
@@ -1003,8 +1021,10 @@ def generate_email(lead_id):
 
     email_body = response.choices[0].message.content
 
-    session['ai_email_subject'] = f"{lead.property_type} in {lead.location}"
-    session['ai_email_body'] = email_body
+    update_lead_ai_data(lead, {
+        'ai_email_subject': f"{lead.property_type} in {lead.location}",
+        'ai_email_body': email_body
+    })
 
     current_user.credits -= 1
     db.session.commit()
@@ -1032,7 +1052,7 @@ def generate_followup(lead_id):
 
     followup = response.choices[0].message.content
 
-    session['ai_followup'] = followup
+    update_lead_ai_data(lead, {'ai_followup': followup})
 
     current_user.credits -= 1
     db.session.commit()
@@ -1073,7 +1093,7 @@ You are an expert real estate sales coach. Create a conversational phone call sc
 
     script = response.choices[0].message.content
 
-    session['ai_script'] = script
+    update_lead_ai_data(lead, {'ai_script': script})
 
     current_user.credits -= 1
     db.session.commit()
@@ -1096,7 +1116,7 @@ def generate_objection(lead_id):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
-    session['ai_objection'] = response.choices[0].message.content
+    update_lead_ai_data(lead, {'ai_objection': response.choices[0].message.content})
     current_user.credits -= 1
     db.session.commit()
     return redirect(url_for('prospect'))
@@ -1117,7 +1137,7 @@ def generate_inspection(lead_id):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
-    session['ai_inspection'] = response.choices[0].message.content
+    update_lead_ai_data(lead, {'ai_inspection': response.choices[0].message.content})
     current_user.credits -= 1
     db.session.commit()
     return redirect(url_for('prospect'))
@@ -1138,7 +1158,7 @@ def generate_fomo(lead_id):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
-    session['ai_fomo'] = response.choices[0].message.content
+    update_lead_ai_data(lead, {'ai_fomo': response.choices[0].message.content})
     current_user.credits -= 1
     db.session.commit()
     return redirect(url_for('prospect'))
@@ -1159,7 +1179,7 @@ def generate_offmarket(lead_id):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
-    session['ai_offmarket'] = response.choices[0].message.content
+    update_lead_ai_data(lead, {'ai_offmarket': response.choices[0].message.content})
     current_user.credits -= 1
     db.session.commit()
     return redirect(url_for('prospect'))
@@ -1257,6 +1277,10 @@ with app.app_context():
                 db.session.execute(text("ALTER TABLE lead ADD COLUMN source VARCHAR(50) DEFAULT 'Manual'"))
                 db.session.commit()
                 print("Successfully added source to lead table.")
+            if 'ai_data' not in columns:
+                db.session.execute(text('ALTER TABLE lead ADD COLUMN ai_data TEXT'))
+                db.session.commit()
+                print("Successfully added ai_data to lead table.")
                 
         if 'user' in inspector.get_table_names():
             user_columns = [col['name'] for col in inspector.get_columns('user')]
