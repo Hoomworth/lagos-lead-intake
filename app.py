@@ -70,6 +70,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=True)
     company_name = db.Column(db.String(150), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
+    ai_instructions = db.Column(db.Text, nullable=True)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -412,6 +413,7 @@ def profile():
     if request.method == 'POST':
         full_name = request.form.get('full_name')
         company_name = request.form.get('company_name')
+        ai_instructions = request.form.get('ai_instructions')
         new_password = request.form.get('new_password')
         confirm_password = request.form.get('confirm_password')
 
@@ -420,6 +422,9 @@ def profile():
             
         if company_name is not None:
             current_user.company_name = company_name
+            
+        if ai_instructions is not None:
+            current_user.ai_instructions = ai_instructions
         
         if new_password:
             if new_password == confirm_password:
@@ -907,6 +912,9 @@ Your task is to analyze a client lead and generate a suite of communication mate
 }}
 """
 
+    if current_user.ai_instructions:
+        prompt += f"\n\n**Agent's Custom Rules (MUST FOLLOW):**\n{current_user.ai_instructions}"
+
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -960,6 +968,9 @@ def generate_first_contact(lead_id):
 
     prompt = f"Write a highly detailed, 3-paragraph WhatsApp first-contact message to a real estate client named {lead.name} from me, the agent named {lead.agent_name}. They are inquiring about a {lead.property_type} in {lead.location} with a budget of {lead.budget}. Do NOT use any placeholders like [Your Name] or [Recipient's Name]. Do NOT use emojis. Separate each paragraph with a double line break (\\n\\n)."
 
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -985,6 +996,9 @@ def generate_sms(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
     prompt = f"Generate a short SMS under 140 characters to {lead.name} from agent {lead.agent_name} regarding a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use placeholders. Do NOT use emojis."
+
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1013,6 +1027,9 @@ def generate_email(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
     prompt = f"Write a concise but comprehensive, professional real estate email to the client {lead.name}, from me, the agent {lead.agent_name}. It is about a {lead.property_type} in {lead.location}, budget {lead.budget}. Do NOT use any placeholders. Do NOT use emojis. The email should be a single, well-structured paragraph."
+
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1044,6 +1061,9 @@ def generate_followup(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
 
     prompt = f"Write a detailed, 2-paragraph follow-up WhatsApp message to a real estate client named {lead.name} from me, the agent {lead.agent_name}. They showed interest in a {lead.property_type} in {lead.location}. Do NOT use placeholders. Do NOT use emojis. Separate each paragraph with a double line break (\\n\\n)."
+
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -1086,6 +1106,9 @@ You are an expert real estate sales coach. Create a conversational phone call sc
 7.  **No Emojis:** Do NOT use emojis anywhere in the script.
 """
 
+    if current_user.ai_instructions:
+        prompt += f"\n\n**Agent's Custom Rules (MUST FOLLOW):**\n{current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -1112,6 +1135,9 @@ def generate_objection(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
     prompt = f"Write a highly persuasive, 2-paragraph objection-crusher WhatsApp script addressed to my client {lead.name} from me, the agent {lead.agent_name}. Use this when the client hesitates on a {lead.property_type} in {lead.location} due to their {lead.budget} budget. Give exact word-for-word responses to justify the value and appreciation. Do NOT use placeholders. Do NOT use emojis."
     
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -1133,6 +1159,9 @@ def generate_inspection(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
     prompt = f"Write a highly persuasive, 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Specifically design it to lock in a physical or virtual viewing this weekend for a {lead.property_type} in {lead.location}. Do NOT use placeholders. Do NOT use emojis."
     
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -1154,6 +1183,9 @@ def generate_fomo(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
     prompt = f"Write a short, data-driven 2-paragraph WhatsApp message addressed to my client {lead.name} from me, the agent {lead.agent_name}. Highlight why buying a {lead.property_type} in {lead.location} right now is a smart investment, creating high FOMO (Fear Of Missing Out) for their {lead.budget} budget. Do NOT use placeholders. Do NOT use emojis."
     
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -1175,6 +1207,9 @@ def generate_offmarket(lead_id):
     lead = Lead.query.filter_by(id=lead_id, user_id=current_user.id).first()
     prompt = f"Write a short, mysterious 2-paragraph WhatsApp message to {lead.name} from me, the agent {lead.agent_name}, saying an off-market {lead.property_type} just came up in {lead.location} that perfectly matches their budget of {lead.budget}. It’s not public yet, ask if you should send pictures. Do NOT use placeholders. Do NOT use emojis."
     
+    if current_user.ai_instructions:
+        prompt += f" **Agent's Custom Rules (MUST FOLLOW):** {current_user.ai_instructions}"
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
@@ -1301,6 +1336,10 @@ with app.app_context():
                 db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))
                 db.session.commit()
                 print("Successfully added is_admin to user table.")
+            if 'ai_instructions' not in user_columns:
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN ai_instructions TEXT'))
+                db.session.commit()
+                print("Successfully added ai_instructions to user table.")
 
         # Force the very first registered user to ALWAYS be an admin safely after tables exist
         db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))

@@ -64,6 +64,10 @@
                 <label>Email Address</label>
                 <input type="email" value="{{ current_user.email }}" disabled style="width: 100%; padding: 14px; border: 1.5px solid #d1d5db; border-radius: 8px; background: #f3f4f6; color: #6b7280; cursor: not-allowed; font-family: 'Inter', sans-serif;">
             </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Custom AI Instructions</label>
+                <textarea name="ai_instructions" rows="4" placeholder="Example: Always end messages with 'Your preferred Lagos Agent' and never mention my last name..." style="width: 100%; padding: 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-family: 'Inter', sans-serif;">{{ current_user.ai_instructions or '' }}</textarea>
+            </div>
             
             <hr style="border:none; border-top:1px solid #e5e7eb; margin:25px 0;">
             
