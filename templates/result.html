@@ -156,24 +156,12 @@
     </div>
 
     <div class="action-row">
-        <button class="btn btn-copy" onclick="copyToClipboard('message1')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
-            Copy
-        </button>
-
-        <a 
-            href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}"
-            target="_blank"
-            onclick="fetch('{{ url_for('mark_contacted', lead_id=lead.id) }}', {method: 'POST'})"
-            class="btn" style="background: #25D366; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">
-            WhatsApp
-        </a>
-
+        <button class="uniform-btn" onclick="copyToClipboard('message1')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Copy</button>
+        <a href="https://wa.me/{{ phone }}?text={{ message1 | urlencode }}" target="_blank" onclick="fetch('{{ url_for('mark_contacted', lead_id=lead.id) }}', {method: 'POST'})" class="uniform-btn" style="background: #25D366; color: white;">WhatsApp</a>
         {% if not is_ai_message1 %}
-        <a 
-            href="{{ url_for('generate_first_contact', lead_id=lead.id) }}"
-            class="btn btn-copy" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
-            Generate AI (1 Credit)
-        </a>
+        <a href="{{ url_for('generate_first_contact', lead_id=lead.id) }}" class="uniform-btn" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Generate AI (1 Credit)</a>
+        {% else %}
+        <a href="{{ url_for('generate_first_contact', lead_id=lead.id) }}" class="uniform-btn" style="background: #f59e0b; color: white;">Regenerate</a>
         {% endif %}
     </div>
 
