@@ -276,7 +276,6 @@ Would you prefer I send over a quick WhatsApp presentation with pictures, or wou
                 {% endif %}
             </div>
         </div>
-
         <div class="message-container">
             <h2>Message 3: Short Call Script</h2>
 
@@ -290,18 +289,14 @@ If we happen to find a property that completely blows you away but sits just sli
 Here is my proposed next step: I am going to compile the details, photos, and exact locations of these properties and send them directly to your WhatsApp. Please review them at your convenience, and if one catches your eye, we can immediately schedule a private viewing. Does that sound like a fair plan to you?{% endif %}</pre>
             </div>
 
-            {% if call_script %}
-            <div class="action-row" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn btn-copy" onclick="copyToClipboard('call_script')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">Copy Script</button>
-                <a href="{{ url_for('generate_script', lead_id=lead.id) }}" class="btn" style="background: #f59e0b; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Regenerate</a>
+            <div class="action-row">
+                <button class="uniform-btn" onclick="copyToClipboard('call_script')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Copy Script</button>
+                {% if call_script %}
+                <a href="{{ url_for('generate_script', lead_id=lead.id) }}" class="uniform-btn" style="background: #f59e0b; color: white;">Regenerate</a>
+                {% else %}
+                <a href="{{ url_for('generate_script', lead_id=lead.id) }}" class="uniform-btn" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Generate AI (1 Credit)</a>
+                {% endif %}
             </div>
-            {% else %}
-            <a 
-            href="{{ url_for('generate_script', lead_id=lead.id) }}"
-            class="btn btn-center btn-dark" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
-            Generate AI (1 Credit)
-            </a>
-            {% endif %}
         </div>
 
         <div class="message-container">
