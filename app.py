@@ -71,6 +71,7 @@ class User(db.Model):
     company_name = db.Column(db.String(150), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
     ai_instructions = db.Column(db.Text, nullable=True)
+    tokens_used = db.Column(db.Integer, default=0)
 
     leads = db.relationship('Lead', backref='owner', lazy=True)
 
@@ -164,6 +165,15 @@ def update_lead_ai_data(lead, new_data):
         data = {}
     data.update(new_data)
     lead.ai_data = json.dumps(data)
+
+def deduct_credit_and_log_tokens(user, response):
+    user.credits -= 1
+    try:
+        if hasattr(response, 'usage') and response.usage:
+            user.tokens_used = (user.tokens_used or 0) + response.usage.total_tokens
+    except Exception as e:
+        print("Token tracking error:", e)
+    db.session.commit()
 
 def get_current_user():
     user_id = session.get('user_id')
@@ -942,9 +952,8 @@ Your task is to analyze a client lead and generate a suite of communication mate
             }
         })
 
-        # deduct credit
-        current_user.credits -= 1
-        db.session.commit()
+        # deduct credit and log tokens
+        deduct_credit_and_log_tokens(current_user, response)
 
         flash("AI analysis generated!", "success")
 
@@ -978,8 +987,7 @@ def generate_first_contact(lead_id):
 
     update_lead_ai_data(lead, {'ai_whatsapp': response.choices[0].message.content})
 
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
 
     return redirect(url_for('prospect'))
 
@@ -1009,8 +1017,7 @@ def generate_sms(lead_id):
 
     update_lead_ai_data(lead, {'ai_sms': sms})
 
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
 
     return redirect(url_for('prospect'))
 
@@ -1043,8 +1050,7 @@ def generate_email(lead_id):
         'ai_email_body': email_body
     })
 
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
 
     return redirect(url_for('prospect'))
 
@@ -1074,8 +1080,7 @@ def generate_followup(lead_id):
 
     update_lead_ai_data(lead, {'ai_followup': followup})
 
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
 
     return redirect(url_for('prospect'))
 
@@ -1118,8 +1123,7 @@ You are an expert real estate sales coach. Create a conversational phone call sc
 
     update_lead_ai_data(lead, {'ai_script': script})
 
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
 
     return redirect(url_for('prospect'))
 
@@ -1143,8 +1147,7 @@ def generate_objection(lead_id):
         messages=[{"role": "user", "content": prompt}]
     )
     update_lead_ai_data(lead, {'ai_objection': response.choices[0].message.content})
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
     return redirect(url_for('prospect'))
 
 
@@ -1167,8 +1170,7 @@ def generate_inspection(lead_id):
         messages=[{"role": "user", "content": prompt}]
     )
     update_lead_ai_data(lead, {'ai_inspection': response.choices[0].message.content})
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
     return redirect(url_for('prospect'))
 
 
@@ -1191,8 +1193,7 @@ def generate_fomo(lead_id):
         messages=[{"role": "user", "content": prompt}]
     )
     update_lead_ai_data(lead, {'ai_fomo': response.choices[0].message.content})
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
     return redirect(url_for('prospect'))
 
 
@@ -1215,8 +1216,7 @@ def generate_offmarket(lead_id):
         messages=[{"role": "user", "content": prompt}]
     )
     update_lead_ai_data(lead, {'ai_offmarket': response.choices[0].message.content})
-    current_user.credits -= 1
-    db.session.commit()
+    deduct_credit_and_log_tokens(current_user, response)
     return redirect(url_for('prospect'))
 
 
@@ -1340,6 +1340,10 @@ with app.app_context():
                 db.session.execute(text('ALTER TABLE "user" ADD COLUMN ai_instructions TEXT'))
                 db.session.commit()
                 print("Successfully added ai_instructions to user table.")
+            if 'tokens_used' not in user_columns:
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN tokens_used INTEGER DEFAULT 0'))
+                db.session.commit()
+                print("Successfully added tokens_used to user table.")
 
         # Force the very first registered user to ALWAYS be an admin safely after tables exist
         db.session.execute(text('UPDATE "user" SET is_admin = TRUE WHERE id = 1'))

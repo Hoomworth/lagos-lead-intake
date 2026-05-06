@@ -51,6 +51,7 @@
                         <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Phone</th>
                         <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Leads</th>
                         <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Credits</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Tokens Used</th>
                         <th style="padding: 12px; border-bottom: 2px solid #e5e7eb;">Action</th>
                     </tr>
                 </thead>
@@ -67,6 +68,7 @@
                         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">{{ user.phone or 'N/A' }}</td>
                         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">{{ user.leads|length }}</td>
                         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #d97706;">{{ user.credits }}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4f46e5;">{{ user.tokens_used or 0 }}</td>
                         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
                             <form method="POST" action="{{ url_for('admin_add_credits', user_id=user.id) }}" style="display: flex; gap: 8px;">
                                 <input type="number" name="credits" value="10" style="width: 60px; padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px;" required>
