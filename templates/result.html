@@ -210,28 +210,15 @@
         <pre id="sms">{{ sms if sms else "Hi " ~ lead.name ~ ", I have options for " ~ lead.property_type ~ " in " ~ lead.location ~ ". Let me know if you're still interested." }}</pre>
     </div>
 
-    {% if sms %}
-    <!-- SHOW SEND BUTTON -->
-    <a 
-    href="sms:{{ phone }}?body={{ sms | urlencode }}" 
-    class="btn btn-center btn-primary" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
-    Send SMS
-    </a>
-
-    <p style="text-align:center; margin-top:6px;">
-    <a href="#" onclick="copyToClipboard('sms')">
-        Copy SMS instead
-    </a>
-    </p>
-
-    {% else %}
-    <!-- SHOW GENERATE BUTTON -->
-    <a 
-    href="{{ url_for('generate_sms', lead_id=lead.id) }}" 
-    class="btn btn-center btn-primary" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2); border: none;">
-    Generate SMS with AI (1 credit)
-    </a>
-    {% endif %}
+    <div class="action-row">
+        <button class="uniform-btn" onclick="copyToClipboard('sms')" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Copy</button>
+        {% if sms %}
+        <a href="sms:{{ phone }}?body={{ sms | urlencode }}" class="uniform-btn" style="background: #3b82f6; color: white;">Send SMS</a>
+        <a href="{{ url_for('generate_sms', lead_id=lead.id) }}" class="uniform-btn" style="background: #f59e0b; color: white;">Regenerate</a>
+        {% else %}
+        <a href="{{ url_for('generate_sms', lead_id=lead.id) }}" class="uniform-btn" style="background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%); color: white; box-shadow: 0 4px 12px rgba(26, 58, 82, 0.2);">Generate AI (1 Credit)</a>
+        {% endif %}
+    </div>
 
 </div>
 
