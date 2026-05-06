@@ -11,7 +11,37 @@
         @media (max-width: 600px) {
             .hide-on-mobile { display: none; }
             .icon-btn-mobile { padding: 4px 8px !important; }
+            .uniform-btn { flex: 1 1 100% !important; margin: 4px 0; }
         }
+        .action-row {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .uniform-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+            text-decoration: none !important;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            min-width: 140px;
+            flex: 1;
+            text-align: center;
+            transition: opacity 0.2s ease;
+        }
+        .uniform-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
